@@ -17,7 +17,6 @@
     char str[100];
     int val;
 
-    test_object obj;
 }
 
 %token VOID
