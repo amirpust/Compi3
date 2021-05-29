@@ -17,17 +17,6 @@
     };
 %}
 
-
-%union {
-    char str[100];
-    int val;
-
-    typedef struct exp_t {
-        TYPE t;
-
-    } exp;
-}
-
 %token VOID
 %token INT
 %nonassoc BYTE
