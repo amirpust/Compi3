@@ -1,8 +1,8 @@
 %{
 	#include <stdio.h>
+    #include "u.hpp"
     #include "parser.tab.hpp"
     #include "hw3_output.hpp"
-    #include "u.hpp"
 
     void printLexError();
     void output::errorLex(int lineno);
