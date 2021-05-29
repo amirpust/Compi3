@@ -18,7 +18,7 @@ public:
     bool b;
     string str;
 
-    Exp_t() : t(E_bool), str(NULL) {
+    Exp_t() : t(E_bool), str("") {
         cout << "DEFAULT" << endl;
     };
 

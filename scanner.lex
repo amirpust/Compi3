@@ -49,7 +49,7 @@ default                                             return DEFAULT;
 [a-zA-Z][a-zA-Z0-9]*                                return ID;
 {noZeroDigit}{digit}*                               {return NUM;}
 0                                                   return NUM;
-\"([^\n\r\"\\]|\\[rnt"\\])+\"                       {if (!yytext) yylval.expVal = Exp_t(string(yytext)); return STRING;}
+\"([^\n\r\"\\]|\\[rnt"\\])+\"                       {if (!yytext) {yylval.expVal = Exp_t(string(yytext));} return STRING;}
 \/\/[^\r\n]*(\r|\n|\r\n)?                           ;
 {whitespace}                                        ;
 .                                                   printLexError();
