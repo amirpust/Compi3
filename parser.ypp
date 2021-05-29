@@ -10,12 +10,22 @@
     void output::errorSyn(int lineno);
     void yyerror(const char*);
 
+    enum TYPE {
+        E_byte,
+        E_int,
+        E_string
+    }
 %}
 
 
 %union {
     char str[100];
     int val;
+
+    typedef struct exp_t {
+        TYPE t;
+
+    } exp;
 }
 
 %token VOID
@@ -53,7 +63,7 @@
 %nonassoc <str> STRING
 %right ELSE
 
-%type<val> Exp
+%type<exp> Exp
 
 %%
 
@@ -109,7 +119,7 @@ Exp:            LPAREN Exp RPAREN                                           {out
                 | Call                                                      {output::printProductionRule(37);}
                 | NUM                                                       {output::printProductionRule(38);}
                 | NUM B                                                     {output::printProductionRule(39);}
-                | STRING                                                    {$$ = 1 ; output::printInt($$); output::printProductionRule(40);}
+                | STRING                                                    {$$ = exp(); $$.t = E_string ; output::printInt($$.t); output::printProductionRule(40);}
                 | TRUE                                                      {output::printProductionRule(41);}
                 | FALSE                                                     {output::printProductionRule(42);}
                 | NOT Exp                                                   {output::printProductionRule(43);}
