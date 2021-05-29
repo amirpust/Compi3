@@ -14,7 +14,7 @@
         E_byte,
         E_int,
         E_string
-    }
+    };
 %}
 
 
