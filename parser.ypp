@@ -38,9 +38,9 @@
 %left RBRACE
 %right ASSIGN
 %left EQUALITY
-%nonassoc RELOP
+%nonassoc <relopAUX> RELOP
 %left <intVal> BINOP_PM
-%left <intVal> BINOP_MD
+%left <boolVal> BINOP_MD
 %token <idVal> ID
 %nonassoc <intVal> NUM
 %nonassoc <stringVal> STRING
@@ -48,6 +48,7 @@
 
 %type<expVal> Exp
 %type<expList> ExpList
+%type<typeVal> Type
 
 %%
 
@@ -97,7 +98,7 @@ Type :          INT                                                         {out
                 | BOOL                                                      {output::printProductionRule(33);}
 ;
 Exp:            LPAREN Exp RPAREN                                           {$$ = Exp_t($2); $$.printFullExp(); output::printProductionRule(34);}
-                | Exp BINOP_MD Exp                                          {$$ = Exp_t($1.i * $3.i); output::printProductionRule(35);}
+                | Exp BINOP_MD Exp                                          {if($2) $$ = Exp_t($1.i * $3.i); else $$ = Exp_t($1.i / $3.i); output::printProductionRule(35);}
                 | Exp BINOP_PM Exp                                          {$$ = Exp_t($1.i + $2 * $3.i); output::printProductionRule(35);}
                 | ID                                                        {output::printProductionRule(36);}
                 | Call                                                      {output::printProductionRule(37);}
@@ -109,9 +110,9 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | NOT Exp                                                   {$$ = Exp_t(!($2.b)); output::printProductionRule(43);}
                 | Exp AND Exp                                               {$$ = Exp_t($1.b && $3.b); output::printProductionRule(44);}
                 | Exp OR Exp                                                {$$ = Exp_t($1.b || $3.b); output::printProductionRule(45);}
-                | Exp EQUALITY Exp                                          {output::printProductionRule(46);}
-                | Exp RELOP Exp                                             {output::printProductionRule(46);}
-                | LPAREN Type RPAREN Exp                                    {output::printProductionRule(47);}
+                | Exp EQUALITY Exp                                          {$$ = Exp_t($1 || $3); output::printProductionRule(46);}
+                | Exp RELOP Exp                                             {$$ = Exp_t($2.compare($1, $2)) ; output::printProductionRule(46);}
+                | LPAREN Type RPAREN Exp                                    {$$ = Exp_t($4); $$.castType($2); output::printProductionRule(47);}
 ;
 CaseList:       CaseDecl CaseList                                           {output::printProductionRule(48);}
                 | CaseDecl                                                  {output::printProductionRule(49);}
