@@ -3,7 +3,6 @@
 
 #include <iostream>
 using namespace std;
-extern char* yytext;
 
 enum TYPE {
     E_bool,
@@ -16,9 +15,10 @@ class Exp_t{
 public:
     TYPE t;
     bool b;
+    char * str;
 
-    Exp_t() : t(E_bool) {
-        cout << "DEFAULT" << yytext << endl;
+    Exp_t() : t(E_bool), str(NULL) {
+        cout << "DEFAULT" << endl;
     };
 
     Exp_t(bool b) : b(b), t(E_bool) {
@@ -30,7 +30,7 @@ public:
     }
 
     Exp_t(Exp_t& test) {
-        cout << "Copy" << endl;
+        cout << "Copy" << test.str << endl;
     }
 };
 
