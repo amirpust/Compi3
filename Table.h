@@ -13,6 +13,8 @@ public:
     Symbol(string _id, Exp_t _exp, int _offset, vector<Symbol> _symbolList = vector<Symbol>()):
     id(_id), exp(_exp), offset(_offset), symbolList(_symbolList){};
 
+    Symbol(string _id, TYPE t): id(_id), exp(t){};
+
 };
 
 class Scope{
@@ -36,6 +38,14 @@ public:
         return false;
     }
 
+    ExpList getArgs(string funcName){
+        for(int i = 0; i < symbols.size(); i++){
+            if(symbols[i].id == funcName){
+                return symbols[i].symbolList;
+            }
+        }
+        return ExpList();
+    }
 };
 
 class SymbolTable{
@@ -48,6 +58,24 @@ public:
     }
 
     void openFuncScope(string funcName, ExpList arguments){
+        scopes.emplace_back(-arguments.size(), true);
+        ExpList decArgs = ExpList();
+        int scopeDecl;
+        for(scopeDecl = scopes.size() - 1; scopeDecl >= 0; scopeDecl--){
+            if(scopes[scopeDecl].isExist(funcName))
+                decArgs = scopes[scopeDecl].getArgs(funcName);
+            if(scopes[scopeDecl].isFunc)
+                break; //TODO: func decl doesn't exists
+        }
+
+        if(decArgs.size() != arguments.size()) return; //TODO: throw exception
+
+        for (int i = 0; i < decArgs.size(); ++i) {
+            if(decArgs[i].t != arguments[i].t)
+                break; // TODO: throw exception types are not the same
+
+            addSymbol(decArgs[i].id, arguments[i])
+        }
 
     }
 
@@ -66,7 +94,7 @@ public:
 
     }
 
-    void addSymbol(string id, TYPE t, int val, bool isFunc){
+    void addSymbol(string id, Exp_t exp){
 
         // checks if the the id was already declared in outer scope
         for(int i = scopes.size() - 1; i >= 0; i--){
