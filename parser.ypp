@@ -11,9 +11,9 @@
     void output::errorSyn(int lineno);
     void yyerror(const char*);
 
-
 %}
 
+#define YYSTYPE u
 
 
 
