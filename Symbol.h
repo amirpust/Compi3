@@ -18,12 +18,15 @@ public:
     Exp_t exp;
     int offset;
     vector<Symbol> symbolList;
+    TYPE returnType;
 
-    Symbol(string _id, Exp_t _exp, int _offset, vector<Symbol> _symbolList = vector<Symbol>()):
-            id(_id), exp(_exp), offset(_offset), symbolList(_symbolList){};
+    Symbol(string _id, Exp_t _exp, int _offset):
+            id(_id), exp(_exp), offset(_offset){};
 
     Symbol(string _id, TYPE t): id(_id), exp(t){};
 
+    Symbol(string _id, int _offset, vector<Symbol> _symbolList, TYPE _returnType):
+    id(_id), offset(_offset), symbolList(_symbolList), returnType(_returnType){};
 };
 
 

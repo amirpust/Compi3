@@ -20,6 +20,10 @@ public:
         symbols.emplace_back(id, exp,offset++);
     }
 
+    void insert(string id, SymList declArgs, TYPE ret){
+        symbols.emplace_back(id,offset++);
+    }
+
     bool isExist(string id){
         for(int i = 0; i < symbols.size(); i++){
             if(symbols[i].id == id)
@@ -56,7 +60,7 @@ public:
     }
 
     void openFuncScope(string funcName, ExpList arguments){
-        scopes.emplace_back(-arguments.size(), true);
+        scopes.emplace_back(-(arguments.size()), true);
         vector<Symbol> decArgs = vector<Symbol>();
         int scopeDecl;
         for(scopeDecl = scopes.size() - 1; scopeDecl >= 0; scopeDecl--){
@@ -82,19 +86,24 @@ public:
             scopes.pop_back();
     }
 
-    void addFuncSymbol(TYPE returnType, string funcName, ExpList funcArgs){
+    void addFuncSymbol(TYPE returnType, string funcName, SymList funcArgs){
         for(int i = scopes.size() - 1; i >= 0; i--){
             if(scopes[i].isExist(funcName))
                 return; // TODO: it exists throw some exception
             if(scopes[i].isFunc)
-                break;
+                break; // TODO: it exists throw some exception
         }
-
+        scopes.back().insert(funcName, funcArgs, returnType);
 
 
     }
 
-    void addSymbol(string id, Exp_t exp){
+    void addSymbol(TYPE t, string id){
+
+    }
+
+    void addSymbolWithExp(TYPE t, string id, Exp_t exp){
+        exp.castType(t);
 
         // checks if the the id was already declared in outer scope
         for(int i = scopes.size() - 1; i >= 0; i--){
