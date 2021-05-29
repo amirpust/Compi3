@@ -3,6 +3,7 @@
     #include "hw3_output.hpp"
     #include "u.hpp"
 
+
     int yylex();
     extern int yylineno;
     void output::printProductionRule(int ruleno);
@@ -49,6 +50,8 @@
 %type<expVal> Exp
 %type<expList> ExpList
 %type<typeVal> Type
+%type<symbol> FormalDecl
+%type<symList> FormalsList
 
 %%
 
@@ -59,8 +62,8 @@ Funcs:          /*epsilon*/                                                 {out
 ;
 FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE Statements RBRACE   {output::printProductionRule(4);}
 ;
-RetType:        Type                                                        {output::printProductionRule(5);}
-                | VOID                                                      {output::printProductionRule(6);}
+RetType:        Type                                                        {$$ = $1; output::printProductionRule(5);}
+                | VOID                                                      {$$ = $1; output::printProductionRule(6);}
 ;
 Formals:        /*epsilon*/                                                 {output::printProductionRule(7);}
                 | FormalsList                                               {output::printProductionRule(8);}

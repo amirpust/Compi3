@@ -6,6 +6,7 @@
 #include "hw3_output.hpp"
 #include "Exp_t.h"
 #include "Enums.h"
+#include "Symbol.h"
 
 using namespace std;
 extern int lineno;
@@ -20,6 +21,8 @@ typedef struct objects_pool_t{
     ExpList expList;
     RelopAUX relopAUX;
     TYPE typeVal;
+    Symbol symbol;
+    SymList symList;
 }objects_pool;
 
 #define YYSTYPE objects_pool
