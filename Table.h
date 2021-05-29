@@ -10,9 +10,9 @@ public:
     int offset;
     vector<Symbol> symbolList;
 
-    Symbol(string _id,TYPE _t, bool _val, int _offset): id(_id), t(_t), boolVal(_val), offset(_offset){};
-    Symbol(string _id,TYPE _t, int _val, int _offset): id(_id), t(_t), intVal(_val), offset(_offset){};
-    Symbol(string _id,TYPE _t, string _val, int _offset): id(_id), t(_t), strVal(_val), offset(_offset){};
+    Symbol(string _id, Exp_t _exp, int _offset, vector<Symbol> _symbolList = vector<Symbol>()):
+    id(_id), exp(_exp), offset(_offset), symbolList(_symbolList){};
+
 };
 
 class Scope{
@@ -22,16 +22,10 @@ public:
     int offset;
     bool isFunc;
 
-    Scope(int _offset): symbols(), offset(_offset){};
+    Scope(int _offset, bool _isFunc = false): symbols(), offset(_offset), isFunc(false){};
 
-    void insert(string id, TYPE t, bool val){
-        symbols.emplace_back(id, t, val, offset++);
-    }
-    void insert(string id, TYPE t, int val){
-        symbols.emplace_back(id, t, val, offset++);
-    }
-    void insert(string id, TYPE t, string val){
-        symbols.emplace_back(id, t, val, offset++);
+    void insert(string id, Exp_t exp){
+        symbols.emplace_back(id, exp,offset++);
     }
 
     bool isExist(string id){
