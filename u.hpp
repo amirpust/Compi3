@@ -23,27 +23,27 @@ class Integer_t : public Exp_t{
 public:
     int val;
 
-    Integer_t(int _val) : Exp_t(E_int), val(_val);
+    Integer_t(int _val) : Exp_t(E_int), val(_val) {};
     Integer_t(char * val) {
         cout << "Integer_t c'tor" << val << endl;
-    }
-    void* getVal() { return &val; }
+    };
+    void* getVal() { return &val; };
 };
 
 class Bool_t : public Exp_t{
 public:
     bool val;
 
-    Integer_t(bool _val) : val(_val), t(E_int);
-    void* getVal() { return &val; }
+    Integer_t(bool* _val) :  Exp_t(E_bool), val(_val) {};
+    void* getVal() { return &val; };
 };
 
 class String_t : public Exp_t{
 public:
     char* val;
 
-    Integer_t(char* _val) : val(_val), t(E_int);
-    void* getVal() { return val; }
+    Integer_t(char* _val) :  Exp_t(E_string), val(_val) {};
+    void* getVal() { return val; };
 };
 
 typedef struct objects_pool_t{
