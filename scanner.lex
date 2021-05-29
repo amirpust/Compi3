@@ -9,7 +9,6 @@
 %}
 
 %option yylineno
-%option yytext
 %option noyywrap
 
 whitespace	                                        ([ \t\r\n])
