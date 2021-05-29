@@ -93,9 +93,9 @@ Call :          ID LPAREN ExpList RPAREN                                    {out
 ExpList:        Exp                                                         {$$ = ExpList(); $$.push_back($1); output::printProductionRule(29);}
                 | Exp COMMA ExpList                                         {$$ = ExpList($3); $$.push_back($1); output::printProductionRule(30);}
 ;
-Type :          INT                                                         {output::printProductionRule(31);}
-                | BYTE                                                      {output::printProductionRule(32);}
-                | BOOL                                                      {output::printProductionRule(33);}
+Type :          INT                                                         {$$ = $1 ;output::printProductionRule(31);}
+                | BYTE                                                      {$$ = $1 ;output::printProductionRule(32);}
+                | BOOL                                                      {$$ = $1 ;output::printProductionRule(33);}
 ;
 Exp:            LPAREN Exp RPAREN                                           {$$ = Exp_t($2); $$.printFullExp(); output::printProductionRule(34);}
                 | Exp BINOP_MD Exp                                          {if($2) $$ = Exp_t($1.i * $3.i); else $$ = Exp_t($1.i / $3.i); output::printProductionRule(35);}

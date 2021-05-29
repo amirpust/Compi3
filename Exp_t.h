@@ -1,6 +1,10 @@
 #ifndef HW3_EXP_T_H
 #define HW3_EXP_T_H
 
+#include <iostream>
+#include <string>
+#include "hw3_output.hpp"
+#include "Enums.h"
 
 class Exp_t{
 public:

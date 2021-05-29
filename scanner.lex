@@ -16,14 +16,14 @@ whitespace	                                        ([ \t\r\n])
 noZeroDigit	                                        ([1-9])
 digit		                                        ([0-9])
 %%
-void					                            return VOID;
-int                                                 return INT;
-byte                                                return BYTE;
-b                                                   return B;
-bool                                                return BOOL;
-and                                                 return AND;
-or                                                  return OR;
-not                                                 return NOT;
+void					                            {yylval.typeVal = E_void; return VOID;}
+int                                                 {yylval.typeVal = E_int; return INT;}
+byte                                                {yylval.typeVal = E_byte; return BYTE;}
+b                                                   {return B;   }
+bool                                                {yylval.typeVal = E_bool; return BOOL;}
+and                                                 {return AND; }
+or                                                  {return OR;  }
+not                                                 {return NOT; }
 true                                                {yylval.boolVal = true; return TRUE;}
 false                                               {yylval.boolVal = false; return FALSE;}
 return                                              return RETURN;
