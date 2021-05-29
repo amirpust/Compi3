@@ -35,7 +35,7 @@ class Bool_t : public Exp_t{
 public:
     bool val;
 
-    Integer_t(bool* _val) :  Exp_t(E_bool), val(_val) {};
+    Bool_t(bool _val) :  Exp_t(E_bool), val(_val) {};
     void* getVal() { return &val; };
 };
 
@@ -43,7 +43,7 @@ class String_t : public Exp_t{
 public:
     char* val;
 
-    Integer_t(char* _val) :  Exp_t(E_string), val(_val) {};
+    String_t(char* _val) :  Exp_t(E_string), val(_val) {};
     void* getVal() { return val; };
 };
 
