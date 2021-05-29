@@ -41,7 +41,7 @@
 %nonassoc RELOP
 %left BINOP_PM
 %left BINOP_MD
-%token ID
+%token <idVal> ID
 %nonassoc <expVal> NUM
 %nonassoc <expVal> STRING
 %right ELSE

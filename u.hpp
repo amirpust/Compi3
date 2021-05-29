@@ -37,6 +37,7 @@ public:
 
 typedef struct objects_pool_t{
     Exp_t expVal;
+    string idVal;
 }objects_pool;
 
 #define YYSTYPE objects_pool

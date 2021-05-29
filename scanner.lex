@@ -46,9 +46,9 @@ default                                             return DEFAULT;
 "=="|"!="                                           return EQUALITY;
 "*"|"/"                                             return BINOP_MD;
 "+"|"-"                                             return BINOP_PM;
-[a-zA-Z][a-zA-Z0-9]*                                return ID;
-{noZeroDigit}{digit}*                               {return NUM;}
-0                                                   return NUM;
+[a-zA-Z][a-zA-Z0-9]*                                {yylval.idVal = string(yytext); return ID;}
+{noZeroDigit}{digit}*                               {yylval.expVal = Exp_t(stoi(yytext)); return NUM;}
+0                                                   {yylval.expVal = Exp_t(0); return NUM;}
 \"([^\n\r\"\\]|\\[rnt"\\])+\"                       {yylval.expVal = Exp_t(string(yytext)); return STRING;}
 \/\/[^\r\n]*(\r|\n|\r\n)?                           ;
 {whitespace}                                        ;
