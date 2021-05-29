@@ -1,11 +1,11 @@
 #ifndef U_HPP
 #define U_HPP
 
-struct object{
+typedef struct test_object_t{
     int val;
     char op[100];
 
-};
-#define YYSTYPE object*
+}test_object;
+#define YYSTYPE test_object*
 
 #endif
