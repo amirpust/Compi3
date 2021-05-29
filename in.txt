@@ -3,5 +3,6 @@ void main(){
     bool fff = (true or false);
     int aaa = (20 + 57);
     int sss = (20 - 57);
+    aaa = aaa - 1;
     return "yay";
 }

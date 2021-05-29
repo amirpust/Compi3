@@ -58,6 +58,8 @@ public:
     }
 };
 
+typedef vector<Exp_t> ExpList;
+
 typedef struct objects_pool_t{
     Exp_t expVal;
     string idVal;
@@ -65,6 +67,7 @@ typedef struct objects_pool_t{
     int intVal;
     bool boolVal;
     string stringVal;
+    ExpList expList;
 }objects_pool;
 
 #define YYSTYPE objects_pool

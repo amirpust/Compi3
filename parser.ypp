@@ -47,6 +47,7 @@
 %right ELSE
 
 %type<expVal> Exp
+%type<expList> ExpList
 
 %%
 
@@ -88,8 +89,8 @@ Statement:      LBRACE Statements RBRACE                                    {out
 Call :          ID LPAREN ExpList RPAREN                                    {output::printProductionRule(27);}
                 | ID LPAREN RPAREN                                          {output::printProductionRule(28);}
 ;
-ExpList:        Exp                                                         {output::printProductionRule(29);}
-                | Exp COMMA ExpList                                         {output::printProductionRule(30);}
+ExpList:        Exp                                                         {$$ = ExpList(); $$.push_back($1); output::printProductionRule(29);}
+                | Exp COMMA ExpList                                         {$$ = ExpList($3); $$.push_back($1); output::printProductionRule(30);}
 ;
 Type :          INT                                                         {output::printProductionRule(31);}
                 | BYTE                                                      {output::printProductionRule(32);}
