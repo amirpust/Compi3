@@ -4,14 +4,6 @@
     #define YYDEBUG 1
 
 
-    typedef union {
-                      int val;
-                      char op;
-                  } u;
-
-    #define YYSTYPE u
-
-
     int yylex();
     extern int yylineno;
     void output::printProductionRule(int ruleno);
