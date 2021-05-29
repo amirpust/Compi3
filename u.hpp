@@ -1,6 +1,9 @@
 #ifndef U_HPP
 #define U_HPP
 
+#include <iostream>
+using namespace std;
+
 enum TYPE {
     E_bool,
     E_byte,
@@ -12,6 +15,7 @@ class Exp_t{
 public:
     TYPE t;
 
+    Exp_t(TYPE _t) : t(_t) {};
     virtual void* getVal() = 0;
 };
 
@@ -19,7 +23,7 @@ class Integer_t : public Exp_t{
 public:
     int val;
 
-    Integer_t(int _val) : val(_val), t(E_int);
+    Integer_t(int _val) : Exp_t(E_int), val(_val);
     Integer_t(char * val) {
         cout << "Integer_t c'tor" << val << endl;
     }
