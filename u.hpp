@@ -27,11 +27,11 @@ public:
     };
 
     Exp_t(string _str) : str(_str) {
-        cout << "TEST:" << _str << endl;
+        cout << "TEST: " << _str << endl;
     }
 
     Exp_t(Exp_t& test) {
-        cout << "Copy" << test.str << endl;
+        cout << "Copy: " << test.str << endl;
     }
 };
 
