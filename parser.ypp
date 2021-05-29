@@ -42,11 +42,11 @@
 %left BINOP_PM
 %left BINOP_MD
 %token ID
-%nonassoc <val> NUM
-%nonassoc <str> STRING
+%nonassoc <integerVal> NUM
+%nonassoc <stringVal> STRING
 %right ELSE
 
-%type<exp> Exp
+%type<expVal> Exp
 
 %%
 
@@ -100,9 +100,9 @@ Exp:            LPAREN Exp RPAREN                                           {out
                 | Exp BINOP_PM Exp                                          {output::printProductionRule(35);}
                 | ID                                                        {output::printProductionRule(36);}
                 | Call                                                      {output::printProductionRule(37);}
-                | NUM                                                       {output::printProductionRule(38);}
+                | NUM                                                       {$$ = Integer_t($1); output::printInt(*($$.getVal())); output::printProductionRule(38);}
                 | NUM B                                                     {output::printProductionRule(39);}
-                | STRING                                                    {$$ = exp_t(); $$.t = E_string ; output::printInt($$.t); output::printProductionRule(40);}
+                | STRING                                                    {$$ = String_t(); output::printInt($$.t); output::printProductionRule(40);}
                 | TRUE                                                      {output::printProductionRule(41);}
                 | FALSE                                                     {output::printProductionRule(42);}
                 | NOT Exp                                                   {output::printProductionRule(43);}
