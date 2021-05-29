@@ -9,7 +9,6 @@
 using namespace std;
 
 class Scope{
-
 public:
     vector<Symbol> symbols;
     int offset;
