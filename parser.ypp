@@ -13,7 +13,12 @@
 %}
 
 
+%union {
+    char str[100];
+    int val;
 
+    test_object obj;
+}
 
 %token VOID
 %token INT
@@ -47,9 +52,10 @@
 %left BINOP_MD
 %token ID
 %nonassoc <val> NUM
-%nonassoc <op> STRING
+%nonassoc <str> STRING
 %right ELSE
 
+%type<test_object> Exp
 
 %%
 
