@@ -4,7 +4,7 @@
 typedef union
 {
     int val;
-    char op;
+    char op[100];
 }u;
 
 #define YYSTYPE u

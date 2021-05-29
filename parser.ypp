@@ -49,8 +49,9 @@
 %left BINOP_MD
 %token ID
 %nonassoc <val> NUM
-%nonassoc STRING
+%nonassoc <op> STRING
 %right ELSE
+
 
 %%
 
@@ -106,7 +107,7 @@ Exp:            LPAREN Exp RPAREN                                           {out
                 | Call                                                      {output::printProductionRule(37);}
                 | NUM                                                       {output::printProductionRule(38);}
                 | NUM B                                                     {output::printProductionRule(39);}
-                | STRING                                                    {$$ = u(); std::cout << "Flag" << $1 << endl; output::printProductionRule(40);}
+                | STRING                                                    {$$ = u() ; output::printProductionRule(40);}
                 | TRUE                                                      {output::printProductionRule(41);}
                 | FALSE                                                     {output::printProductionRule(42);}
                 | NOT Exp                                                   {output::printProductionRule(43);}
