@@ -14,46 +14,23 @@ enum TYPE {
 class Exp_t{
 public:
     TYPE t;
+    bool b;
 
-    Exp_t(TYPE _t) : t(_t) {};
     Exp_t() : t(E_bool) {};
-    virtual void* getVal() { return NULL; };
-};
 
-class Integer_t : public Exp_t{
-public:
-    int val;
+    Exp_t(bool b) : b(b), t(E_bool) {};
 
-    Integer_t(int _val) : Exp_t(E_int), val(_val) {};
-    Integer_t(char * val) {
-        cout << "Integer_t c'tor" << val << endl;
-    };
-    void* getVal() { return &val; };
-};
+    Exp_t(char* test) {
+        cout << "TEST:" << test << endl;
+    }
 
-class Bool_t : public Exp_t{
-public:
-    bool val;
-
-    Bool_t(bool _val) :  Exp_t(E_bool), val(_val) {};
-    void* getVal() { return &val; };
-};
-
-class String_t : public Exp_t{
-public:
-    char* val;
-
-    String_t(char* _val) :  Exp_t(E_string), val(_val) {};
-    void* getVal() { return val; };
+    Exp_t(Exp_t& test) {
+        cout << "Copy" << endl;
+    }
 };
 
 typedef struct objects_pool_t{
-    Integer_t integerVal;
-    Bool_t boolVal;
-    String_t stringVal;
-
     Exp_t expVal;
-
 }objects_pool;
 
 #define YYSTYPE objects_pool
