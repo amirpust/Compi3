@@ -100,9 +100,9 @@ Exp:            LPAREN Exp RPAREN                                           {out
                 | Exp BINOP_PM Exp                                          {output::printProductionRule(35);}
                 | ID                                                        {output::printProductionRule(36);}
                 | Call                                                      {output::printProductionRule(37);}
-                | NUM                                                       {$$ = Integer_t($1); output::printInt(*($$.getVal())); output::printProductionRule(38);}
+                | NUM                                                       {$$ = Exp_t($1); output::printInt(1); output::printProductionRule(38);}
                 | NUM B                                                     {output::printProductionRule(39);}
-                | STRING                                                    {$$ = String_t(); output::printInt($$.t); output::printProductionRule(40);}
+                | STRING                                                    {$$ = Exp_t($1); output::printInt(2); output::printProductionRule(40);}
                 | TRUE                                                      {output::printProductionRule(41);}
                 | FALSE                                                     {output::printProductionRule(42);}
                 | NOT Exp                                                   {output::printProductionRule(43);}
