@@ -3,10 +3,6 @@
     #include "hw3_output.hpp"
     #include "u.hpp"
 
-    #ifndef YYSTYPE
-    #define YYSTYPE u
-    #endif
-
     int yylex();
     extern int yylineno;
     void output::printProductionRule(int ruleno);

@@ -1,12 +1,11 @@
 #ifndef U_HPP
 #define U_HPP
 
-typedef union
-{
+struct object{
     int val;
     char op[100];
-}u;
 
-#define YYSTYPE u
+};
+#define YYSTYPE object*
 
 #endif
