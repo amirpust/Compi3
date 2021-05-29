@@ -1,7 +1,7 @@
 %{
 	#include <stdio.h>
     #include "parser.tab.hpp"
-    #include "output.hpp"
+    #include "hw3_output.hpp"
 
     void printLexError();
     void output::errorLex(int lineno);
