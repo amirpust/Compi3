@@ -47,7 +47,7 @@ default                                             return DEFAULT;
 "*"|"/"                                             return BINOP_MD;
 "+"|"-"                                             return BINOP_PM;
 [a-zA-Z][a-zA-Z0-9]*                                return ID;
-{noZeroDigit}{digit}*                               return NUM;
+{noZeroDigit}{digit}*                               {output::printInt(yytext[0] - '0') ; return NUM;}
 0                                                   return NUM;
 \"([^\n\r\"\\]|\\[rnt"\\])+\"                       return STRING;
 \/\/[^\r\n]*(\r|\n|\r\n)?                           ;
