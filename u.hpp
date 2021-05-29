@@ -17,7 +17,7 @@ public:
 
     Exp_t(TYPE _t) : t(_t) {};
     Exp_t() : t(E_bool) {};
-    virtual void* getVal() = 0;
+    virtual void* getVal() { return NULL; };
 };
 
 class Integer_t : public Exp_t{

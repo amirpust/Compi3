@@ -3,4 +3,4 @@ project(hw3)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(hw3 main.cpp hw3_output.cpp hw3_output.hpp parser.ypp scanner.lex)
+add_executable(hw3 hw3_output.cpp hw3_output.hpp parser.ypp scanner.lex u.hpp)
