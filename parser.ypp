@@ -17,6 +17,7 @@
     char str[100];
     int val;
 
+    //test_object obj;
 }
 
 %token VOID
@@ -54,7 +55,7 @@
 %nonassoc <str> STRING
 %right ELSE
 
-%type<test_object> Exp
+%type<val> Exp
 
 %%
 
