@@ -16,9 +16,13 @@ public:
     TYPE t;
     bool b;
 
-    Exp_t() : t(E_bool) {};
+    Exp_t() : t(E_bool) {
+        cout << "DEFAULT" << endl;
+    };
 
-    Exp_t(bool b) : b(b), t(E_bool) {};
+    Exp_t(bool b) : b(b), t(E_bool) {
+        cout << "BOOL" << endl;
+    };
 
     Exp_t(char* test) {
         cout << "TEST:" << test << endl;
