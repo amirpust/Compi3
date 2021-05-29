@@ -7,6 +7,6 @@ typedef union
     char op;
 }u;
 
-#define YYSTYPE int
+#define YYSTYPE u
 
 #endif
