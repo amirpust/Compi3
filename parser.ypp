@@ -4,6 +4,14 @@
     #define YYDEBUG 1
 
 
+    typedef union {
+                      int val;
+                      char op;
+                  } u;
+
+    #define YYSTYPE u
+
+
     int yylex();
     extern int yylineno;
     void output::printProductionRule(int ruleno);
@@ -13,6 +21,9 @@
 
 
 %}
+
+
+
 
 %token VOID
 %token INT
@@ -41,11 +52,11 @@
 %left RBRACE
 %right ASSIGN
 %left EQUALITY
-%nonassoc RELOP
+%nonassoc <op> RELOP
 %left BINOP_PM
 %left BINOP_MD
 %token ID
-%nonassoc NUM
+%nonassoc <val> NUM
 %nonassoc STRING
 %right ELSE
 
@@ -97,11 +108,11 @@ Type :          INT                                                         {out
                 | BOOL                                                      {output::printProductionRule(33);}
 ;
 Exp:            LPAREN Exp RPAREN                                           {output::printProductionRule(34);}
-                | Exp BINOP_MD Exp                                             {output::printProductionRule(35);}
-                | Exp BINOP_PM Exp                                             {output::printProductionRule(35);}
+                | Exp BINOP_MD Exp                                          {output::printProductionRule(35);}
+                | Exp BINOP_PM Exp                                          {output::printProductionRule(35);}
                 | ID                                                        {output::printProductionRule(36);}
                 | Call                                                      {output::printProductionRule(37);}
-                | NUM                                                       {output::printProductionRule(38);}
+                | NUM                                                       {YYSTYPE.val = yytext[0] - '0'; output::printProductionRule(38);}
                 | NUM B                                                     {output::printProductionRule(39);}
                 | STRING                                                    {output::printProductionRule(40);}
                 | TRUE                                                      {output::printProductionRule(41);}
