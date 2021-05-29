@@ -9,12 +9,6 @@
     void output::errorLex(int lineno);
     void output::errorSyn(int lineno);
     void yyerror(const char*);
-
-    enum TYPE {
-        E_byte,
-        E_int,
-        E_string
-    };
 %}
 
 %token VOID

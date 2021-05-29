@@ -1,6 +1,12 @@
 #ifndef U_HPP
 #define U_HPP
 
+enum TYPE {
+    E_byte,
+    E_int,
+    E_string
+};
+
 typedef struct exp_t {
     TYPE t;
 
