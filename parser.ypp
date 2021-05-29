@@ -44,7 +44,7 @@
 %left RBRACE
 %right ASSIGN
 %left EQUALITY
-%nonassoc <op> RELOP
+%nonassoc RELOP
 %left BINOP_PM
 %left BINOP_MD
 %token ID
@@ -104,7 +104,7 @@ Exp:            LPAREN Exp RPAREN                                           {out
                 | Exp BINOP_PM Exp                                          {output::printProductionRule(35);}
                 | ID                                                        {output::printProductionRule(36);}
                 | Call                                                      {output::printProductionRule(37);}
-                | NUM                                                       {YYSTYPE.val = yytext[0] - '0'; output::printInt(YYSTYPE.val); output::printProductionRule(38);}
+                | NUM                                                       {YYSTYPE = yytext[0] - '0'; output::printInt(YYSTYPE); output::printProductionRule(38);}
                 | NUM B                                                     {output::printProductionRule(39);}
                 | STRING                                                    {output::printProductionRule(40);}
                 | TRUE                                                      {output::printProductionRule(41);}
