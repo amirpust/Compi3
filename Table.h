@@ -76,7 +76,7 @@ public:
             if(decArgs[i].exp.t != arguments[i].t)
                 break; // TODO: throw exception types are not the same
 
-            addSymbol(decArgs[i].id, arguments[i]);
+            addSymbolWithExp(arguments[i].t, decArgs[i].id, arguments[i]);
         }
 
     }
@@ -94,13 +94,21 @@ public:
                 break; // TODO: it exists throw some exception
         }
         scopes.back().insert(funcName, funcArgs, returnType);
-
-
     }
 
     void addSymbol(TYPE t, string id){
 
+        for(int i = scopes.size() - 1; i >= 0; i--){
+            if(scopes[i].isExist(id)){
+                return; // TODO: it exists throw some exception
+            }
+            if (scopes[i].isFunc)
+                break;
+
+        }
+        scopes.back().insert(id, Exp_t(t));
     }
+
 
     void addSymbolWithExp(TYPE t, string id, Exp_t exp){
         exp.castType(t);
@@ -110,14 +118,27 @@ public:
             if(scopes[i].isExist(id)){
                 return; // TODO: it exists throw some exception
             }
-
+            if (scopes[i].isFunc)
+                break;
         }
+        scopes.back().insert(id, exp);
 
-        if (!isFunc){
-            scopes.back().insert(id,t,val);
-
-        }
     }
+
+    Exp_t getExpByID(string id){
+        //TODO: get back the Exp with the closest id name
+    }
+
+    void updateSymbol(string id, Exp_t exp){
+    // TODO: update the symbol with
+    }
+
+    Symbol& searchSymbol(string id){
+        // TODO: find the closest symbol with name id
+
+    }
+
+    //TODO: make every scope as pair with scope and reason(ENUM)
 
 
 };
