@@ -19,8 +19,8 @@
 %left OR
 %left AND
 %right NOT
-%nonassoc TRUE
-%nonassoc FALSE
+%nonassoc <boolVal> TRUE
+%nonassoc <boolVal> FALSE
 %nonassoc RETURN
 %nonassoc IF
 %nonassoc WHILE
@@ -39,11 +39,11 @@
 %right ASSIGN
 %left EQUALITY
 %nonassoc RELOP
-%left BINOP_PM
-%left BINOP_MD
+%left <intVal> BINOP_PM
+%left <intVal> BINOP_MD
 %token <idVal> ID
-%nonassoc <expVal> NUM
-%nonassoc <expVal> STRING
+%nonassoc <intVal> NUM
+%nonassoc <stringVal> STRING
 %right ELSE
 
 %type<expVal> Exp
@@ -95,19 +95,19 @@ Type :          INT                                                         {out
                 | BYTE                                                      {output::printProductionRule(32);}
                 | BOOL                                                      {output::printProductionRule(33);}
 ;
-Exp:            LPAREN Exp RPAREN                                           {output::printProductionRule(34);}
-                | Exp BINOP_MD Exp                                          {output::printProductionRule(35);}
-                | Exp BINOP_PM Exp                                          {output::printProductionRule(35);}
+Exp:            LPAREN Exp RPAREN                                           {$$ = Exp_t($2); $$.printFullExp(); output::printProductionRule(34);}
+                | Exp BINOP_MD Exp                                          {$$ = Exp_t($1.i * $3.i); output::printProductionRule(35);}
+                | Exp BINOP_PM Exp                                          {$$ = Exp_t($1.i + $2 * $3.i); output::printProductionRule(35);}
                 | ID                                                        {output::printProductionRule(36);}
                 | Call                                                      {output::printProductionRule(37);}
-                | NUM                                                       {$$ = Exp_t($1); output::printInt(1); output::printProductionRule(38);}
-                | NUM B                                                     {output::printProductionRule(39);}
-                | STRING                                                    {$$ = Exp_t($1); output::printInt(2); output::printProductionRule(40);}
-                | TRUE                                                      {output::printProductionRule(41);}
-                | FALSE                                                     {output::printProductionRule(42);}
-                | NOT Exp                                                   {output::printProductionRule(43);}
-                | Exp AND Exp                                               {output::printProductionRule(44);}
-                | Exp OR Exp                                                {output::printProductionRule(45);}
+                | NUM                                                       {$$ = Exp_t($1); output::printProductionRule(38);}
+                | NUM B                                                     {$$ = Exp_t($1, E_byte); output::printProductionRule(39);}
+                | STRING                                                    {$$ = Exp_t($1); output::printProductionRule(40);}
+                | TRUE                                                      {$$ = Exp_t($1); output::printProductionRule(41);}
+                | FALSE                                                     {$$ = Exp_t($1); output::printProductionRule(42);}
+                | NOT Exp                                                   {$$ = Exp_t(!$1.b); output::printProductionRule(43);}
+                | Exp AND Exp                                               {$$ = Exp_t($1.b && $3.b); output::printProductionRule(44);}
+                | Exp OR Exp                                                {$$ = Exp_t($1.b || $3.b); output::printProductionRule(45);}
                 | Exp EQUALITY Exp                                          {output::printProductionRule(46);}
                 | Exp RELOP Exp                                             {output::printProductionRule(46);}
                 | LPAREN Type RPAREN Exp                                    {output::printProductionRule(47);}

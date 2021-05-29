@@ -24,7 +24,7 @@ namespace output{
     void errorUnexpectedBreak(int lineno);
     void errorUnexpectedContinue(int lineno);
     void errorMainMissing();
-    void errorByteTooLarge(int lineno, const string& value);
+    void errorByteTooLarge(int lineno, const int& value);
 
     void printProductionRule(int rule);
     void printInt(int i);

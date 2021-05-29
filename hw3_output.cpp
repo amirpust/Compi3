@@ -82,7 +82,7 @@ void output::errorMainMissing() {
     cout << "Program has no 'void main()' function" << endl;
 }
 
-void output::errorByteTooLarge(int lineno, const string& value) {
+void output::errorByteTooLarge(int lineno, const int& value) {
     cout << "line " << lineno << ": byte value " << value << " out of range" << endl;
 }
 

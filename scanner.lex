@@ -6,6 +6,7 @@
 
     void printLexError();
     void output::errorLex(int lineno);
+
 %}
 
 %option yylineno
@@ -23,8 +24,8 @@ bool                                                return BOOL;
 and                                                 return AND;
 or                                                  return OR;
 not                                                 return NOT;
-true                                                return TRUE;
-false                                               return FALSE;
+true                                                {yylval.boolVal = true; return TRUE;}
+false                                               {yylval.boolVal = false; return FALSE;}
 return                                              return RETURN;
 if                                                  return IF;
 else                                                return ELSE;
@@ -45,15 +46,17 @@ default                                             return DEFAULT;
 "<"|">"|"<="|">="                                   return RELOP;
 "=="|"!="                                           return EQUALITY;
 "*"|"/"                                             return BINOP_MD;
-"+"|"-"                                             return BINOP_PM;
+"+"|"-"                                             { yylval.intVal = -1 ;if(yytext[0] == '+' ) yylval.intVal = 1; return BINOP_PM;}
 [a-zA-Z][a-zA-Z0-9]*                                {yylval.idVal = string(yytext); return ID;}
-{noZeroDigit}{digit}*                               {yylval.expVal = Exp_t(stoi(yytext)); return NUM;}
-0                                                   {yylval.expVal = Exp_t(0); return NUM;}
-\"([^\n\r\"\\]|\\[rnt"\\])+\"                       {yylval.expVal = Exp_t(string(yytext)); return STRING;}
+{noZeroDigit}{digit}*                               {yylval.intVal = stoi(yytext); return NUM;}
+0                                                   {yylval.intVal = 0; return NUM;}
+\"([^\n\r\"\\]|\\[rnt"\\])+\"                       {yylval.stringVal = string(yytext); return STRING;}
 \/\/[^\r\n]*(\r|\n|\r\n)?                           ;
 {whitespace}                                        ;
 .                                                   printLexError();
 %%
+
+int lineno = yylineno;
 
 void printLexError(){
     output::errorLex(yylineno);
