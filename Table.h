@@ -1,21 +1,12 @@
 #ifndef HW3_TABLE_H
 #define HW3_TABLE_H
 
-#include "u.hpp"
+#include "Exp_t.h"
+#include "Enums.h"
+#include "Symbol.h"
+#include <string>
 #include <vector>
-class Symbol{
-public:
-    string id;
-    Exp_t exp;
-    int offset;
-    vector<Symbol> symbolList;
-
-    Symbol(string _id, Exp_t _exp, int _offset, vector<Symbol> _symbolList = vector<Symbol>()):
-    id(_id), exp(_exp), offset(_offset), symbolList(_symbolList){};
-
-    Symbol(string _id, TYPE t): id(_id), exp(t){};
-
-};
+using namespace std;
 
 class Scope{
 
@@ -38,15 +29,23 @@ public:
         return false;
     }
 
-    ExpList getArgs(string funcName){
+    vector<Symbol> getArgs(string funcName){
         for(int i = 0; i < symbols.size(); i++){
             if(symbols[i].id == funcName){
                 return symbols[i].symbolList;
             }
         }
-        return ExpList();
+        return vector<Symbol>();
     }
 };
+
+
+
+
+
+
+
+
 
 class SymbolTable{
 public:
@@ -59,7 +58,7 @@ public:
 
     void openFuncScope(string funcName, ExpList arguments){
         scopes.emplace_back(-arguments.size(), true);
-        ExpList decArgs = ExpList();
+        vector<Symbol> decArgs = vector<Symbol>();
         int scopeDecl;
         for(scopeDecl = scopes.size() - 1; scopeDecl >= 0; scopeDecl--){
             if(scopes[scopeDecl].isExist(funcName))
@@ -71,10 +70,10 @@ public:
         if(decArgs.size() != arguments.size()) return; //TODO: throw exception
 
         for (int i = 0; i < decArgs.size(); ++i) {
-            if(decArgs[i].t != arguments[i].t)
+            if(decArgs[i].exp.t != arguments[i].t)
                 break; // TODO: throw exception types are not the same
 
-            addSymbol(decArgs[i].id, arguments[i])
+            addSymbol(decArgs[i].id, arguments[i]);
         }
 
     }
@@ -91,6 +90,8 @@ public:
             if(scopes[i].isFunc)
                 break;
         }
+
+
 
     }
 
