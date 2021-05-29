@@ -1,6 +1,6 @@
 void main(){
-    bool ttt = (true || false);
-    bool fff = (true && false);
+    bool ttt = (true and false);
+    bool fff = (true or false);
     int aaa = (20 + 57);
     int sss = (20 - 57);
     return "yay";

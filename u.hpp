@@ -21,9 +21,7 @@ public:
     int i;
     string s;
 
-    Exp_t() : t(E_bool), s("") {
-        cout << "DEFAULT" << endl;
-    };
+    Exp_t() : t(E_bool), s("") {};
 
     Exp_t(bool b) : t(E_bool), b(b) {
         cout << "BOOL" << endl;
