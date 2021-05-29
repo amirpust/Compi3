@@ -85,3 +85,11 @@ void output::errorMainMissing() {
 void output::errorByteTooLarge(int lineno, const string& value) {
     cout << "line " << lineno << ": byte value " << value << " out of range" << endl;
 }
+
+void output::printProductionRule(int rule){
+    cout << "printProductionRule " << rule << endl;
+
+}
+void output::printInt(int i){
+    cout << "printInt " << i << endl;
+}
