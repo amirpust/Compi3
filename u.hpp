@@ -3,6 +3,7 @@
 
 #include <iostream>
 using namespace std;
+extern char* yytext;
 
 enum TYPE {
     E_bool,
@@ -17,7 +18,7 @@ public:
     bool b;
 
     Exp_t() : t(E_bool) {
-        cout << "DEFAULT" << endl;
+        cout << "DEFAULT" << yytext << endl;
     };
 
     Exp_t(bool b) : b(b), t(E_bool) {
