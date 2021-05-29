@@ -6,6 +6,6 @@ typedef struct test_object_t{
     char op[100];
 
 }test_object;
-//#define YYSTYPE test_object*
+#define YYSTYPE test_object
 
 #endif
