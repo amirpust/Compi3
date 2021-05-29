@@ -2,6 +2,7 @@
 #define U_HPP
 
 #include <iostream>
+#include <string>
 using namespace std;
 
 enum TYPE {
@@ -15,7 +16,7 @@ class Exp_t{
 public:
     TYPE t;
     bool b;
-    char * str;
+    string str;
 
     Exp_t() : t(E_bool), str(NULL) {
         cout << "DEFAULT" << endl;
@@ -25,8 +26,8 @@ public:
         cout << "BOOL" << endl;
     };
 
-    Exp_t(char* test) {
-        cout << "TEST:" << test << endl;
+    Exp_t(string _str) : str(_str) {
+        cout << "TEST:" << _str << endl;
     }
 
     Exp_t(Exp_t& test) {

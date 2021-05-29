@@ -49,7 +49,7 @@ default                                             return DEFAULT;
 [a-zA-Z][a-zA-Z0-9]*                                return ID;
 {noZeroDigit}{digit}*                               {output::printInt(yytext[0] - '0') ; return NUM;}
 0                                                   return NUM;
-\"([^\n\r\"\\]|\\[rnt"\\])+\"                       {yylval.expVal = Exp_t(yytext); return STRING;}
+\"([^\n\r\"\\]|\\[rnt"\\])+\"                       {yylval.expVal = Exp_t(string(yytext)); return STRING;}
 \/\/[^\r\n]*(\r|\n|\r\n)?                           ;
 {whitespace}                                        ;
 .                                                   printLexError();
