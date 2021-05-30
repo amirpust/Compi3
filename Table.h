@@ -59,7 +59,33 @@ public:
         scopes.emplace_back();
     }
 
+    void openLoopScope(){
+        scopes.emplace_back();
+        //TODO
+    }
+
+    void openFuncScope(string id){
+        //TODO
+    }
+
+    void openSwitchScope(Exp_t e){
+        //TODO: remember it's a "switch loop", and check if e is byte/int/bool
+        //see openCaseScope and SWITCH/Case rule to get more context
+    }
+
+    void openCaseScope(){
+        //TODO: Check if inside a Switch Scope
+        //TODO: remember it's a case scope
+    }
+
+    void callFunc(string funcName, ExpList arguments){
+        openFuncScope(funcName, arguments);
+    }
+
     void openFuncScope(string funcName, ExpList arguments){
+        //TODO: Make sure this function doesn't open a new scope. Only check if the arguments ok
+        //TODO: please move it to "callFunc" (the function above)
+
         scopes.emplace_back(-(arguments.size()), true);
         vector<Symbol> decArgs = vector<Symbol>();
         int scopeDecl;
@@ -84,6 +110,20 @@ public:
     void closeCurrentScope(){
         if(!scopes.empty())
             scopes.pop_back();
+    }
+
+    void checkReturnType(TYPE t){
+        //TODO
+    }
+
+    void triggerBreak(){
+        //TODO: check if ok (don't close the scope)
+        //trigger an error is not in loop/case (switch scope isn't enough)
+    }
+
+    void triggerContinue(){
+        //TODO: check if ok (don't close the scope)
+        //trigger an error is not in loop (switch scope isn't enough)
     }
 
     void addFuncSymbol(TYPE returnType, string funcName, SymList funcArgs){
@@ -126,7 +166,7 @@ public:
     }
 
     Exp_t getExpByID(string id){
-        //TODO: get back the Exp with the closest id name
+        //TODO: get back the Exp with the closest id name (Should be the only one)
     }
 
     void updateSymbol(string id, Exp_t exp){

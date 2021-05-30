@@ -63,7 +63,11 @@ Program:        Funcs                                                       {out
 Funcs:          /*epsilon*/                                                 {output::printProductionRule(2);}
                 | FuncDecl Funcs                                            {output::printProductionRule(3);}
 ;
-FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE Statements RBRACE   {symbolTable.addFuncSymbol($1, $2, $4) ; output::printProductionRule(4);}
+FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
+                                    {symbolTable.addFuncSymbol($1, $2, $4) ; symbolTable.openFuncScope()}
+                                    Statements
+                                    {symbolTable.closeCurrentScope()}
+                                    RBRACE                                  {output::printProductionRule(4);}
 ;
 RetType:        Type                                                        {$$ = $1; output::printProductionRule(5);}
                 | VOID                                                      {$$ = $1; output::printProductionRule(6);}
@@ -84,17 +88,37 @@ Statement:      LBRACE Statements RBRACE                                    {out
                 | Type ID ASSIGN Exp SC                                     {symbolTable.addSymbolWithExp($1, $2, $4) ; output::printProductionRule(16);}
                 | ID ASSIGN Exp SC                                          {symbolTable.updateSymbol($1, $3) ; output::printProductionRule(17);}
                 | Call SC                                                   {output::printProductionRule(18);}
-                | RETURN SC                                                 {output::printProductionRule(19);}
-                | RETURN Exp SC                                             {output::printProductionRule(20);}
-                | IF LPAREN Exp RPAREN Statement                            {output::printProductionRule(21);}
-                | IF LPAREN Exp RPAREN Statement ELSE Statement             {output::printProductionRule(22);}
-                | WHILE LPAREN Exp RPAREN Statement                         {output::printProductionRule(23);}
-                | BREAK SC                                                  {output::printProductionRule(24);}
-                | CONTINUE SC                                               {output::printProductionRule(25);}
-                | SWITCH LPAREN Exp RPAREN LBRACE CaseList RBRACE           {output::printProductionRule(26);}
+                | RETURN SC                                                 {symbolTable.checkReturnType(E_void) ; output::printProductionRule(19);}
+                | RETURN Exp SC                                             {symbolTable.checkReturnType($2.t) ; output::printProductionRule(20);}
+                | IF LPAREN Exp RPAREN
+                                    {if($3.i) symbolTable.openNewScope();}
+                                    Statement
+                                    {if($3.i) symbolTable.closeCurrentScope();}
+                                                                            {output::printProductionRule(21);}
+                | IF LPAREN Exp RPAREN
+                                    {if($3.i) symbolTable.openNewScope();}
+                                    Statement
+                                    {if($3.i) symbolTable.closeCurrentScope();}
+                                    ELSE
+                                    {if(!$3.i) symbolTable.openNewScope();}
+                                    Statement
+                                    {if(!$3.i) symbolTable.closeCurrentScope();}
+                                                                            {output::printProductionRule(22);}
+                | WHILE LPAREN Exp RPAREN
+                                     {if($3.i) symbolTable.openLoopScope();}
+                                     Statement
+                                     {if($3.i) symbolTable.closeCurrentScope();}
+                                                                            {output::printProductionRule(23);}
+                | BREAK SC                                                  {symbolTable.triggerBreak(); output::printProductionRule(24);}
+                | CONTINUE SC                                               {symbolTable.triggerContinue(); output::printProductionRule(25);}
+                | SWITCH LPAREN Exp RPAREN
+                            {symbolTable.openSwitchScope($3)}
+                            LBRACE CaseList RBRACE
+                            {symbolTable.closeCurrentScope()}
+                                                                            {output::printProductionRule(26);}
 ;
-Call :          ID LPAREN ExpList RPAREN                                    {output::printProductionRule(27);}
-                | ID LPAREN RPAREN                                          {output::printProductionRule(28);}
+Call :          ID LPAREN ExpList RPAREN                                    {symbolTable.callFunc($1, $3) ; output::printProductionRule(27);}
+                | ID LPAREN RPAREN                                          {symbolTable.callFunc($1, ExpList()) ; output::printProductionRule(28);}
 ;
 ExpList:        Exp                                                         {$$ = ExpList(); $$.push_back($1); output::printProductionRule(29);}
                 | Exp COMMA ExpList                                         {$$ = ExpList($3); $$.push_back($1); output::printProductionRule(30);}
@@ -104,9 +128,9 @@ Type :          INT                                                         {$$ 
                 | BOOL                                                      {$$ = $1 ;output::printProductionRule(33);}
 ;
 Exp:            LPAREN Exp RPAREN                                           {$$ = Exp_t($2); $$.printFullExp(); output::printProductionRule(34);}
-                | Exp BINOP_MD Exp                                          {if($2) $$ = Exp_t($1.i * $3.i); else $$ = Exp_t($1.i / $3.i); output::printProductionRule(35);}
+                | Exp BINOP_MD Exp                                          {if(1) $$ = Exp_t($1.i * $3.i); else $$ = Exp_t($1.i / $3.i); output::printProductionRule(35);}
                 | Exp BINOP_PM Exp                                          {$$ = Exp_t($1.i + $2 * $3.i); output::printProductionRule(35);}
-                | ID                                                        {output::printProductionRule(36);}
+                | ID                                                        {$$ = symbolTable.getExpByID($1) ; output::printProductionRule(36);}
                 | Call                                                      {output::printProductionRule(37);}
                 | NUM                                                       {$$ = Exp_t($1); output::printProductionRule(38);}
                 | NUM B                                                     {$$ = Exp_t($1, E_byte); output::printProductionRule(39);}
@@ -124,7 +148,10 @@ CaseList:       CaseDecl CaseList                                           {out
                 | CaseDecl                                                  {output::printProductionRule(49);}
                 | DEFAULT COLON Statements                                  {output::printProductionRule(50);}
 ;
-CaseDecl:       CASE NUM COLON Statements                                   {output::printProductionRule(51);}
+CaseDecl:       CASE NUM COLON  {symbolTable.openCaseScope()}
+                                Statements
+                                {symbolTable.closeCurrentScope()}
+                                                                            {output::printProductionRule(51);}
 ;
 
 %%
