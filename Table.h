@@ -166,6 +166,7 @@ public:
     }
 
     Exp_t getExpByID(string id){
+        return Exp_t();
         //TODO: get back the Exp with the closest id name (Should be the only one)
     }
 
@@ -174,7 +175,12 @@ public:
     }
 
     Symbol& searchSymbol(string id){
-        // TODO: find the closest symbol with name id
+        if(!scopes.size() || !scopes[0].symbols.size()){
+            exit(3);
+        }
+
+        return scopes[0].symbols[0];
+        // TODO: find the closes;t symbol with name id
 
     }
 
