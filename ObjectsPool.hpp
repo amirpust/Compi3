@@ -4,9 +4,10 @@
 #include <iostream>
 #include <string>
 #include "hw3_output.hpp"
-#include "Exp_t.h"
 #include "Enums.h"
-#include "Symbol.h"
+#include "RelopAUX.h"
+#include "Exp_t.h"
+#include "Table.h"
 
 using namespace std;
 extern int lineno;

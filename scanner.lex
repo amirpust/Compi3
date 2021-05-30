@@ -4,10 +4,12 @@
     #include "RelopAUX.h"
     #include "Exp_t.h"
     #include "Table.h"
+    #include "ObjectPool.h"
 
 
-    #include "parser.tab.hpp"
+
     #include "hw3_output.hpp"
+    #include "parser.tab.hpp"
 
     void printLexError();
     void output::errorLex(int lineno);

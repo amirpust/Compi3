@@ -5,6 +5,7 @@
     #include "RelopAUX.h"
     #include "Exp_t.h"
     #include "Table.h"
+    #include "ObjectPool.h"
 
 
     int yylex();
