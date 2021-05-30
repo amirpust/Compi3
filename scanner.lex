@@ -1,9 +1,9 @@
 %{
 	#include <stdio.h>
     #include "Enums.h"
-    #include "RelopAUX.hpp"
-    #include "Exp_t.hpp"
-    #include "Table.hpp"
+    #include "RelopAUX.h"
+    #include "Exp_t.h"
+    #include "Table.h"
 
 
     #include "parser.tab.hpp"
