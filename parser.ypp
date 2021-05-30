@@ -14,11 +14,11 @@
     SymbolTable symbolTable();
 %}
 
-%token VOID
-%token INT
-%nonassoc BYTE
-%nonassoc B
-%nonassoc BOOL
+%token  <typeVal> VOID
+%token  <typeVal> INT
+%nonassoc <typeVal> BYTE
+%nonassoc <typeVal> B
+%nonassoc <typeVal> BOOL
 %left OR
 %left AND
 %right NOT
