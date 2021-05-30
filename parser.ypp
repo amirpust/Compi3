@@ -49,6 +49,7 @@
 %nonassoc <stringVal> STRING
 %right ELSE
 
+%type<typeVal> RetType
 %type<expVal> Exp
 %type<expList> ExpList
 %type<typeVal> Type
