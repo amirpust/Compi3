@@ -1,6 +1,11 @@
 %{
 	#include <stdio.h>
-    #include "u.hpp"
+    #include "Enums.hpp"
+    #include "RelopAUX.hpp"
+    #include "Exp_t.hpp"
+    #include "Table.hpp"
+
+
     #include "parser.tab.hpp"
     #include "hw3_output.hpp"
 

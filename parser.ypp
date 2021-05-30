@@ -1,7 +1,10 @@
 %{
     #include <iostream>
     #include "hw3_output.hpp"
-    #include "u.hpp"
+    #include "Enums.hpp"
+    #include "RelopAUX.hpp"
+    #include "Exp_t.hpp"
+    #include "Table.hpp"
 
 
     int yylex();
