@@ -92,7 +92,10 @@ public:
     }
 
     void castType(TYPE newT){
-        if( newT == E_void || newT == E_string ){
+        if( newT == E_void){
+            //todo: exception
+            return;
+        } else if (!bothAreOrArentStrings(newT)){
             //todo: exception
             return;
         }
