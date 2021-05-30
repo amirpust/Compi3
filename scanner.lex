@@ -1,6 +1,6 @@
 %{
 	#include <stdio.h>
-    #include "Enums.hpp"
+    #include "Enums.h"
     #include "RelopAUX.hpp"
     #include "Exp_t.hpp"
     #include "Table.hpp"
