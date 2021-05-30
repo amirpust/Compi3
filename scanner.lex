@@ -50,7 +50,7 @@ default                                             return DEFAULT;
 \{                                                  return LBRACE;
 \}                                                  return RBRACE;
 =                                                   return ASSIGN;
-"<"|">"|"<="|">="                                   {yylval.relopAUX = relopAUX(string(yytext)) ; return RELOP;}
+"<"|">"|"<="|">="                                   {yylval.relopAUX = RelopAUX(string(yytext)) ; return RELOP;}
 "=="|"!="                                           return EQUALITY;
 "*"|"/"                                             { yylval.intVal = (yytext[0] == '*' ) ; return BINOP_MD;}
 "+"|"-"                                             { yylval.intVal = -1 ;if(yytext[0] == '+' ) yylval.intVal = 1; return BINOP_PM;}

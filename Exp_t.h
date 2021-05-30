@@ -14,14 +14,14 @@ public:
 
     Exp_t()  = default;
 
-    Exp_t(TYPE t) : t(t) {};
+    explicit Exp_t(TYPE t) : t(t) {};
 
 
-    Exp_t(bool i) : t(E_bool), i(i) {
+    explicit Exp_t(bool i) : t(E_bool), i(i) {
         cout << "BOOL" << endl;
     };
 
-    Exp_t(int i, TYPE t = E_int) : t(t), i(i) {
+    explicit Exp_t(int i, TYPE t = E_int) : t(t), i(i) {
         if (t == E_byte && i >= (1 << 8)){
             output::errorByteTooLarge(lineno, i);
             exit(1); //TODO
@@ -29,7 +29,7 @@ public:
         cout << "INT/BYTE" << endl;
     };
 
-    Exp_t(string _str) : t(E_string), s(_str) {
+    explicit Exp_t(string _str) : t(E_string), s(_str) {
         cout << "TEST: " << _str << endl;
     }
 
