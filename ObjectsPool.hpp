@@ -24,6 +24,9 @@ typedef struct objects_pool_t{
     TYPE typeVal;
     Symbol symbol;
     SymList symList;
+    objects_pool_t(){
+
+    }
 }objects_pool;
 
 #define YYSTYPE objects_pool

@@ -19,6 +19,7 @@ public:
     int offset;
     vector<Symbol> symbolList;
 
+    Symbol():id(),exp(),offset(0),symbolList(){};
 
     //c'tor of regular symbol
     Symbol(string _id, Exp_t _exp, int _offset):

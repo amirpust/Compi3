@@ -12,7 +12,7 @@ public:
     int i;
     string s;
 
-    Exp_t()  = default;
+    Exp_t():t(E_bool), i(0), s(){};
 
     explicit Exp_t(TYPE t) : t(t) {};
 
