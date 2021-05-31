@@ -158,8 +158,8 @@ CaseDecl:       CASE NUM COLON  {symbolTable.triggerCase();}
 
 %%
 
-void yyerror(const char*){
-
+void yyerror(const char* e){
+    cout << e << endl;
     output::errorSyn(yylineno);
     exit(0);
 }
