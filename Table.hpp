@@ -1,15 +1,17 @@
-#ifndef HW3_TABLE_H
-#define HW3_TABLE_H
+#ifndef HW3_TABLE_HPP
+#define HW3_TABLE_HPP
 
 #include "Exp_t.h"
 #include "Enums.h"
 #include "Symbol.h"
 #include <string>
 #include <vector>
+
 using namespace std;
 
 class Scope{
 public:
+
     vector<Symbol> symbols;
     int offset;
     bool isFunc;
@@ -44,19 +46,13 @@ public:
 
 
 
-
-
-
-
-
-
 class SymbolTable{
 public:
-    vector<Scope> scopes;
+    vector<pair<Scope, SCOPE_REASON>> scopes;
     SymbolTable(): scopes(){};
 
     void openNewScope(){
-        scopes.emplace_back();
+        scopes.push_back();
     }
 
     void openLoopScope(){
@@ -102,7 +98,7 @@ public:
             if(decArgs[i].exp.t != arguments[i].t)
                 break; // TODO: throw exception types are not the same
 
-            addSymbolWithExp(arguments[i].t, decArgs[i].id, arguments[i]);
+            //addSymbolWithExp(arguments[i].t, decArgs[i].id, arguments[i]);
         }
 
     }
@@ -184,9 +180,9 @@ public:
 
     }
 
-    //TODO: make every scope as pair with scope and reason(ENUM)
+    //TODO: make every scope as pair with scope and reason(ENUM)2
 
 
 };
 
-#endif //HW3_TABLE_H
+#endif //HW3_TABLE_HPP

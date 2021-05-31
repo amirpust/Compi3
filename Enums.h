@@ -18,5 +18,13 @@ enum RELOP_ENUM{
     E_GOE
 };
 
+enum SCOPE_REASON{
+    REGULAR,
+    IF,
+    CASE,
+    SWITCH,
+    LOOP
+};
+
 
 #endif //HW3_ENUMS_H

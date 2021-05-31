@@ -7,7 +7,7 @@
 #include "Enums.h"
 #include "RelopAUX.h"
 #include "Exp_t.h"
-#include "Table.h"
+#include "Table.hpp"
 
 using namespace std;
 extern int lineno;
