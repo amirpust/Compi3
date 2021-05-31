@@ -19,11 +19,12 @@ enum RELOP_ENUM{
 };
 
 enum SCOPE_REASON{
-    REGULAR,
-    IF,
-    CASE,
-    SWITCH,
-    LOOP
+    GLOBAL_SCOPE,
+    REGULAR_SCOPE,
+    IF_SCOPE,
+    CASE_SCOPE,
+    SWITCH_SCOPE,
+    LOOP_SCOPE
 };
 
 

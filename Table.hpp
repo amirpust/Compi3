@@ -16,16 +16,18 @@ public:
     int offset;
     bool isFunc;
 
-    Scope(int _offset, bool _isFunc = false): symbols(), offset(_offset), isFunc(false){};
+    Scope(int _offset, bool _isFunc = false): symbols(vector<Symbol>()), offset(_offset), isFunc(false){};
 
+    // inserting a symbol to the current scope
     void insert(string id, Exp_t exp){
-        symbols.emplace_back(id, exp,offset++);
+        symbols.emplace_back(id, exp, offset++);
     }
-
+    // inserting a function declaration to the current scope
     void insert(string id, SymList declArgs, TYPE ret){
-        symbols.emplace_back(id,offset++);
+        symbols.emplace_back(id,offset++,declArgs, ret);
     }
 
+    // searches for the a symbol with name id in the current scope
     bool isExist(string id){
         for(int i = 0; i < symbols.size(); i++){
             if(symbols[i].id == id)
@@ -34,7 +36,9 @@ public:
         return false;
     }
 
-    vector<Symbol> getArgs(string funcName){
+    // searches for the function with name funcName and returns a list of args
+    // that this func uses in its declaration (might be empty)
+    SymList getArgs(string funcName){
         for(int i = 0; i < symbols.size(); i++){
             if(symbols[i].id == funcName){
                 return symbols[i].symbolList;
@@ -49,19 +53,34 @@ public:
 class SymbolTable{
 public:
     vector<pair<Scope, SCOPE_REASON>> scopes;
-    SymbolTable(): scopes(){};
+    bool seenMainFunc;
+    // initializes the global scope
+    SymbolTable(){
+        pair<Scope, SCOPE_REASON > globalScope = make_pair(Scope(0),GLOBAL_SCOPE);
+        scopes = vector<pair<Scope, SCOPE_REASON>>();
+        scopes.push_back(globalScope);
+        seenMainFunc = false;
+    };
 
+    ~SymbolTable(){
+        if(!seenMainFunc)
+            //TODO: throw an exception
+            return;
+    }
+
+
+    // opens regular Scope, with latest offset of the last scope
     void openNewScope(){
-        scopes.push_back();
+        scopes.emplace_back(Scope(scopes.back().first.offset), REGULAR_SCOPE);
     }
 
+    // opens a loo scope with latest offset of last scope
     void openLoopScope(){
-        scopes.emplace_back();
-        //TODO
+        scopes.emplace_back(Scope(scopes.back().first.offset), LOOP_SCOPE);
     }
+    // the declaration of the func new offset is -args.size
+    void openFuncScope(string id, SymList args, TYPE retType){
 
-    void openFuncScope(string id){
-        //TODO
     }
 
     void openSwitchScope(Exp_t e){
@@ -74,28 +93,24 @@ public:
         //TODO: remember it's a case scope
     }
 
-    void callFunc(string funcName, ExpList arguments){
-        openFuncScope(funcName, arguments);
-    }
-
-    void openFuncScope(string funcName, ExpList arguments){
+    void callFunc(string funcName, ExpList arguments) {
         //TODO: Make sure this function doesn't open a new scope. Only check if the arguments ok
         //TODO: please move it to "callFunc" (the function above)
 
         scopes.emplace_back(-(arguments.size()), true);
         vector<Symbol> decArgs = vector<Symbol>();
         int scopeDecl;
-        for(scopeDecl = scopes.size() - 1; scopeDecl >= 0; scopeDecl--){
-            if(scopes[scopeDecl].isExist(funcName))
+        for (scopeDecl = scopes.size() - 1; scopeDecl >= 0; scopeDecl--) {
+            if (scopes[scopeDecl].isExist(funcName))
                 decArgs = scopes[scopeDecl].getArgs(funcName);
-            if(scopes[scopeDecl].isFunc)
+            if (scopes[scopeDecl].isFunc)
                 break; //TODO: func decl doesn't exists
         }
 
-        if(decArgs.size() != arguments.size()) return; //TODO: throw exception
+        if (decArgs.size() != arguments.size()) return; //TODO: throw exception
 
         for (int i = 0; i < decArgs.size(); ++i) {
-            if(decArgs[i].exp.t != arguments[i].t)
+            if (decArgs[i].exp.t != arguments[i].t)
                 break; // TODO: throw exception types are not the same
 
             //addSymbolWithExp(arguments[i].t, decArgs[i].id, arguments[i]);
@@ -179,9 +194,6 @@ public:
         // TODO: find the closes;t symbol with name id
 
     }
-
-    //TODO: make every scope as pair with scope and reason(ENUM)2
-
 
 };
 
