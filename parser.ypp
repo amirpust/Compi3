@@ -80,8 +80,8 @@ RetType:        Type                                                        {$$ 
 Formals:        /*epsilon*/                                                 {$$ = SymList() ; output::printProductionRule(7);}
                 | FormalsList                                               {$$ = SymList($1) ; output::printProductionRule(8);}
 ;
-FormalsList:    FormalDecl                                                  {$$ = SymList() ; $$.pushback($1); output::printProductionRule(9);}
-                |FormalDecl COMMA FormalsList                               {$$ = SymList($3) ; $$.pushback($1); output::printProductionRule(10);}
+FormalsList:    FormalDecl                                                  {$$ = SymList() ; $$.push_back($1); output::printProductionRule(9);}
+                |FormalDecl COMMA FormalsList                               {$$ = SymList($3) ; $$.push_back($1); output::printProductionRule(10);}
 ;
 FormalDecl:     Type ID                                                     {$$ = Symbol($2, $1) ; output::printProductionRule(11);}
 ;
@@ -145,17 +145,15 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | NOT Exp                                                   {$$ = Exp_t(!($2.i)); output::printProductionRule(43);}
                 | Exp AND Exp                                               {$$ = Exp_t($1.i && $3.i); output::printProductionRule(44);}
                 | Exp OR Exp                                                {$$ = Exp_t($1.i || $3.i); output::printProductionRule(45);}
-                | Exp EQUALITY Exp                                          {$$ = Exp_t($1 || $3); output::printProductionRule(46);}
+                | Exp EQUALITY Exp                                          {$$ = Exp_t($1 == $3); output::printProductionRule(46);}
                 | Exp RELOP Exp                                             {$$ = Exp_t($2.compare($1, $2)) ; output::printProductionRule(46);}
 ;
 CaseList:       CaseDecl CaseList                                           {output::printProductionRule(48);}
                 | CaseDecl                                                  {output::printProductionRule(49);}
                 | DEFAULT COLON Statements                                  {output::printProductionRule(50);}
 ;
-CaseDecl:       CASE NUM COLON  {symbolTable.openCaseScope();}
-                                Statements
-                                {symbolTable.closeCurrentScope();}
-                                                                            {output::printProductionRule(51);}
+CaseDecl:       CASE NUM COLON  {symbolTable.triggerCase();}
+                            Statements                                      {output::printProductionRule(51);}
 ;
 
 %%
