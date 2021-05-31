@@ -15,7 +15,7 @@
     void output::errorSyn(int lineno);
     void yyerror(const char*);
 
-    SymbolTable symbolTable();
+    SymbolTable symbolTable = SymbolTable();
 %}
 
 %token  <typeVal> VOID
@@ -69,7 +69,7 @@ Funcs:          /*epsilon*/                                                 {out
                 | FuncDecl Funcs                                            {output::printProductionRule(3);}
 ;
 FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
-                                    {symbolTable.addFuncSymbol($1, $2, $4) ; symbolTable.openFuncScope()}
+                                    {symbolTable.openFuncScope($2, $4, $1) ; symbolTable.openFuncScope()}
                                     Statements
                                     {symbolTable.closeCurrentScope()}
                                     RBRACE                                  {output::printProductionRule(4);}
