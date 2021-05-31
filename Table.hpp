@@ -15,16 +15,20 @@ public:
     vector<Symbol> symbols;
     int offset;
     bool isFunc;
+    TYPE retType;
+    bool isCase;
 
-    Scope(int _offset, bool _isFunc = false): symbols(vector<Symbol>()), offset(_offset), isFunc(false){};
-
+    Scope(int _offset, bool _isFunc = false, TYPE _retType = E_int): symbols(vector<Symbol>()),
+    offset(_offset), isFunc(false), retType(_retType), isCase(false){};
+    //Scope(int _offset, bool _isFunc, SymList funcArgs, TYPE _retType): symbols(funcArgs),
+    //offset(_offset), isFunc(_isFunc, retType(_retType)){};
     // inserting a symbol to the current scope
     void insert(string id, Exp_t exp){
         symbols.emplace_back(id, exp, offset++);
     }
     // inserting a function declaration to the current scope
-    void insert(string id, SymList declArgs, TYPE ret){
-        symbols.emplace_back(id,offset++,declArgs, ret);
+    void insert(string id, Exp_t exp ,SymList declArgs){
+        symbols.emplace_back(id,offset++,declArgs, exp);
     }
 
     // searches for the a symbol with name id in the current scope
@@ -45,6 +49,16 @@ public:
             }
         }
         return vector<Symbol>();
+    }
+
+    Symbol& getSymbol(string id){
+        for (int i = symbols.size() - 1; i >= 0; --i) {
+            if(id == symbols[i].id)
+                return symbols[i];
+        }
+
+        cout << "not suppose to get here getSymbol in Scope class" << endl;
+        exit(-1);
     }
 };
 
@@ -78,102 +92,131 @@ public:
     void openLoopScope(){
         scopes.emplace_back(Scope(scopes.back().first.offset), LOOP_SCOPE);
     }
+    // searches the above scopes for shadowing
+    bool isShadowSymbolName(string id){
+        for(int i = scopes.size() - 1; i >= 0; i--){
+            if(scopes.back().first.isExist(id))
+                return true;
+            if(scopes.back().first.isFunc)
+                break;
+        }
+        return false;
+    }
+
+
     // the declaration of the func new offset is -args.size
     void openFuncScope(string id, SymList args, TYPE retType){
+        if((retType == E_void) && (id == "main"))
+            seenMainFunc = true;
+
+        if(isShadowSymbolName(id))
+            return; //TODO: throw shadowing error
+
+        // inserts the func to the current scope
+        scopes.back().first.insert(id, Exp_t(retType), args);
+
+        scopes.emplace_back(Scope(-args.size(), true, retType), REGULAR_SCOPE);
+
+        for(auto & arg : args){
+            scopes.back().first.insert(arg.id, arg.exp);
+        }
 
     }
 
-    void openSwitchScope(Exp_t e){
-        //TODO: remember it's a "switch loop", and check if e is byte/int/bool
-        //see openCaseScope and SWITCH/Case rule to get more context
+
+    // opens a switch scope with
+    void openSwitchScope(Exp_t e) {
+        if (e.t != E_bool && e.t != E_byte && e.t != E_int) {
+            return; // TODO: throw exception e isn't byte/int/bool
+        }
+
+        scopes.emplace_back(Scope(scopes.back().first.offset), SWITCH_SCOPE);
     }
 
-    void openCaseScope(){
-        //TODO: Check if inside a Switch Scope
-        //TODO: remember it's a case scope
+    void triggerCase(){
+        for (int i = scopes.size() - 1; i >= 0; --i) {
+            if(scopes[i].second == SWITCH_SCOPE){
+                scopes[i].first.isCase = true;
+                return; // it's ok
+            }
+            if(scopes[i].first.isFunc || scopes[i].second == GLOBAL_SCOPE){
+
+                return; // TODO: throw exception "there isn't a switch scope"
+            }
+
+        }
     }
 
     void callFunc(string funcName, ExpList arguments) {
         //TODO: Make sure this function doesn't open a new scope. Only check if the arguments ok
         //TODO: please move it to "callFunc" (the function above)
 
-        scopes.emplace_back(-(arguments.size()), true);
         vector<Symbol> decArgs = vector<Symbol>();
-        int scopeDecl;
-        for (scopeDecl = scopes.size() - 1; scopeDecl >= 0; scopeDecl--) {
-            if (scopes[scopeDecl].isExist(funcName))
-                decArgs = scopes[scopeDecl].getArgs(funcName);
-            if (scopes[scopeDecl].isFunc)
-                break; //TODO: func decl doesn't exists
+
+        if(!isShadowSymbolName(funcName))
+            return; //TODO: func doesn't exists
+
+        Symbol func = searchSymbol(funcName);
+
+        if(arguments.size() != func.symbolList.size())
+            return; // TODO: arguments doesn't match
+
+        for (int j = 0; j < arguments.size(); ++j) {
+            if(arguments[j].t != func.symbolList[j].exp.t)
+                return; // TODO: arguments doesn't match
         }
 
-        if (decArgs.size() != arguments.size()) return; //TODO: throw exception
-
-        for (int i = 0; i < decArgs.size(); ++i) {
-            if (decArgs[i].exp.t != arguments[i].t)
-                break; // TODO: throw exception types are not the same
-
-            //addSymbolWithExp(arguments[i].t, decArgs[i].id, arguments[i]);
-        }
-
+      // TODO: OK
     }
 
     void closeCurrentScope(){
-        if(!scopes.empty())
-            scopes.pop_back();
+        if(scopes.back().second == GLOBAL_SCOPE && !seenMainFunc)
+            return; //TODO: no main func
+        scopes.pop_back();
     }
 
     void checkReturnType(TYPE t){
-        //TODO
+        for (int i = scopes.size() - 1; i >= 0; --i) {
+            if(scopes[i].first.isFunc){
+                if(scopes[i].first.retType != t)
+                    return; //TODO : type isn't like funcs retType
+                return; //TODO: type is ok
+            }
+        }
     }
 
     void triggerBreak(){
-        //TODO: check if ok (don't close the scope)
-        //trigger an error is not in loop/case (switch scope isn't enough)
+
+        if(scopes.back().second == LOOP_SCOPE ||
+        (scopes.back().second == SWITCH_SCOPE && scopes.back().first.isCase)){
+            scopes.back().first.isCase = false;
+            //TODO: it's OK
+        }
+        // TODO: throw not loop/switch or might be switch with no case
     }
 
     void triggerContinue(){
-        //TODO: check if ok (don't close the scope)
-        //trigger an error is not in loop (switch scope isn't enough)
-    }
-
-    void addFuncSymbol(TYPE returnType, string funcName, SymList funcArgs){
-        for(int i = scopes.size() - 1; i >= 0; i--){
-            if(scopes[i].isExist(funcName))
-                return; // TODO: it exists throw some exception
-            if(scopes[i].isFunc)
-                break; // TODO: it exists throw some exception
-        }
-        scopes.back().insert(funcName, funcArgs, returnType);
+        if(scopes.back().second == LOOP_SCOPE)
+            return; // TODO: it's OK
+        exit(1); //TODO: not in loop scope
     }
 
     void addSymbol(TYPE t, string id){
 
-        for(int i = scopes.size() - 1; i >= 0; i--){
-            if(scopes[i].isExist(id)){
-                return; // TODO: it exists throw some exception
-            }
-            if (scopes[i].isFunc)
-                break;
-
+        if(isShadowSymbolName(id)) {
+            return; // TODO: it exists throw some exception
         }
-        scopes.back().insert(id, Exp_t(t));
+        scopes.back().first.insert(id, Exp_t(t));
     }
 
 
     void addSymbolWithExp(TYPE t, string id, Exp_t exp){
         exp.castType(t);
 
-        // checks if the the id was already declared in outer scope
-        for(int i = scopes.size() - 1; i >= 0; i--){
-            if(scopes[i].isExist(id)){
-                return; // TODO: it exists throw some exception
-            }
-            if (scopes[i].isFunc)
-                break;
-        }
-        scopes.back().insert(id, exp);
-
+        // checks if the id was already declared in outer scope
+        if(isShadowSymbolName(id))
+            exit(1); //TODO: shadowing another var
+        scopes.back().first.insert(id, exp);
     }
 
     Exp_t getExpByID(string id){
@@ -186,13 +229,17 @@ public:
     }
 
     Symbol& searchSymbol(string id){
-        if(!scopes.size() || !scopes[0].symbols.size()){
-            exit(3);
+        if(!isShadowSymbolName(id)){
+            cout << "searchSymbol not suppose to get here" << endl;
+            exit(-1);
         }
-
-        return scopes[0].symbols[0];
-        // TODO: find the closes;t symbol with name id
-
+        for (int i = scopes.size() - 1; i >= 0 ; --i) {
+            if(scopes[i].first.isExist(id)){
+                return scopes[i].first.getSymbol(id);
+            }
+        }
+        cout << "searchSymbol not suppose to get here : symbol not found" << endl;
+        exit(-1);
     }
 
 };
