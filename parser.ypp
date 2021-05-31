@@ -83,7 +83,7 @@ Formals:        /*epsilon*/                                                 {$$ 
 FormalsList:    FormalDecl                                                  {$$ = SymList() ; $$.push_back($1); output::printProductionRule(9);}
                 |FormalDecl COMMA FormalsList                               {$$ = SymList($3) ; $$.push_back($1); output::printProductionRule(10);}
 ;
-FormalDecl:     Type { cout << "Inner Flag: " << __LINE__ << endl ; } ID                                                     {cout << "Flag: " << __LINE__ << endl ; $$ = Symbol($3, $1) ; output::printProductionRule(11);}
+FormalDecl:     Type { cout << "Inner Flag: " << __LINE__ << endl ; } ID  { cout << "Inner Flag 2: " << __LINE__ << endl ; }  {cout << "Flag: " << __LINE__ << endl ; $$ = Symbol($3, $1) ; output::printProductionRule(11);}
 ;
 Statements:     Statement                                                   {output::printProductionRule(12);}
                 |Statements Statement                                       {output::printProductionRule(13);}
