@@ -11,6 +11,14 @@ enum TYPE {
     E_void
 };
 
+string printType[] = {
+        "bool",
+        "byte",
+        "int",
+        "deprecated",
+        "void"
+};
+
 enum RELOP_ENUM{
     E_L,
     E_G,

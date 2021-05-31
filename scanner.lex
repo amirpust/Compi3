@@ -55,7 +55,7 @@ default                                             return DEFAULT;
 "=="|"!="                                           return EQUALITY;
 "*"|"/"                                             { yylval.intVal = (yytext[0] == '*' ) ; return BINOP_MD;}
 "+"|"-"                                             { yylval.intVal = -1 ;if(yytext[0] == '+' ) yylval.intVal = 1; return BINOP_PM;}
-[a-zA-Z][a-zA-Z0-9]*                                {yylval.idVal = string(yytext); cout << yytext << endl;  return ID;}
+[a-zA-Z][a-zA-Z0-9]*                                {yylval.idVal = string(yytext);  return ID;}
 {noZeroDigit}{digit}*                               {yylval.intVal = stoi(yytext); return NUM;}
 0                                                   {yylval.intVal = 0; return NUM;}
 \"([^\n\r\"\\]|\\[rnt"\\])+\"                       {yylval.stringVal = string(yytext); return STRING;}
