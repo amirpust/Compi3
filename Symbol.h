@@ -35,6 +35,8 @@ public:
     // all the args that are passed are type valid
     Symbol(string _id, int _offset, vector<Symbol> _symbolList, Exp_t _exp):
     id(_id), exp(_exp), offset(_offset), symbolList(_symbolList){};
+
+
 };
 
 

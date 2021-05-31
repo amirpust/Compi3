@@ -6,6 +6,7 @@
 #include "Symbol.h"
 #include <string>
 #include <vector>
+#include "hw3_output.hpp"
 
 using namespace std;
 
@@ -172,6 +173,11 @@ public:
     void closeCurrentScope(){
         if(scopes.back().second == GLOBAL_SCOPE && !seenMainFunc)
             return; //TODO: no main func
+        output::endScope();
+        for (int i = 0; i < scopes.back().first.symbols.size() ; ++i) {
+            Symbol current =scopes.back().first.symbols[i];
+            output::printID(current.id, current.offset, printType[current.exp.t] );
+        }
         scopes.pop_back();
     }
 
