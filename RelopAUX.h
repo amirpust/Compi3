@@ -7,6 +7,8 @@
 class RelopAUX{
 public:
     RELOP_ENUM op;
+
+    RelopAUX() : op(E_L) {};
     RelopAUX(const string& _op){
         if(_op == "<"){
             op = E_L;
