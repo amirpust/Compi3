@@ -41,6 +41,7 @@ public:
         symbolList = vector<Symbol>();
         for (int i = 0; i < _symbolList.size(); ++i) {
             symbolList.push_back(_symbolList[i]) ;
+
         }
     };
 
