@@ -49,7 +49,7 @@ public:
 
     Symbol(const Symbol& s){
         id = s.id;
-        exp = s.exp;
+        exp = Exp_t(s.exp.t);
         offset = s.offset;
         symbolList = s.symbolList;
         isFunc = s.isFunc;
