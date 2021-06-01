@@ -40,7 +40,7 @@ public:
     id(_id), exp(_exp), offset(_offset), isFunc(_isFunc){
         symbolList = vector<Symbol>();
         for (int i = 0; i < _symbolList.size(); ++i) {
-            symbolList[i] = _symbolList[i];
+            symbolList.push_back(_symbolList[i]) ;
         }
     };
 
@@ -59,7 +59,7 @@ public:
 
         symbolList = vector<Symbol>();
         for (int i = 0; i <s.symbolList.size(); ++i) {
-            symbolList[i] = s.symbolList[i];
+            symbolList.push_back(s.symbolList[i]);
         }
     }
 
@@ -67,7 +67,10 @@ public:
         id = s.id;
         exp = s.exp;
         offset = s.offset;
-        symbolList = s.symbolList;
+        symbolList = vector<Symbol>();
+        for (int i = 0; i <s.symbolList.size(); ++i) {
+            symbolList.push_back(s.symbolList[i]);
+        }
         isFunc = s.isFunc;
 
         return (*this);
