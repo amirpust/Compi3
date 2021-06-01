@@ -139,7 +139,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | Call                                                      {output::printProductionRule(37);}
                 | NUM                                                       {$$ = Exp_t($1); output::printProductionRule(38);}
                 | NUM B                                                     {$$ = Exp_t($1, E_byte); output::printProductionRule(39);}
-                | STRING                                                    {$$ = Exp_t($1); output::printProductionRule(40);}
+                | STRING                                                    {$$ = Exp_t($1, E_string); output::printProductionRule(40);}
                 | TRUE                                                      {$$ = Exp_t($1); output::printProductionRule(41);}
                 | FALSE                                                     {$$ = Exp_t($1); output::printProductionRule(42);}
                 | NOT Exp                                                   {$$ = Exp_t(!($2.i)); output::printProductionRule(43);}
