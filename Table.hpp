@@ -8,71 +8,11 @@
 #include <string>
 #include <vector>
 #include "hw3_output.hpp"
+#include <stack>
 
 extern int yylineno;
 
 using namespace std;
-
-/*
-class Scope{
-public:
-    SymList symbols;
-    int offset;
-    bool isCase;
-
-    explicit Scope(int _offset, bool _isFunc = false, TYPE _retType = E_int): symbols(SymList()),
-    offset(_offset), isFunc(false), retType(_retType), isCase(false){};
-
-
-    //  Scope(int _offset, bool _isFunc, SymList funcArgs, TYPE _retType): symbols(funcArgs),
-    //  offset(_offset), isFunc(_isFunc, retType(_retType)){};
-    //  inserting a symbol to the current scope
-    void insert(string id, Exp_t exp){
-        symbols.emplace_back(id, exp, offset++);
-    }
-
-
-    // inserting a function declaration to the current scope
-    void insert(string id, Exp_t exp ,SymList declArgs){
-        symbols.emplace_back(id,offset++,declArgs, exp, true);
-    }
-
-
-    // searches for the a symbol with name id in the current scope
-    bool isExist(string id){
-        for(auto & symbol : symbols){
-            if(symbol.id == id)
-                return true;
-        }
-        return false;
-    }
-
-
-    // searches for the function with name funcName and returns a list of args
-    // that this func uses in its declaration (might be empty)
-    SymList getArgs(string funcName){
-        for(auto & symbol : symbols){
-            if(symbol.id == funcName){
-                return symbol.symbolList;
-            }
-        }
-        return vector<Symbol>();
-    }
-
-
-    Symbol& getSymbol(string id){
-        for (int i = symbols.size() - 1; i >= 0; --i) {
-            if(id == symbols[i].id)
-                return symbols[i];
-        }
-
-        cout << "not suppose to get here getSymbol in Scope class" << endl;
-        exit(-1);
-    }
-};
- */
-
-
 
 class Scope{
 public:
@@ -80,37 +20,28 @@ public:
     int offest;
     SCOPE_REASON type;
 
-    Scope(SymList _symList, int _offest, SCOPE_REASON _type) :
-            symList(_symList),
+    Scope(int _offest, SCOPE_REASON _type) :
+            symList(),
             offest(_offest),
             type(_type) {};
 };
 
 typedef vector<Scope> ScopeList;
 
-
 class SymbolTable{
 public:
-    vector<pair<Scope, SCOPE_REASON>> scopes;
+    ScopeList scopeList;
+    FuncList funcList;
     bool seenMainFunc;
+    stack<int> offsets;
+    int cases;
 
-
-    // initializes the global scope
-    SymbolTable(){
-        pair<Scope, SCOPE_REASON > globalScope = make_pair(Scope(0),GLOBAL_SCOPE);
-        scopes = vector<pair<Scope, SCOPE_REASON>>();
-        scopes.push_back(globalScope);
-        seenMainFunc = false;
-
-        SymList printList = SymList();
-        printList.emplace_back(E_string);
-        scopes.back().first.insert("print",Exp_t(E_void), printList);
-
-        SymList printIList = SymList();
-        printList.emplace_back(E_int);
-        scopes.back().first.insert("printi",Exp_t(E_void), printList);
+    SymbolTable() : scopeList(), funcList(), seenMainFunc(false) , offsets() , cases(0){
+        scopeList.emplace_back(0, GLOBAL_SCOPE);
+        funcList.emplace_back(E_void, "print", SymList(1, Symbol("mockId", E_string)));
+        funcList.emplace_back(E_void, "printi", SymList(1, Symbol("mockId", E_int)));
+        offsets.push(0);
     };
-
 
     ~SymbolTable(){
         if(!seenMainFunc)
@@ -118,254 +49,183 @@ public:
             return;
     }
 
-
-    // opens regular Scope, with latest offset of the last scope
-    void openNewScope(){
-        scopes.emplace_back(Scope(scopes.back().first.offset), REGULAR_SCOPE);
+    // open scopes
+    void openNewScope(SCOPE_REASON type = REGULAR_SCOPE){
+        scopeList.emplace_back(offsets.top(), type);
+        offsets.push(offsets.top());
     }
-
-
-    // opens a loo scope with latest offset of last scope
     void openLoopScope(){
-        scopes.emplace_back(Scope(scopes.back().first.offset), LOOP_SCOPE);
+        openNewScope(LOOP_SCOPE);
     }
-
-
-    // searches the above scopes for shadowing
-    bool isShadowSymbolName(string id){
-        for(int i = scopes.size() - 1; i >= 0; i--){
-            if(scopes.back().first.isExist(id))
-                return true;
-        }
-        return false;
-    }
-
-
-    // the declaration of the func new offset is -args.size
-    void openFuncScope(string id, SymList args, TYPE retType){
-        if((retType == E_void) && (id == "main")) //TODO: args is empty
-            seenMainFunc = true;
-
-        if(isShadowSymbolName(id))
-            return; //TODO: throw shadowing error
-
-        // inserts the func to the current scope
-        scopes.back().first.insert(id, Exp_t(retType), args);
-
-        scopes.emplace_back(Scope(-args.size(), true, retType), REGULAR_SCOPE);
-
-        for(auto & arg : args){
-            scopes.back().first.insert(arg.id, arg.exp);
-        }
-
-    }
-
-
-    // opens a switch scope with
     void openSwitchScope(Exp_t e) {
-        if (e.t != E_bool && e.t != E_byte && e.t != E_int) {
+        if (e.t != E_byte && e.t != E_int) {
             return; // TODO: throw exception e isn't byte/int/bool
         }
 
-        scopes.emplace_back(Scope(scopes.back().first.offset), SWITCH_SCOPE);
+        openNewScope( SWITCH_SCOPE);
+    }
+    void openFuncScope(string id, SymList args, TYPE retType) {
+        if((retType == E_void) && (id == "main")) //TODO: args is empty
+            seenMainFunc = true;
+
+        if (findFunc(id) != funcList.end()){
+            //todo: throw
+            exit(1);
+        }
+
+        funcList.emplace_back(retType, id, args);
+        offsets.push(0);
     }
 
-
+    // triggers
     void triggerCase(){
-        for (int i = scopes.size() - 1; i >= 0; --i) {
-            if(scopes[i].second == SWITCH_SCOPE){
-                scopes[i].first.isCase = true;
-                return; // it's ok
+        for (auto& s : scopeList){
+            if (s.type == SWITCH_SCOPE){
+                cases++ ;
             }
-            if(scopes[i].first.isFunc || scopes[i].second == GLOBAL_SCOPE){
-
-                return; // TODO: throw exception "there isn't a switch scope"
-            }
-
         }
+        //TODO: exception
+        exit(1);
+    }
+    void triggerBreak(){
+        for(ScopeList::iterator i = scopeList.begin(); i != scopeList.end(); i++){
+            if ((*i).type == LOOP_SCOPE || cases > 0){
+                cases = 0;
+                return;
+            }
+        }
+
+        output::errorUnexpectedBreak(yylineno);
+        exit(-1);
+    }
+    void triggerContinue(){
+        for(ScopeList::iterator i = scopeList.begin(); i != scopeList.end(); i++){
+            if ((*i).type == LOOP_SCOPE){
+                return;
+            }
+        }
+        output::errorUnexpectedContinue(yylineno);
+        exit(-1);
     }
 
 
-    Exp_t callFunc(string funcName, ExpList arguments) {
-        //TODO: Make sure this function doesn't open a new scope. Only check if the arguments ok
-        //TODO: please move it to "callFunc" (the function above)
+    TYPE callFunc(string funcName, ExpList arguments) {
+        if(findFunc(funcName) == funcList.end()){
+            //TODO
+            exit(1);
+        }
 
-        vector<Symbol> decArgs = vector<Symbol>();
+        SymList sArgs = SymList();
+        for (ExpList::iterator a = arguments.begin(); a != arguments.end(); a++){
+            sArgs.emplace_back("mockId", (*a).t);
+        }
 
-        if(!isShadowSymbolName(funcName)){
-            output::errorDef(yylineno, funcName);
+        FuncSymbol func = *findFunc(funcName);
+        std::vector<string> strTypes = std::vector<string>();
+        for (SymList::iterator i = func.symList.begin(); i != func.symList.end(); i++){
+            strTypes.push_back(typeStr[(int)((*i).second)]);
+        }
+
+        if(sArgs.size() != func.symList.size()){
+            output::errorPrototypeMismatch(yylineno, funcName, strTypes);
             exit(-1);
         }
 
-        Symbol func = getSymbolById(funcName);
-        auto types = func.getSymListTypes();
 
-        if(arguments.size() != func.symbolList.size()){
-            output::errorPrototypeMismatch(yylineno, funcName, types);
-            exit(-1);
-        }
-
-
-        for (int j = 0; j < arguments.size(); ++j) {
-            if(arguments[j].t != func.symbolList[j].exp.t){
-                output::errorPrototypeMismatch(yylineno, funcName, types);
+        for (int i = 0; i < sArgs.size(); ++i) {
+            if(sArgs[i].second != func.symList[i].second){
+                output::errorPrototypeMismatch(yylineno, funcName, strTypes);
                 exit(-1);
             }
         }
 
-        return func.exp;
+        return func.retType;
     }
-
-
     void closeCurrentScope(){
-        if(scopes.back().second == GLOBAL_SCOPE && !seenMainFunc){
+        if(scopeList.size() <= 1 && !seenMainFunc){
             output::errorMainMissing();
             exit(-1);
         }
+
         output::endScope();
-        auto closingScope = scopes.back().first;
-        for (int i = 0; i < closingScope.symbols.size(); ++i) {
-            string typeForPrinting = printType[closingScope.symbols[i].exp.t];
 
-            if(closingScope.symbols[i].isFunc){
-                vector<string> args = closingScope.symbols[i].getSymListTypes();
-                typeForPrinting = output::makeFunctionType(typeForPrinting, args);
-            }
+        if (scopeList.size() == 2){
+            //Closing func
+            //TODO
+        }else{
+            //TODO
+        }
+        Scope closingScope = scopeList.back();
 
-            output::printID(closingScope.symbols[i].id, closingScope.symbols[i].offset, typeForPrinting);
+
+
+        for (int i = 0; i < closingScope.symList.size(); ++i) {
+            string typeForPrinting = typeStr[(int)(closingScope.symList[i].second)];
+            output::printID(closingScope.symList[i].first, offsets.top()--, typeForPrinting);
         }
 
-        scopes.pop_back();
+        scopeList.pop_back();
     }
-
-
     void checkReturnType(Exp_t exp){
         // TODO: check if it works, actually we are suppose to be in the scope of the function so the return type should be saved
-        if(!exp.castType(scopes.back().first.retType)){
+        if(!exp.castType(funcList.back().retType)){
             output::errorMismatch(yylineno);
         }
     }
-
-
-    void triggerBreak(){
-
-        if(scopes.back().second == LOOP_SCOPE ||
-        (scopes.back().second == SWITCH_SCOPE && scopes.back().first.isCase)){
-            scopes.back().first.isCase = false;
-            //TODO: it's OK
-        }else{
-            output::errorUnexpectedBreak(yylineno);
-            exit(-1);
-        }
-
-    }
-
-
-    void triggerContinue(){
-        if(scopes.back().second != LOOP_SCOPE){
-            output::errorUnexpectedContinue(yylineno);
-            exit(-1);
-        }
-    }
-
-    void addSymbol(TYPE t, string id){
-
-        if(isShadowSymbolName(id)) {
+    void addSymbol(TYPE t, string& id){
+        if(isId(id)) {
             output::errorDef(yylineno, id);
             exit(-1);
         }
 
-        scopes.back().first.insert(id, Exp_t(t));
+        scopeList.back().symList.emplace_back(id, t);
+        offsets.top()++;
     }
 
-
-    void addSymbolWithExp(TYPE t, string id, Exp_t exp){
-        exp.castType(t);
-
-        // checks if the id was already declared in outer scope
-        if(isShadowSymbolName(id)){
-            output::errorDef(yylineno, id);
-            exit(-1);
+    TYPE getTypeByID(string& _id){
+        Symbol* sym = findSym(_id);
+        if(!sym){
+            //TODO: make sure can't reach here
+            exit(-46);
         }
-
-        scopes.back().first.insert(id, exp);
+        return sym->second;
+    }
+    Exp_t getExpByID(string& _id){
+        return Exp_t(getTypeByID(_id));
+    }
+    void assign(string& _id, Exp_t e){
+        Symbol* sym = findSym(_id);
+        if(!sym){
+            //TODO: make sure can't reach here
+            exit(-463);
+        }
+        Exp_t newE = Exp_t(sym->second);
+        newE = e;
     }
 
-
-    Exp_t getExpByID(string id){
-        //TODO: get back the Exp with the closest id name (Should be the only one)
-        if(isShadowSymbolName(id)){
-            return getSymbolById(id).exp;
-        }
-        return Exp_t(); // not suppose to get here
-    }
-
-
-    Exp_t getExpById(string id){
-        if(!isShadowSymbolName(id)){
-            output::errorUndef(yylineno, id);
-            exit(-1);
-        }
-
-        for (int i = scopes.size() - 1; i >= 0 ; --i) {
-            if(scopes[i].first.isExist(id)){
-                auto sym = scopes[i].first.getSymbol(id);
-                if(sym.isFunc){
-                    output::errorUndef(yylineno, id);
-                    exit(-1);
-                }
-                return sym.exp;
+private:
+    FuncList::iterator findFunc(string& _id){
+        for (FuncList::iterator f = funcList.begin(); f != funcList.end(); f++){
+            if (f->id == _id){
+                return f;
             }
         }
+        return funcList.end();
     }
-
-
-    Symbol getSymbolById(string id){
-        if(!isShadowSymbolName(id)){
-            output::errorUndef(yylineno, id);
-            exit(-1);
-        }
-
-        for (int i = scopes.size() - 1; i >= 0 ; --i) {
-            if(scopes[i].first.isExist(id)){
-                auto sym = scopes[i].first.getSymbol(id);
-                if(sym.isFunc){
-                    output::errorUndef(yylineno, id);
-                    exit(-1);
+    Symbol* findSym(string& _id){
+        for(ScopeList::iterator scope = scopeList.begin(); scope != scopeList.end(); scope++){
+            for(SymList::iterator sym = (*scope).symList.begin(); sym != (*scope).symList.end() ; sym++){
+                if ((*sym).first == _id){
+                    return &(*sym);
                 }
-                return sym;
             }
         }
+
+        return NULL;
     }
-
-    // check if the id was declared earlier
-    void checkUndefError(string id){
-        if(!isShadowSymbolName(id)){
-            output::errorUndef(yylineno, id);
-            exit(-1);
-        }
-        Symbol s = getSymbolById(id);
-        if(s.isFunc){
-            output::errorUndef(yylineno, id);
-            exit(-1);
-        }
+    bool isId(string _id){
+        return findSym(_id) || findFunc(_id) != funcList.end();
     }
-
-
-    void checkUndefFunc(string id){
-        if(!isShadowSymbolName(id)){
-            output::errorUndefFunc(yylineno, id);
-            exit(-1);
-        }
-        Symbol s = getSymbolById(id);
-        if(!s.isFunc){
-            output::errorUndefFunc(yylineno, id);
-            exit(-1);
-        }
-    }
-
-
-
 };
 
 #endif //HW3_TABLE_HPP

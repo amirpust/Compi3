@@ -8,34 +8,16 @@
 
 class Exp_t{
 public:
-    TYPE t;
-    int i;
-    string s;
-
-    Exp_t():t(E_bool), i(0), s(){};
-
+    Exp_t t;
+    Exp_t():t(E_bool) {};
     explicit Exp_t(TYPE t) : t(t) {};
-    explicit Exp_t(bool i) : t(E_bool), i(i) {
-        cout << "BOOL" << endl;
-    };
-    explicit Exp_t(int i, TYPE t = E_int) : t(t), i(i) {
-        if (t == E_byte && i >= (1 << 8)){
-            output::errorByteTooLarge(lineno, i);
-            exit(1); //TODO: exception
+    Exp_t(TYPE t, int i) : t(t) {
+        if ( t == E_byte && i >= (1 << 8)){
+            exit(5456);
+            //todo
         }
-        cout << "INT/BYTE" << endl;
     };
-    explicit Exp_t(string _str) : t(E_string), s(_str) {
-        cout << "TEST: " << _str << endl;
-    }
-    Exp_t(const Exp_t& c) : t(c.t), i(c.i), s(c.s) {
-        if (t == E_byte && i >= (1 << 8)){
-            output::errorByteTooLarge(lineno, i);
-            exit(1); //TODO: exception
-        }
-        cout << "COPY " << endl;
-
-    }
+    Exp_t(const Exp_t& c) = default;
 
     bool isNumerical() const{
         return t == E_int || t == E_byte;
@@ -57,34 +39,23 @@ public:
 
         return false;
     }
-    bool bothAreOrArentStrings(TYPE t2){
-        return (t == t2) || (t != E_string && t2 != E_string);
-    }
-    void printFullExp(){
-        cout << "{"
-             << "type: " << t
-             << ", int: " << i
-             << ", string: " << s
-             << "}" << endl;
-    }
 
-    Exp_t operator=(Exp_t& e){
-        if (!e.castType(t)){
+    Exp_t& operator=(const Exp_t& e){
+        if (!Exp_t(e).castType(t)){
             output::errorMismatch(lineno);
             exit(-1);
         }
-        i = e.i;
-        s = e.s;
-
         return (*this);
+        //TODO: check overflow
     };
     Exp_t operator+(const Exp_t& e) const {
         if(!isNumerical() || !e.isNumerical()){
             //TODO: exception
+            exit(621);
         }
 
         //TODO: check overflow
-        return Exp_t(i + e.i, getDualType(e)) ;
+        return Exp_t(getDualType(e)) ;
     }
     Exp_t operator-(const Exp_t& e) const {
         if(!isNumerical() || !e.isNumerical()){
@@ -92,9 +63,10 @@ public:
         }
 
         //TODO: check overflow
-        return Exp_t(i - e.i, getDualType(e)) ;
+        return Exp_t(getDualType(e)) ;
     }
 
+    /*
     bool operator==(const Exp_t& e){
         if ( isNumerical() && e.isNumerical()){
             return i == e.i;
@@ -121,7 +93,7 @@ public:
         }
 
         return t < e.t;
-    }
+    } */
 };
 
 typedef vector<Exp_t> ExpList;

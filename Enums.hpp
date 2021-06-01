@@ -13,7 +13,7 @@ enum TYPE {
     E_void
 };
 
-std::string printType[] = {
+std::string typeStr[] = {
         "BOOL",
         "B",
         "INT",
