@@ -29,7 +29,7 @@ public:
     //created for Jonathan
     Symbol(string _id, TYPE t): id(_id), exp(t){};
 
-
+    Symbol(TYPE t): exp(t){};
     //creates a symbol of function, which means it holds a argument list that
     // will be used to make sure that when this function is being called
     // all the args that are passed are type valid

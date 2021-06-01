@@ -9,7 +9,7 @@
 
 
     int yylex();
-    extern int yylineno;
+    // extern int yylineno; moved it to table.hpp
     void output::printProductionRule(int ruleno);
     void output::errorLex(int lineno);
     void output::errorSyn(int lineno);

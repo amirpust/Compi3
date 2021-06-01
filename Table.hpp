@@ -8,6 +8,8 @@
 #include <vector>
 #include "hw3_output.hpp"
 
+extern int yylineno;
+
 using namespace std;
 
 class Scope{
@@ -19,38 +21,45 @@ public:
     TYPE retType;
     bool isCase;
 
-    Scope(int _offset, bool _isFunc = false, TYPE _retType = E_int): symbols(vector<Symbol>()),
+    explicit Scope(int _offset, bool _isFunc = false, TYPE _retType = E_int): symbols(vector<Symbol>()),
     offset(_offset), isFunc(false), retType(_retType), isCase(false){};
+
+
     //  Scope(int _offset, bool _isFunc, SymList funcArgs, TYPE _retType): symbols(funcArgs),
     //  offset(_offset), isFunc(_isFunc, retType(_retType)){};
     //  inserting a symbol to the current scope
     void insert(string id, Exp_t exp){
         symbols.emplace_back(id, exp, offset++);
     }
+
+
     // inserting a function declaration to the current scope
     void insert(string id, Exp_t exp ,SymList declArgs){
         symbols.emplace_back(id,offset++,declArgs, exp);
     }
 
+
     // searches for the a symbol with name id in the current scope
     bool isExist(string id){
-        for(int i = 0; i < symbols.size(); i++){
-            if(symbols[i].id == id)
+        for(auto & symbol : symbols){
+            if(symbol.id == id)
                 return true;
         }
         return false;
     }
 
+
     // searches for the function with name funcName and returns a list of args
     // that this func uses in its declaration (might be empty)
     SymList getArgs(string funcName){
-        for(int i = 0; i < symbols.size(); i++){
-            if(symbols[i].id == funcName){
-                return symbols[i].symbolList;
+        for(auto & symbol : symbols){
+            if(symbol.id == funcName){
+                return symbol.symbolList;
             }
         }
         return vector<Symbol>();
     }
+
 
     Symbol& getSymbol(string id){
         for (int i = symbols.size() - 1; i >= 0; --i) {
@@ -65,17 +74,29 @@ public:
 
 
 
+
 class SymbolTable{
 public:
     vector<pair<Scope, SCOPE_REASON>> scopes;
     bool seenMainFunc;
-    // initializes the global scope  TODO: enter print and printi
+
+
+    // initializes the global scope
     SymbolTable(){
         pair<Scope, SCOPE_REASON > globalScope = make_pair(Scope(0),GLOBAL_SCOPE);
         scopes = vector<pair<Scope, SCOPE_REASON>>();
         scopes.push_back(globalScope);
         seenMainFunc = false;
+
+        SymList printList = SymList();
+        printList.emplace_back(E_string);
+        scopes.back().first.insert("print",Exp_t(E_void), printList);
+
+        SymList printIList = SymList();
+        printList.emplace_back(E_int);
+        scopes.back().first.insert("printi",Exp_t(E_void), printList);
     };
+
 
     ~SymbolTable(){
         if(!seenMainFunc)
@@ -89,10 +110,13 @@ public:
         scopes.emplace_back(Scope(scopes.back().first.offset), REGULAR_SCOPE);
     }
 
+
     // opens a loo scope with latest offset of last scope
     void openLoopScope(){
         scopes.emplace_back(Scope(scopes.back().first.offset), LOOP_SCOPE);
     }
+
+
     // searches the above scopes for shadowing
     bool isShadowSymbolName(string id){
         for(int i = scopes.size() - 1; i >= 0; i--){
@@ -134,6 +158,7 @@ public:
         scopes.emplace_back(Scope(scopes.back().first.offset), SWITCH_SCOPE);
     }
 
+
     void triggerCase(){
         for (int i = scopes.size() - 1; i >= 0; --i) {
             if(scopes[i].second == SWITCH_SCOPE){
@@ -148,6 +173,7 @@ public:
         }
     }
 
+
     void callFunc(string funcName, ExpList arguments) {
         //TODO: Make sure this function doesn't open a new scope. Only check if the arguments ok
         //TODO: please move it to "callFunc" (the function above)
@@ -157,7 +183,7 @@ public:
         if(!isShadowSymbolName(funcName))
             return; //TODO: func doesn't exists
 
-        Symbol func = searchSymbol(funcName);
+        Symbol func = getSymbolById(funcName);
 
         if(arguments.size() != func.symbolList.size())
             return; // TODO: arguments doesn't match
@@ -170,16 +196,17 @@ public:
       // TODO: OK
     }
 
+
     void closeCurrentScope(){
         if(scopes.back().second == GLOBAL_SCOPE && !seenMainFunc)
             return; //TODO: no main func
         output::endScope();
-        for (int i = 0; i < scopes.back().first.symbols.size() ; ++i) {
-            Symbol current =scopes.back().first.symbols[i];
+        for (auto current : scopes.back().first.symbols) {
             output::printID(current.id, current.offset, printType[current.exp.t] );
         }
         scopes.pop_back();
     }
+
 
     void checkReturnType(TYPE t){
         for (int i = scopes.size() - 1; i >= 0; --i) {
@@ -191,6 +218,7 @@ public:
         }
     }
 
+
     void triggerBreak(){
 
         if(scopes.back().second == LOOP_SCOPE ||
@@ -200,6 +228,7 @@ public:
         }
         // TODO: throw not loop/switch or might be switch with no case
     }
+
 
     void triggerContinue(){
         if(scopes.back().second == LOOP_SCOPE)
@@ -225,18 +254,22 @@ public:
         scopes.back().first.insert(id, exp);
     }
 
+
     Exp_t getExpByID(string id){
-        return Exp_t();
         //TODO: get back the Exp with the closest id name (Should be the only one)
+        if()
+
     }
+
 
     void updateSymbol(string id, Exp_t exp){
     // TODO: update the symbol with
     }
 
-    Symbol& searchSymbol(string id){
+
+    Symbol& getSymbolById(string id){
         if(!isShadowSymbolName(id)){
-            cout << "searchSymbol not suppose to get here" << endl;
+            cout << "getSymbolById not suppose to get here" << endl;
             exit(-1);
         }
         for (int i = scopes.size() - 1; i >= 0 ; --i) {
@@ -244,10 +277,9 @@ public:
                 return scopes[i].first.getSymbol(id);
             }
         }
-        cout << "searchSymbol not suppose to get here : symbol not found" << endl;
+        cout << "getSymbolById not suppose to get here : symbol not found" << endl;
         exit(-1);
     }
-
 };
 
 #endif //HW3_TABLE_HPP
