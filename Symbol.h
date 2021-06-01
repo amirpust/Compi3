@@ -12,6 +12,8 @@
 #include <vector>
 
 using namespace std;
+extern string printType[];
+
 class Symbol{
 public:
     string id;
