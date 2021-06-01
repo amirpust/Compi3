@@ -306,7 +306,7 @@ public:
     }
 
 
-    Symbol& getSymbolById(string id){
+    Symbol getSymbolById(string id){
         if(!isShadowSymbolName(id)){
             output::errorUndef(yylineno, id);
             exit(-1);
