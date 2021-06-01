@@ -1,9 +1,9 @@
 #ifndef HW3_TABLE_HPP
 #define HW3_TABLE_HPP
 
-#include "Enums.h"
-#include "Exp_t.h"
-#include "Symbol.h"
+#include "Enums.hpp"
+#include "Exp_t.hpp"
+#include "Symbol.hpp"
 #include <string>
 #include <vector>
 #include "hw3_output.hpp"

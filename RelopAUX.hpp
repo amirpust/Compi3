@@ -1,8 +1,8 @@
-#ifndef HW3_RELOPAUX_H
-#define HW3_RELOPAUX_H
+#ifndef HW3_RELOPAUX_HPP
+#define HW3_RELOPAUX_HPP
 
-#include "Enums.h"
-#include "Exp_t.h"
+#include "Enums.hpp"
+#include "Exp_t.hpp"
 
 class RelopAUX{
 public:
@@ -38,4 +38,4 @@ public:
     }
 };
 
-#endif //HW3_RELOPAUX_H
+#endif //HW3_RELOPAUX_HPP

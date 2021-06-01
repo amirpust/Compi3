@@ -1,9 +1,9 @@
 %{
 	#include <stdio.h>
 	#include <iostream>
-    #include "Enums.h"
-    #include "RelopAUX.h"
-    #include "Exp_t.h"
+    #include "Enums.hpp"
+    #include "RelopAUX.hpp"
+    #include "Exp_t.hpp"
     #include "Table.hpp"
     #include "ObjectsPool.hpp"
 

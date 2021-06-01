@@ -4,9 +4,9 @@
 #include <iostream>
 #include <string>
 #include "hw3_output.hpp"
-#include "Enums.h"
-#include "RelopAUX.h"
-#include "Exp_t.h"
+#include "Enums.hpp"
+#include "RelopAUX.hpp"
+#include "Exp_t.hpp"
 #include "Table.hpp"
 
 using namespace std;

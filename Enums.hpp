@@ -1,5 +1,5 @@
-#ifndef HW3_ENUMS_H
-#define HW3_ENUMS_H
+#ifndef HW3_ENUMS_HPP
+#define HW3_ENUMS_HPP
 
 #include <string>
 
@@ -38,4 +38,4 @@ enum SCOPE_REASON{
 };
 
 
-#endif //HW3_ENUMS_H
+#endif //HW3_ENUMS_HPP

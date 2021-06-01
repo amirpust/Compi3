@@ -1,10 +1,10 @@
-#ifndef HW3_EXP_T_H
-#define HW3_EXP_T_H
+#ifndef HW3_EXP_T_HPP
+#define HW3_EXP_T_HPP
 
 #include <iostream>
 #include <string>
 #include "hw3_output.hpp"
-#include "Enums.h"
+#include "Enums.hpp"
 
 class Exp_t{
 public:
@@ -127,4 +127,4 @@ public:
 typedef vector<Exp_t> ExpList;
 
 
-#endif //HW3_EXP_T_H
+#endif //HW3_EXP_T_HPP
