@@ -108,8 +108,7 @@ public:
         exit(-1);
     }
 
-
-    TYPE callFunc(string funcName, ExpList arguments) {
+    Exp_t callFunc(string funcName, ExpList arguments) {
         if(findFunc(funcName) == funcList.end()){
             //TODO
             exit(1);
@@ -139,7 +138,7 @@ public:
             }
         }
 
-        return func.retType;
+        return Exp_t(func.retType);
     }
     void closeCurrentScope(){
         if(scopeList.size() <= 1 && !seenMainFunc){
