@@ -66,6 +66,7 @@ public:
 };
 
 
+
 typedef vector<Symbol> SymList;
 
 #endif //HW3_SYMBOL_H
