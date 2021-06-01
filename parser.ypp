@@ -97,12 +97,12 @@ Statement:      LBRACE Statements RBRACE                                    {out
                 | RETURN SC                                                 {symbolTable.checkReturnType(Exp_t(E_void)) ; output::printProductionRule(19);}
                 | RETURN Exp SC                                             {symbolTable.checkReturnType($2) ; output::printProductionRule(20);}
                 | IF LPAREN Exp RPAREN
-                                    {if($3.t == E_bool) symbolTable.openNewScope(); else { output::errorMismatch(lineno); exit(41);}}
+                                    {if($3.t == E_bool) {symbolTable.openNewScope();} else { output::errorMismatch(lineno); exit(41);}}
                                     Statement
                                     {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(21);}
                 | IF LPAREN Exp RPAREN
-                                    {if($3.t == E_bool) symbolTable.openNewScope(); else { output::errorMismatch(lineno); exit(1);}}
+                                    {if($3.t == E_bool) {symbolTable.openNewScope();} else { output::errorMismatch(lineno); exit(1);}}
                                     Statement
                                     {symbolTable.closeCurrentScope();}
                                     ELSE
@@ -111,7 +111,7 @@ Statement:      LBRACE Statements RBRACE                                    {out
                                     {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(22);}
                 | WHILE LPAREN Exp RPAREN
-                                     {if($3.t == E_bool) symbolTable.openLoopScope(); else { output::errorMismatch(lineno); exit(1);}}
+                                     {if($3.t == E_bool) {symbolTable.openLoopScope();} else { output::errorMismatch(lineno); exit(1);}}
                                      Statement
                                      {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(23);}
@@ -129,25 +129,25 @@ Call :          ID LPAREN ExpList RPAREN                                    {$$ 
 ExpList:        Exp                                                         {$$ = ExpList(); $$.push_back($1); output::printProductionRule(29);}
                 | Exp COMMA ExpList                                         {$$ = ExpList($3); $$.push_back($1); output::printProductionRule(30);}
 ;
-Type :          INT                                                         { cout << "Flag: " <<__LINE__<<endl ; cout << $$ << endl; ; $$ = $1 ;output::printProductionRule(31);}
+Type :          INT                                                         {$$ = $1 ;output::printProductionRule(31);}
                 | BYTE                                                      {$$ = $1 ;output::printProductionRule(32);}
                 | BOOL                                                      {$$ = $1 ;output::printProductionRule(33);}
 ;
-Exp:            LPAREN Exp RPAREN                                           {$$ = Exp_t($2); $$.printFullExp(); output::printProductionRule(34);}
-                | Exp BINOP_MD Exp                                          {if(1) $$ = Exp_t($1.i * $3.i); else $$ = Exp_t($1.i / $3.i); output::printProductionRule(35);}
-                | Exp BINOP_PM Exp                                          {$$ = Exp_t($1.i + $2 * $3.i); output::printProductionRule(35);}
+Exp:            LPAREN Exp RPAREN                                           {$$ = Exp_t($2);  output::printProductionRule(34);}
+                | Exp BINOP_MD Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
+                | Exp BINOP_PM Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
                 | ID                                                        {$$ = symbolTable.getExpByID($1) ; output::printProductionRule(36);}
                 | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = Exp_t($1); output::printProductionRule(38);}
                 | NUM B                                                     {$$ = Exp_t($1, E_byte); output::printProductionRule(39);}
-                | STRING                                                    {$$ = Exp_t($1); output::printProductionRule(40);}
-                | TRUE                                                      {$$ = Exp_t($1); output::printProductionRule(41);}
-                | FALSE                                                     {$$ = Exp_t($1); output::printProductionRule(42);}
-                | NOT Exp                                                   {$$ = Exp_t(!($2.i)); output::printProductionRule(43);}
-                | Exp AND Exp                                               {$$ = Exp_t($1.i && $3.i); output::printProductionRule(44);}
-                | Exp OR Exp                                                {$$ = Exp_t($1.i || $3.i); output::printProductionRule(45);}
-                | Exp EQUALITY Exp                                          {$$ = Exp_t($1 == $3); output::printProductionRule(46);}
-                | Exp RELOP Exp                                             {$$ = Exp_t($2.compare($1, $3)) ; output::printProductionRule(46);}
+                | STRING                                                    {$$ = Exp_t(E_string); output::printProductionRule(40);}
+                | TRUE                                                      {$$ = Exp_t(E_bool); output::printProductionRule(41);}
+                | FALSE                                                     {$$ = Exp_t(E_bool); output::printProductionRule(42);}
+                | NOT Exp                                                   {$$ = Exp_t(E_bool); output::printProductionRule(43);}
+                | Exp AND Exp                                               {$$ = Exp_t(E_bool); output::printProductionRule(44);}
+                | Exp OR Exp                                                {$$ = Exp_t(E_bool); output::printProductionRule(45);}
+                | Exp EQUALITY Exp                                          {$$ = Exp_t(E_bool); output::printProductionRule(46);}
+                | Exp RELOP Exp                                             {$$ = Exp_t(E_bool) ; output::printProductionRule(46);}
 ;
 CaseList:       CaseDecl CaseList                                           {output::printProductionRule(48);}
                 | CaseDecl                                                  {output::printProductionRule(49);}
