@@ -68,7 +68,16 @@ public:
              << "}" << endl;
     }
 
-    Exp_t& operator=(const Exp_t& e) = default;
+    Exp_t& operator=(Exp_t& e){
+        if (!e.castType(t)){
+            output::errorMismatch(lineno);
+            exit(-1);
+        }
+        i = e.i;
+        s = e.s;
+
+        return (*this);
+    };
     Exp_t operator+(const Exp_t& e) const {
         if(!isNumerical() || !e.isNumerical()){
             //TODO: exception

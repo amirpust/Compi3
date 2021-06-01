@@ -55,6 +55,7 @@
 
 %type<typeVal> RetType
 %type<expVal> Exp
+%type<expVal> Call
 %type<expList> ExpList
 %type<typeVal> Type
 %type<symbol> FormalDecl
@@ -90,8 +91,8 @@ Statements:     Statement                                                   {out
 ;
 Statement:      LBRACE Statements RBRACE                                    {output::printProductionRule(14);}
                 | Type ID SC                                                {symbolTable.addSymbol($1, $2) ; output::printProductionRule(15);}
-                | Type ID ASSIGN Exp SC                                     {symbolTable.addSymbolWithExp($1, $2, $4) ; output::printProductionRule(16);}
-                | ID ASSIGN Exp SC                                          {symbolTable.updateSymbol($1, $3) ; output::printProductionRule(17);}
+                | Type ID ASSIGN Exp SC                                     {symbolTable.addSymbol($1, $2); symbolTable.getExpById($2) = $4; output::printProductionRule(16);}
+                | ID ASSIGN Exp SC                                          {symbolTable.getExpById($1) = $3 ; output::printProductionRule(17);}
                 | Call SC                                                   {output::printProductionRule(18);}
                 | RETURN SC                                                 {symbolTable.checkReturnType(Exp_t(E_void)) ; output::printProductionRule(19);}
                 | RETURN Exp SC                                             {symbolTable.checkReturnType($2) ; output::printProductionRule(20);}
@@ -122,8 +123,8 @@ Statement:      LBRACE Statements RBRACE                                    {out
                             {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(26);}
 ;
-Call :          ID LPAREN ExpList RPAREN                                    {symbolTable.callFunc($1, $3) ; output::printProductionRule(27);}
-                | ID LPAREN RPAREN                                          {symbolTable.callFunc($1, ExpList()) ; output::printProductionRule(28);}
+Call :          ID LPAREN ExpList RPAREN                                    {$$ = symbolTable.callFunc($1, $3) ; output::printProductionRule(27);}
+                | ID LPAREN RPAREN                                          {$$ = symbolTable.callFunc($1, ExpList()) ; output::printProductionRule(28);}
 ;
 ExpList:        Exp                                                         {$$ = ExpList(); $$.push_back($1); output::printProductionRule(29);}
                 | Exp COMMA ExpList                                         {$$ = ExpList($3); $$.push_back($1); output::printProductionRule(30);}
@@ -136,10 +137,10 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | Exp BINOP_MD Exp                                          {if(1) $$ = Exp_t($1.i * $3.i); else $$ = Exp_t($1.i / $3.i); output::printProductionRule(35);}
                 | Exp BINOP_PM Exp                                          {$$ = Exp_t($1.i + $2 * $3.i); output::printProductionRule(35);}
                 | ID                                                        {$$ = symbolTable.getExpByID($1) ; output::printProductionRule(36);}
-                | Call                                                      {output::printProductionRule(37);}
+                | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = Exp_t($1); output::printProductionRule(38);}
                 | NUM B                                                     {$$ = Exp_t($1, E_byte); output::printProductionRule(39);}
-                | STRING                                                    {$$ = Exp_t($1, E_string); output::printProductionRule(40);}
+                | STRING                                                    {$$ = Exp_t($1); output::printProductionRule(40);}
                 | TRUE                                                      {$$ = Exp_t($1); output::printProductionRule(41);}
                 | FALSE                                                     {$$ = Exp_t($1); output::printProductionRule(42);}
                 | NOT Exp                                                   {$$ = Exp_t(!($2.i)); output::printProductionRule(43);}
