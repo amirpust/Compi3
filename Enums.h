@@ -3,7 +3,6 @@
 
 #include <string>
 
-
 extern int lineno;
 
 enum TYPE {
