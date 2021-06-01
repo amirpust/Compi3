@@ -46,9 +46,16 @@ public:
 
         return E_int;
     }
-    void castType(TYPE newT){
-        if (newT == E_int && t == E_byte)
+    bool castType(TYPE newT){
+        if (newT == E_int && t == E_byte){
             t = E_int;
+            return true;
+        }
+        if (t == newT){
+            return true;
+        };
+
+        return false;
     }
     bool bothAreOrArentStrings(TYPE t2){
         return (t == t2) || (t != E_string && t2 != E_string);
