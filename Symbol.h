@@ -6,8 +6,8 @@
 #define HW3_SYMBOL_H
 
 
-#include "Exp_t.h"
 #include "Enums.h"
+#include "Exp_t.h"
 #include <string>
 #include <vector>
 
