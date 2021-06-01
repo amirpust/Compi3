@@ -54,7 +54,7 @@ public:
         isFunc = s.isFunc;
     }
 
-    Symbol& operator=(Symbol& s){
+    Symbol operator=(Symbol& s){
         id = s.id;
         exp = s.exp;
         offset = s.offset;
