@@ -47,6 +47,14 @@ public:
         return types;
     }
 
+    Symbol(const Symbol& s){
+        id = s.id;
+        exp = s.exp;
+        offset = s.offset;
+        symbolList = s.symbolList;
+        isFunc = s.isFunc;
+    }
+
     Symbol& operator=(Symbol& s){
         id = s.id;
         exp = s.exp;
