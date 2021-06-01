@@ -37,7 +37,12 @@ public:
     // will be used to make sure that when this function is being called
     // all the args that are passed are type valid
     Symbol(string _id, int _offset, vector<Symbol> _symbolList, Exp_t _exp, bool _isFunc):
-    id(_id), exp(_exp), offset(_offset), symbolList(_symbolList), isFunc(_isFunc){};
+    id(_id), exp(_exp), offset(_offset), isFunc(_isFunc){
+        symbolList = vector<Symbol>();
+        for (int i = 0; i < _symbolList.size(); ++i) {
+            symbolList[i] = _symbolList[i];
+        }
+    };
 
     vector<string> getSymListTypes(){
         vector<string> types = vector<string>();
