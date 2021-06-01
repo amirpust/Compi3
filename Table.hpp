@@ -8,6 +8,8 @@
 #include <vector>
 #include "hw3_output.hpp"
 
+extern int yylineno;
+
 using namespace std;
 
 class Scope{
