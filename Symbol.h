@@ -46,6 +46,16 @@ public:
         }
         return types;
     }
+
+    Symbol& operator=(Symbol& s){
+        id = s.id;
+        exp = s.exp;
+        offset = s.offset;
+        symbolList = s.symbolList;
+        isFunc = s.isFunc;
+
+        return (*this);
+    }
 };
 
 
