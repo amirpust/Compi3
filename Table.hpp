@@ -225,13 +225,10 @@ public:
     }
 
 
-    void checkReturnType(TYPE t){
-        for (int i = scopes.size() - 1; i >= 0; --i) {
-            if(scopes[i].first.isFunc){
-                if(scopes[i].first.retType != t)
-                    return; //TODO : type isn't like funcs retType
-                return; //TODO: type is ok
-            }
+    void checkReturnType(Exp_t exp){
+        // TODO: check if it works, actually we are suppose to be in the scope of the function so the return type should be saved
+        if(!exp.castType(scopes.back().first.retType)){
+            output::errorMismatch(yylineno);
         }
     }
 
@@ -275,6 +272,7 @@ public:
             output::errorDef(yylineno, id);
             exit(-1);
         }
+
         scopes.back().first.insert(id, exp);
     }
 
@@ -288,23 +286,41 @@ public:
     }
 
 
-    void updateSymbol(string id, Exp_t exp){
-    // TODO: update the symbol with
+    Exp_t getExpById(string id){
+        if(!isShadowSymbolName(id)){
+            output::errorUndef(yylineno, id);
+            exit(-1);
+        }
+
+        for (int i = scopes.size() - 1; i >= 0 ; --i) {
+            if(scopes[i].first.isExist(id)){
+                auto sym = scopes[i].first.getSymbol(id);
+                if(sym.isFunc){
+                    output::errorUndef(yylineno, id);
+                    exit(-1);
+                }
+                return sym.exp;
+            }
+        }
     }
 
 
     Symbol& getSymbolById(string id){
         if(!isShadowSymbolName(id)){
-            cout << "getSymbolById not suppose to get here" << endl;
+            output::errorUndef(yylineno, id);
             exit(-1);
         }
+
         for (int i = scopes.size() - 1; i >= 0 ; --i) {
             if(scopes[i].first.isExist(id)){
-                return scopes[i].first.getSymbol(id);
+                auto sym = scopes[i].first.getSymbol(id);
+                if(sym.isFunc){
+                    output::errorUndef(yylineno, id);
+                    exit(-1);
+                }
+                return sym;
             }
         }
-        cout << "getSymbolById not suppose to get here : symbol not found" << endl;
-        exit(-1);
     }
 
     // check if the id was declared earlier
