@@ -25,7 +25,7 @@ public:
     };
 
     bool compare(Exp_t a, Exp_t b){
-        switch (op){
+        /*switch (op){
             case E_G:
                 return a < b;
             case E_L:
@@ -34,7 +34,8 @@ public:
                 return a <= b;
             case E_LOE:
                 return b <= a;
-        }
+        }*/
+        return true;
     }
 };
 

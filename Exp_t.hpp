@@ -8,7 +8,7 @@
 
 class Exp_t{
 public:
-    Exp_t t;
+    TYPE t;
     Exp_t():t(E_bool) {};
     explicit Exp_t(TYPE t) : t(t) {};
     Exp_t(TYPE t, int i) : t(t) {
