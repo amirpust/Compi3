@@ -97,18 +97,18 @@ Statement:      LBRACE Statements RBRACE                                    {out
                 | RETURN SC                                                 {symbolTable.checkReturnType(Exp_t(E_void)) ; output::printProductionRule(19);}
                 | RETURN Exp SC                                             {symbolTable.checkReturnType($2) ; output::printProductionRule(20);}
                 | IF LPAREN Exp RPAREN
-                                    {if($3.i) symbolTable.openNewScope();}
+                                    {if($3.t == E_bool) symbolTable.openNewScope(); else { output::errorMismatch(lineno); exit(1);}}
                                     Statement
-                                    {if($3.i) symbolTable.closeCurrentScope();}
+                                    {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(21);}
                 | IF LPAREN Exp RPAREN
-                                    {if($3.i) symbolTable.openNewScope();}
+                                    {if($3.t == E_bool) symbolTable.openNewScope(); else { output::errorMismatch(lineno); exit(1);}}
                                     Statement
-                                    {if($3.i) symbolTable.closeCurrentScope();}
+                                    {symbolTable.closeCurrentScope();}
                                     ELSE
-                                    {if(!$3.i) symbolTable.openNewScope();}
+                                    {symbolTable.openNewScope();}
                                     Statement
-                                    {if(!$3.i) symbolTable.closeCurrentScope();}
+                                    {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(22);}
                 | WHILE LPAREN Exp RPAREN
                                      {if($3.i) symbolTable.openLoopScope();}
