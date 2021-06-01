@@ -15,7 +15,6 @@ public:
     Exp_t():t(E_bool), i(0), s(){};
 
     explicit Exp_t(TYPE t) : t(t) {};
-    explicit Exp_t(const TYPE t) : t(t) {};
     explicit Exp_t(bool i) : t(E_bool), i(i) {
         cout << "BOOL" << endl;
     };

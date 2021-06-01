@@ -47,9 +47,8 @@ public:
         return types;
     }
 
-    Symbol(const Symbol& s){
+    Symbol(Symbol& s):exp(s.exp.t){
         id = s.id;
-        exp = Exp_t(s.exp.t);
         offset = s.offset;
         symbolList = s.symbolList;
         isFunc = s.isFunc;
