@@ -10,9 +10,10 @@
 #include "Exp_t.hpp"
 #include <string>
 #include <vector>
+#include <utility>
 
 using namespace std;
-
+/*
 class Symbol{
 public:
     string id;
@@ -78,8 +79,9 @@ public:
     }
 };
 
+*/
 
-
+typedef pair<string, TYPE> Symbol;
 typedef vector<Symbol> SymList;
 
 #endif //HW3_SYMBOL_HPP

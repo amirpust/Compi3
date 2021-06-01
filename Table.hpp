@@ -4,6 +4,7 @@
 #include "Enums.hpp"
 #include "Exp_t.hpp"
 #include "Symbol.hpp"
+#include "FuncSymbol.hpp"
 #include <string>
 #include <vector>
 #include "hw3_output.hpp"
@@ -12,16 +13,14 @@ extern int yylineno;
 
 using namespace std;
 
+/*
 class Scope{
 public:
-
-    vector<Symbol> symbols;
+    SymList symbols;
     int offset;
-    bool isFunc;
-    TYPE retType;
     bool isCase;
 
-    explicit Scope(int _offset, bool _isFunc = false, TYPE _retType = E_int): symbols(vector<Symbol>()),
+    explicit Scope(int _offset, bool _isFunc = false, TYPE _retType = E_int): symbols(SymList()),
     offset(_offset), isFunc(false), retType(_retType), isCase(false){};
 
 
@@ -71,8 +70,23 @@ public:
         exit(-1);
     }
 };
+ */
 
 
+
+class Scope{
+public:
+    SymList symList;
+    int offest;
+    SCOPE_REASON type;
+
+    Scope(SymList _symList, int _offest, SCOPE_REASON _type) :
+            symList(_symList),
+            offest(_offest),
+            type(_type) {};
+};
+
+typedef vector<Scope> ScopeList;
 
 
 class SymbolTable{
