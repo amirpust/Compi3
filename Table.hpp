@@ -38,7 +38,7 @@ public:
 
     SymbolTable() : scopeList(), funcList(), seenMainFunc(false) , offsets() , cases(0){
         scopeList.emplace_back(0, GLOBAL_SCOPE);
-        funcList.emplace_back(E_void, "print", SymList(1, Symbol("mockId", E_string)));
+        funcList.emplace_back(E_void, string("print"), SymList(1, Symbol(string("mockId"), E_string)));
         funcList.emplace_back(E_void, "printi", SymList(1, Symbol("mockId", E_int)));
         offsets.push(0);
     };
