@@ -55,8 +55,12 @@ public:
     Symbol(Symbol& s):exp(s.exp.t){
         id = s.id;
         offset = s.offset;
-        symbolList = s.symbolList;
         isFunc = s.isFunc;
+
+        symbolList = vector<Symbol>();
+        for (int i = 0; i <s.symbolList.size(); ++i) {
+            symbolList[i] = s.symbolList[i];
+        }
     }
 
     Symbol operator=(Symbol& s){
