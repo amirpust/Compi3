@@ -68,7 +68,7 @@ public:
              << "}" << endl;
     }
 
-    Exp_t& operator=(Exp_t& e){
+    Exp_t operator=(Exp_t& e){
         if (!e.castType(t)){
             output::errorMismatch(lineno);
             exit(-1);
