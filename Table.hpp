@@ -21,9 +21,9 @@ public:
 
     Scope(int _offset, bool _isFunc = false, TYPE _retType = E_int): symbols(vector<Symbol>()),
     offset(_offset), isFunc(false), retType(_retType), isCase(false){};
-    //Scope(int _offset, bool _isFunc, SymList funcArgs, TYPE _retType): symbols(funcArgs),
-    //offset(_offset), isFunc(_isFunc, retType(_retType)){};
-    // inserting a symbol to the current scope
+    //  Scope(int _offset, bool _isFunc, SymList funcArgs, TYPE _retType): symbols(funcArgs),
+    //  offset(_offset), isFunc(_isFunc, retType(_retType)){};
+    //  inserting a symbol to the current scope
     void insert(string id, Exp_t exp){
         symbols.emplace_back(id, exp, offset++);
     }
@@ -69,7 +69,7 @@ class SymbolTable{
 public:
     vector<pair<Scope, SCOPE_REASON>> scopes;
     bool seenMainFunc;
-    // initializes the global scope
+    // initializes the global scope  TODO: enter print and printi
     SymbolTable(){
         pair<Scope, SCOPE_REASON > globalScope = make_pair(Scope(0),GLOBAL_SCOPE);
         scopes = vector<pair<Scope, SCOPE_REASON>>();
@@ -107,7 +107,7 @@ public:
 
     // the declaration of the func new offset is -args.size
     void openFuncScope(string id, SymList args, TYPE retType){
-        if((retType == E_void) && (id == "main"))
+        if((retType == E_void) && (id == "main")) //TODO: args is empty
             seenMainFunc = true;
 
         if(isShadowSymbolName(id))
