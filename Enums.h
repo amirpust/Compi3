@@ -12,11 +12,11 @@ enum TYPE {
 };
 
 string printType[] = {
-        "bool",
-        "byte",
-        "int",
-        "deprecated",
-        "void"
+        "BOOL",
+        "B",
+        "INT",
+        "STRING",
+        "VOID"
 };
 
 enum RELOP_ENUM{

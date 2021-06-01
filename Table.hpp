@@ -35,7 +35,7 @@ public:
 
     // inserting a function declaration to the current scope
     void insert(string id, Exp_t exp ,SymList declArgs){
-        symbols.emplace_back(id,offset++,declArgs, exp);
+        symbols.emplace_back(id,offset++,declArgs, exp, true);
     }
 
 
@@ -180,30 +180,46 @@ public:
 
         vector<Symbol> decArgs = vector<Symbol>();
 
-        if(!isShadowSymbolName(funcName))
-            return; //TODO: func doesn't exists
-
-        Symbol func = getSymbolById(funcName);
-
-        if(arguments.size() != func.symbolList.size())
-            return; // TODO: arguments doesn't match
-
-        for (int j = 0; j < arguments.size(); ++j) {
-            if(arguments[j].t != func.symbolList[j].exp.t)
-                return; // TODO: arguments doesn't match
+        if(!isShadowSymbolName(funcName)){
+            output::errorDef(yylineno, funcName);
+            exit(-1);
         }
 
-      // TODO: OK
+        Symbol func = getSymbolById(funcName);
+        auto types = func.getSymListTypes();
+
+        if(arguments.size() != func.symbolList.size()){
+
+        }
+
+
+        for (int j = 0; j < arguments.size(); ++j) {
+            if(arguments[j].t != func.symbolList[j].exp.t){
+                output::errorPrototypeMismatch(yylineno, funcName, types);
+                exit(-1);
+            }
+        }
     }
 
 
     void closeCurrentScope(){
-        if(scopes.back().second == GLOBAL_SCOPE && !seenMainFunc)
-            return; //TODO: no main func
-        output::endScope();
-        for (auto current : scopes.back().first.symbols) {
-            output::printID(current.id, current.offset, printType[current.exp.t] );
+        if(scopes.back().second == GLOBAL_SCOPE && !seenMainFunc){
+            output::errorMainMissing();
+            exit(-1);
         }
+        output::endScope();
+        auto closingScope = scopes.back().first;
+        for (int i = 0; i < closingScope.symbols.size(); ++i) {
+            string typeForPrinting = printType[closingScope.symbols[i].exp.t];
+
+            if(closingScope.symbols[i].isFunc){
+                vector<string> args = closingScope.symbols[i].getSymListTypes();
+                typeForPrinting = output::makeFunctionType(typeForPrinting, args);
+            }
+
+            output::printID(closingScope.symbols[i].id, closingScope.symbols[i].offset, typeForPrinting);
+        }
+
         scopes.pop_back();
     }
 
@@ -225,21 +241,26 @@ public:
         (scopes.back().second == SWITCH_SCOPE && scopes.back().first.isCase)){
             scopes.back().first.isCase = false;
             //TODO: it's OK
+        }else{
+            output::errorUnexpectedBreak(yylineno);
+            exit(-1);
         }
-        // TODO: throw not loop/switch or might be switch with no case
+
     }
 
 
     void triggerContinue(){
-        if(scopes.back().second == LOOP_SCOPE)
-            return; // TODO: it's OK
-        exit(1); //TODO: not in loop scope
+        if(scopes.back().second != LOOP_SCOPE){
+            output::errorUnexpectedContinue(yylineno);
+            exit(-1);
+        }
     }
 
     void addSymbol(TYPE t, string id){
 
         if(isShadowSymbolName(id)) {
-            return; // TODO: it exists throw some exception
+            output::errorDef(yylineno, id);
+            exit(-1);
         }
         scopes.back().first.insert(id, Exp_t(t));
     }
@@ -249,16 +270,20 @@ public:
         exp.castType(t);
 
         // checks if the id was already declared in outer scope
-        if(isShadowSymbolName(id))
-            exit(1); //TODO: shadowing another var
+        if(isShadowSymbolName(id)){
+            output::errorDef(yylineno, id);
+            exit(-1);
+        }
         scopes.back().first.insert(id, exp);
     }
 
 
     Exp_t getExpByID(string id){
         //TODO: get back the Exp with the closest id name (Should be the only one)
-        if()
-
+        if(isShadowSymbolName(id)){
+            return getSymbolById(id).exp;
+        }
+        return Exp_t(); // not suppose to get here
     }
 
 
@@ -280,6 +305,35 @@ public:
         cout << "getSymbolById not suppose to get here : symbol not found" << endl;
         exit(-1);
     }
+
+    // check if the id was declared earlier
+    void checkUndefError(string id){
+        if(!isShadowSymbolName(id)){
+            output::errorUndef(yylineno, id);
+            exit(-1);
+        }
+        Symbol s = getSymbolById(id);
+        if(s.isFunc){
+            output::errorUndef(yylineno, id);
+            exit(-1);
+        }
+    }
+
+
+    void checkUndefFunc(string id){
+        if(!isShadowSymbolName(id)){
+            output::errorUndefFunc(yylineno, id);
+            exit(-1);
+        }
+        Symbol s = getSymbolById(id);
+        if(!s.isFunc){
+            output::errorUndefFunc(yylineno, id);
+            exit(-1);
+        }
+    }
+
+
+
 };
 
 #endif //HW3_TABLE_HPP
