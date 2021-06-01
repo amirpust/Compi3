@@ -9,7 +9,7 @@
 #include "hw3_output.hpp"
 
 extern int yylineno;
-
+extern string printType[];
 using namespace std;
 
 class Scope{
