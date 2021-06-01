@@ -1,6 +1,7 @@
 #ifndef HW3_ENUMS_H
 #define HW3_ENUMS_H
 
+#include <string>
 extern int lineno;
 
 enum TYPE {
