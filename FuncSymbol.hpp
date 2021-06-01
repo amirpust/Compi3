@@ -18,7 +18,7 @@ public:
     string id;
     SymList symList;
 
-    FuncSymbol(TYPE _retType, string& _id, SymList& _symList) :   retType(_retType),
+    FuncSymbol(TYPE _retType, string _id, SymList _symList) :   retType(_retType),
                                                                 id(_id),
                                                                 symList(_symList)
                                                                 {};
