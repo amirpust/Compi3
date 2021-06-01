@@ -123,8 +123,6 @@ public:
         for(int i = scopes.size() - 1; i >= 0; i--){
             if(scopes.back().first.isExist(id))
                 return true;
-            if(scopes.back().first.isFunc)
-                break;
         }
         return false;
     }
@@ -175,7 +173,7 @@ public:
     }
 
 
-    void callFunc(string funcName, ExpList arguments) {
+    Exp_t callFunc(string funcName, ExpList arguments) {
         //TODO: Make sure this function doesn't open a new scope. Only check if the arguments ok
         //TODO: please move it to "callFunc" (the function above)
 
@@ -190,7 +188,8 @@ public:
         auto types = func.getSymListTypes();
 
         if(arguments.size() != func.symbolList.size()){
-
+            output::errorPrototypeMismatch(yylineno, funcName, types);
+            exit(-1);
         }
 
 
@@ -200,6 +199,8 @@ public:
                 exit(-1);
             }
         }
+
+        return func.exp;
     }
 
 
@@ -260,6 +261,7 @@ public:
             output::errorDef(yylineno, id);
             exit(-1);
         }
+
         scopes.back().first.insert(id, Exp_t(t));
     }
 
