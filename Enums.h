@@ -2,6 +2,8 @@
 #define HW3_ENUMS_H
 
 #include <string>
+
+
 extern int lineno;
 
 enum TYPE {
@@ -12,7 +14,7 @@ enum TYPE {
     E_void
 };
 
-string printType[] = {
+std::string printType[] = {
         "BOOL",
         "B",
         "INT",
