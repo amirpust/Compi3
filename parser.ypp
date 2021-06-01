@@ -138,8 +138,8 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | Exp BINOP_PM Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
                 | ID                                                        {$$ = symbolTable.getExpByID($1) ; output::printProductionRule(36);}
                 | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
-                | NUM                                                       {$$ = Exp_t($1); output::printProductionRule(38);}
-                | NUM B                                                     {$$ = Exp_t($1, E_byte); output::printProductionRule(39);}
+                | NUM                                                       {$$ = Exp_t(E_int); output::printProductionRule(38);}
+                | NUM B                                                     {$$ = Exp_t(E_byte); output::printProductionRule(39);}
                 | STRING                                                    {$$ = Exp_t(E_string); output::printProductionRule(40);}
                 | TRUE                                                      {$$ = Exp_t(E_bool); output::printProductionRule(41);}
                 | FALSE                                                     {$$ = Exp_t(E_bool); output::printProductionRule(42);}
