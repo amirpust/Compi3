@@ -6,6 +6,7 @@
     #include "Exp_t.hpp"
     #include "Table.hpp"
     #include "BaseObj.hpp"
+    #define YYSTYPE BaseObj*
 
     BaseObj* id = new ID("yay");
 

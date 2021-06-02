@@ -78,5 +78,5 @@ public:
     Num(int val);
 };
 
-#define YYSTYPE *BaseObj
+#define YYSTYPE BaseObj*
 #endif //HW3_BASEOBJ_HPP
