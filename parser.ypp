@@ -121,7 +121,7 @@ Type :          INT                                                         {$$ 
                 | BYTE                                                      {$$ = new Type(E_byte) ;output::printProductionRule(32);}
                 | BOOL                                                      {$$ = new Type(E_bool) ;output::printProductionRule(33);}
 ;
-Exp:            LPAREN Exp RPAREN                                           {$$ = $1 ; output::printLog(castExp($1).t.toStr()) ; output::printProductionRule(34);}
+Exp:            LPAREN Exp RPAREN                                           {$$ = $1 ; output::printLog(castExp($1).t.getStr()) ; output::printProductionRule(34);}
                 | Exp BINOP_MD Exp                                          {
                                                                                 if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
                                                                                         output::errorMismatch(yylineno);
