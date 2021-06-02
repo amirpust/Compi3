@@ -153,7 +153,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                                                                                     delete $3;
                                                                             }
                 | Exp RELOP Exp                                             {
-                                                                                if(!castExp($1)->isNumerical() || !castExp($3)->isNumerical()){
+                                                                                if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
                                                                                     exit(12);
                                                                                 }
                                                                                 $$ = new Exp_t(Type(E_bool));
