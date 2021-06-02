@@ -31,7 +31,7 @@ public:
     bool castType(TYPE newT){
         if(newT == E_void || t == E_void){
             output::errorMismatch(lineno);
-            *output::logFile << "Casting void" << endl;
+            output::printLog("Casting void");
             exit(1);
         }
         if (newT == E_int && t == E_byte){

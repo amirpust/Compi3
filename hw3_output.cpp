@@ -88,8 +88,10 @@ void output::errorByteTooLarge(int lineno, const int& value) {
 }
 
 void output::printProductionRule(int rule){
-    *logFile << "printProductionRule " << rule << endl;
+    string str = "printProductionRule " +to_string(rule);
+    printLog(str);
 }
+
 void output::printInt(int i){
     cout << "printInt " << i << endl;
 }
@@ -102,4 +104,8 @@ void output::init() {
 void output::close() {
     logFile->close();
     delete logFile;
+}
+
+void output::printLog(const string s) {
+    *logFile << s << endl;
 }

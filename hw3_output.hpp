@@ -13,6 +13,8 @@ namespace output{
     void init();
     void close();
 
+    void printLog(const string s);
+
     void endScope();
     void printID(const string& id, int offset, const string& type);
 
