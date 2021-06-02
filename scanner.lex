@@ -26,8 +26,8 @@ digit		                                        ([0-9])
 %%
 void					                            {yylval = new BaseObj() ; return VOID;}
 int                                                 {yylval = new Type(E_bool) ; return INT;}
-byte                                                {yylval = new ID("yaY") ; return BYTE;}
-b                                                   {static_cast<*ID>(yylval) = new ID("yaY") ; return B;}
+byte                                                {yylval = new ID2("yaY") ; return BYTE;}
+b                                                   {yylval = new ID2(yytext) ; return B;}
 bool                                                {return BOOL;}
 and                                                 {return AND;}
 or                                                  {return OR;}

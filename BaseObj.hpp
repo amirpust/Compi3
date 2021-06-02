@@ -13,11 +13,18 @@ public:
     BaseObj() = default;
 };
 
+class ID2 : public BaseObj{
+public:
+    string id;
+    ID2(string _id) : id(_id) {};
+};
+
 class ID : public BaseObj{
 public:
     string id;
     ID(string _id) : id(_id) {};
 };
+
 class Type: public BaseObj {
 public:
     TYPE t;
