@@ -146,7 +146,7 @@ public:
 
         output::endScope();
 
-        if ( scopeList.empty()){
+        if (scopeList.empty()){
             output::printLog("ASSERT: closeCurrentScope - empty");
             return;
         }
@@ -162,12 +162,21 @@ public:
         if (scopeList.size() == 2){
             //Func scope
             FuncSymbol func = funcList.funcList.back();
+            output::printLog("closeCurrentScope - size:" + to_string(func.symList.symList.size()));
 
             for (int i = 0; i < func.symList.symList.size(); ++i) {
                 output::printLog("closeCurrentScope - iter 2:" + to_string(i));
 
+                output::printLog(closingScope.symList.symList[i].t.getStr());
+
                 string typeForPrinting = closingScope.symList.symList[i].t.getStr();
+
+                output::printLog("closeCurrentScope - iter 3:" + to_string(i));
+
+
                 output::printID(closingScope.symList.symList[i].id.id, -1-i, typeForPrinting);
+
+                output::printLog("closeCurrentScope - iter 4:" + to_string(i));
             }
         }
 
