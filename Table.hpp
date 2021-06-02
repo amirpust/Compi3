@@ -35,7 +35,16 @@ public:
     stack<int> offsets;
     int cases;
 
-    SymbolTable() : scopeList(), funcList(), seenMainFunc(false) , offsets() , cases(0){
+    SymbolTable(){
+        output::printLog("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+
+        scopeList = ScopeList();
+        funcList = FuncList();
+        seenMainFunc = false;
+        offsets = stack<int>();
+        cases = 0;
+
         scopeList.emplace_back(0, GLOBAL_SCOPE);
         output::printLog("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@scope list size" + to_string(scopeList.size()));
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << to_string(scopeList.size()) << endl;
