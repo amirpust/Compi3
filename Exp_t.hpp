@@ -117,7 +117,4 @@ public:
     typedef vector<Exp_t>::iterator iterator;
 };
 
-typedef
-
-
 #endif //HW3_EXP_T_HPP

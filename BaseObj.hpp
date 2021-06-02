@@ -49,11 +49,30 @@ public:
     SymList(const vector<Symbol> &symList);
     SymList();
 
-    void insert(Symbol sym){
-        symList.push_back(sym);
-    }
+    void insert(Symbol sym);
 
     typedef vector<Symbol>::iterator iterator;
+};
+
+class FuncSymbol : public BaseObj {
+public:
+    Type retType;
+    ID id;
+    SymList symList;
+
+    FuncSymbol(Type _retType, ID _id, SymList _symList);;
+};
+
+class FuncList : public BaseObj {
+public:
+    vector<FuncSymbol> funcList;
+
+    FuncList(vector<FuncSymbol> & _funcList);
+    FuncList();;
+
+    void insert(FuncSymbol func);
+
+    typedef vector<FuncSymbol>::iterator iterator;
 };
 
 #define YYSTYPE BaseObj*
