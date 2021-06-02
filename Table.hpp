@@ -127,8 +127,9 @@ public:
 
         SymList sArgs = SymList();
         for (ExpList::iterator a = arguments.expList.begin(); a != arguments.expList.end(); a++){
-            sArgs.insert(Symbol(IDtype(""),Type((*a).t)));
+            sArgs.insert(Symbol(IDtype(""),(*a).t));
         }
+        output::printLog("callFunc: Flag 1");
 
         FuncSymbol func = *findFunc(funcName);
         output::printLog("func size: " + to_string(func.symList.symList.size()));
