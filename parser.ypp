@@ -71,13 +71,13 @@ Funcs:          /*epsilon*/                                                 {out
                 | FuncDecl Funcs                                            {output::printProductionRule(3);}
 ;
 FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
-                                    {symbolTable.openFuncScope($2, $4, $1); output::printLog("Flag");}
+                                    {symbolTable.openFuncScope($2, $4, $1); output::printLog("open scope Flag");}
                                     Statements
-                                    {symbolTable.closeCurrentScope();}
+                                    {output::printLog("Flag close scope"); symbolTable.closeCurrentScope();}
                                     RBRACE                                  {output::printProductionRule(4);}
 ;
-RetType:        Type                                                        {output::printLog("Flag type");$$ = $1; output::printProductionRule(5);}
-                | VOID                                                      {output::printLog("Flag void");$$ = $1; output::printProductionRule(6);}
+RetType:        Type                                                        {output::printLog("Flag type"); $$ = $1; output::printProductionRule(5);}
+                | VOID                                                      {output::printLog("Flag void"); $$ = $1; output::printProductionRule(6);}
 ;
 Formals:        /*epsilon*/                                                 {$$ = SymList() ; output::printProductionRule(7);}
                 | FormalsList                                               {$$ = SymList($1) ; output::printProductionRule(8);}
