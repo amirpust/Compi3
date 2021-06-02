@@ -24,7 +24,7 @@ whitespace	                                        ([ \t\r\n])
 noZeroDigit	                                        ([1-9])
 digit		                                        ([0-9])
 %%
-void					                            {yylval = new ID("void") ;return VOID;}
+void					                            {yylval = new BaseObj() ;return VOID;}
 int                                                 {return INT;}
 byte                                                {return BYTE;}
 b                                                   {return B;}
