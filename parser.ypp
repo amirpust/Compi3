@@ -108,7 +108,7 @@ Statement:      LBRACE {symbolTable.openNewScope(); }
 ;
 
 BOOLEXP:        Exp                                                         {if (castExp($1).t != Type(E_bool)) {output::errorMismatch(yylineno); exit(1);} $$ = $1;}
-NUMEXP:         Exp                                                         {if (!castExp($1).isNumerical) {output::errorMismatch(yylineno); exit(1);} $$ = $1;}
+NUMEXP:         Exp                                                         {if (!castExp($1).isNumerical()) {output::errorMismatch(yylineno); exit(1);} $$ = $1;}
 
 STARTSCOPE:     /*epsilon*/                                                  {symbolTable.openNewScope();}
 ENDSCOPE:       /*epsilon*/                                                  {symbolTable.closeCurrentScope();}
@@ -144,10 +144,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                                                                                     delete $1;
                                                                                     delete $3;
                                                                             }
-                | Exp RELOP Exp                                             {
-                                                                                if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
-                                                                                    exit(12);
-                                                                                }
+                | NUMEXP RELOP NUMEXP                                       {
                                                                                 $$ = new Exp_t(Type(E_bool));
                                                                                 delete $1;
                                                                                 delete $3;
