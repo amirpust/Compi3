@@ -5,6 +5,7 @@
 #include "Enums.hpp"
 #include <vector>
 #include <utility>
+#define YYSTYPE BaseObj*
 
 using namespace std;
 
