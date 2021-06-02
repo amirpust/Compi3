@@ -93,3 +93,13 @@ void output::printProductionRule(int rule){
 void output::printInt(int i){
     cout << "printInt " << i << endl;
 }
+
+void output::init() {
+    logFile = new ofstream();
+    logFile->open("log.txt");
+}
+
+void output::close() {
+    logFile->close();
+    delete logFile;
+}

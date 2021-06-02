@@ -10,14 +10,8 @@ using namespace std;
 namespace output{
     ofstream* logFile;
 
-    void init(){
-        logFile = new ofstream();
-        logFile->open("log.txt");
-    }
-    void close(){
-        logFile->close();
-        delete logFile;
-    }
+    void init();
+    void close();
 
     void endScope();
     void printID(const string& id, int offset, const string& type);
