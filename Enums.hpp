@@ -34,7 +34,8 @@ enum SCOPE_REASON{
     IF_SCOPE,
     CASE_SCOPE,
     SWITCH_SCOPE,
-    LOOP_SCOPE
+    LOOP_SCOPE,
+    FUNC_SCOPE
 };
 
 

@@ -81,6 +81,7 @@ public:
 
         funcList.insert(FuncSymbol(retType, id, args));
         offsets.push(0);
+        scopeList.emplace_back(offsets.top(), FUNC_SCOPE);
     }
 
     // triggers
