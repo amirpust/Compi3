@@ -94,7 +94,7 @@ public:
                 if (sym == sym2)
                     continue;
                 if ((*sym).id.id == (*sym2).id.id){
-                    output::printLog("isId2:" + (*sym).id.id));
+                    output::printLog("isId2:" + (*sym).id.id);
                     output::errorDef(yylineno, (*sym).id.id);
                     exit(444);
                 }
