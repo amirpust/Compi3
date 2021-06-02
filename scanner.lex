@@ -1,4 +1,5 @@
 %{
+    #define YYSTYPE BaseObj*
 	#include <stdio.h>
 	#include <iostream>
     #include "Enums.hpp"
@@ -6,9 +7,6 @@
     #include "Exp_t.hpp"
     #include "Table.hpp"
     #include "BaseObj.hpp"
-    #define YYSTYPE BaseObj*
-
-    BaseObj* id = new ID("yay");
 
     #include "hw3_output.hpp"
     #include "parser.tab.hpp"
