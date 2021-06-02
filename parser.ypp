@@ -124,8 +124,18 @@ Type :          INT                                                         {$$ 
                 | BOOL                                                      {$$ = new Type(E_bool) ;output::printProductionRule(33);}
 ;
 Exp:            LPAREN Exp RPAREN                                           {$$ = $1; output::printProductionRule(34);}
-                | NUMEXP BINOP_MD NUMEXP                                    {$$ = new Exp_t(Type(castExp($1).getDualType(castExp($3)))); output::printProductionRule(35);}
-                | NUMEXP BINOP_PM NUMEXP                                    {$$ = new Exp_t(Type(castExp($1).getDualType(castExp($3)))); output::printProductionRule(35);}
+                | Exp BINOP_MD Exp                                          {
+                                                                                if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
+                                                                                        output::errorMismatch(yylineno);
+                                                                                        exit(12);
+                                                                                    };
+                                                                                $$ = new Exp_t(Type(castExp($1).getDualType(castExp($3)))); output::printProductionRule(35);}
+                | Exp BINOP_PM Exp                                          {
+                                                                                if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
+                                                                                    output::errorMismatch(yylineno);
+                                                                                    exit(12);
+                                                                                };
+                                                                                $$ = new Exp_t(Type(castExp($1).getDualType(castExp($3)))); output::printProductionRule(35);}
                 | ID                                                        {$$ = new Exp_t(symbolTable.getExpByID(castID($1))) ; output::printProductionRule(36);}
                 | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = new Exp_t(Type(E_int)); output::printProductionRule(38);}
@@ -133,19 +143,21 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | STRING                                                    {$$ = new Exp_t(Type(E_string)); ; output::printProductionRule(40);}
                 | TRUE                                                      {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(41);}
                 | FALSE                                                     {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(42);}
-                | BOOLEXP AND BOOLEXP                                       {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(44);}
-                | BOOLEXP OR BOOLEXP                                        {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(45);}
-                | NOT BOOLEXP                                               {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(43);}
+                | Exp AND Exp                                               {if (castExp($1).t != Type(E_bool) || castExp($3).t != Type(E_bool)) {output::errorMismatch(yylineno); exit(1);} ; $$ = new Exp_t(Type(E_bool)); output::printProductionRule(44);}
+                | Exp OR Exp                                                {if (castExp($1).t != Type(E_bool) || castExp($3).t != Type(E_bool)) {output::errorMismatch(yylineno); exit(1);} ; $$ = new Exp_t(Type(E_bool)); output::printProductionRule(45);}
+                | NOT Exp                                                   {if (castExp($1).t != Type(E_bool)) {output::errorMismatch(yylineno); exit(1);} ;$$ = new Exp_t(Type(E_bool)); output::printProductionRule(43);}
                 | Exp EQUALITY Exp                                          {
                                                                                     if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
+                                                                                        output::errorMismatch(yylineno);
                                                                                         exit(12);
                                                                                     }
                                                                                     $$ = new Exp_t(Type(E_bool));
                                                                                     delete $1;
                                                                                     delete $3;
                                                                             }
-                | NUMEXP RELOP NUMEXP                                          {
+                | Exp RELOP Exp                                             {
                                                                                 if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
+                                                                                    output::errorMismatch(yylineno);
                                                                                     exit(12);
                                                                                 }
                                                                                 $$ = new Exp_t(Type(E_bool));
