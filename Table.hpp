@@ -146,7 +146,7 @@ public:
         Scope closingScope = scopeList.back();
 
         for (int i = 0; i < closingScope.symList.symList.size(); ++i) {
-            string typeForPrinting = typeStr[(int)(closingScope.symList.symList[i].t.t)];
+            string typeForPrinting = closingScope.symList.symList[i].t.getStr();
             output::printID(closingScope.symList.symList[i].id.id, offsets.top()--, typeForPrinting);
         }
 
@@ -155,7 +155,7 @@ public:
             FuncSymbol func = funcList.funcList.back();
 
             for (int i = 0; i < func.symList.symList.size(); ++i) {
-                string typeForPrinting = typeStr[(int)(closingScope.symList.symList[i].t.t)];
+                string typeForPrinting = closingScope.symList.symList[i].t.getStr();
                 output::printID(closingScope.symList.symList[i].id.id, -1-i, typeForPrinting);
             }
         }
@@ -163,9 +163,9 @@ public:
         if (scopeList.size() == 1){
             for (FuncList::iterator func = funcList.funcList.begin(); func != funcList.funcList.end(); ++func){
                 std::vector<string> argTypes;
-                string funcType = typeStr[(int)(*func).retType.t];
+                string funcType = (*func).retType.getStr();
                 for(SymList::iterator sym = (*func).symList.symList.begin(); sym != (*func).symList.symList.end(); ++sym){
-                    argTypes.push_back(typeStr[(int)((*sym).t.t)]);
+                    argTypes.push_back((*sym).t.getStr());
                 }
                 output::printID((*func).id.id, 0, output::makeFunctionType(funcType, argTypes));
             }
@@ -173,6 +173,7 @@ public:
 
         scopeList.pop_back();
     }
+
     void checkReturnType(Exp_t exp){
         if(!exp.castType(funcList.funcList.back().retType)){
             output::errorMismatch(yylineno);
