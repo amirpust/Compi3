@@ -18,7 +18,6 @@ public:
     string id;
     ID(string _id) : id(_id) {};
 };
-
 class Type: public BaseObj {
 public:
     TYPE t;
@@ -31,7 +30,6 @@ public:
     bool operator!=(const Type rhs) const;
     bool operator!=(const TYPE rhs) const;
 };
-
 class Symbol : public BaseObj {
 public:
     ID id;
@@ -45,7 +43,6 @@ public:
 class SymList : public BaseObj {
 public:
     vector<Symbol> symList;
-
     SymList(const vector<Symbol> &symList);
     SymList();
 
@@ -73,6 +70,12 @@ public:
     void insert(FuncSymbol func);
 
     typedef vector<FuncSymbol>::iterator iterator;
+};
+
+class Num: public BaseObj{
+public:
+    int val;
+    Num(int val);
 };
 
 #define YYSTYPE BaseObj*

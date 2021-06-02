@@ -39,3 +39,5 @@ FuncList::FuncList() : funcList() {}
 void FuncList::insert(FuncSymbol func) {
     funcList.push_back(func);
 }
+
+Num::Num(int val) : val(val) {}
