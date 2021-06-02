@@ -85,7 +85,7 @@ public:
         }
 
         for(SymList::iterator sym = args.symList.begin(); sym != args.symList.end(); sym++){
-            if(isId((*sym).id)){
+            if(findFunc((*sym).id) != funcList.funcList.end()){
                 output::printLog("isId:" + (*sym).id.id);
                 output::errorDef(yylineno, (*sym).id.id);
                 exit(444);
