@@ -116,6 +116,8 @@ public:
     }
 
     Type callFunc(IDtype funcName, ExpList arguments) {
+        output::printLog("callFunc: start");
+
         reverse(arguments.expList.begin(),arguments.expList.end());
 
         if(findFunc(funcName) == funcList.funcList.end()){
@@ -129,6 +131,9 @@ public:
         }
 
         FuncSymbol func = *findFunc(funcName);
+        output::printLog("func size: " + to_string(func.symList.symList.size()));
+        output::printLog("sArgs size: " + to_string(sArgs.symList.size()));
+
         std::vector<string> strTypes = std::vector<string>();
         for (SymList::iterator i = func.symList.symList.begin(); i != func.symList.symList.end(); i++){
             strTypes.push_back((*i).t.getStr());
