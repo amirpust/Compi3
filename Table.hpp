@@ -142,6 +142,8 @@ public:
         return func.retType;
     }
     void closeCurrentScope(){
+        output::printLog("closeCurrentScope - entering flag");
+
         output::endScope();
 
         if ( scopeList.empty()){
