@@ -9,7 +9,8 @@
 class Exp_t{
 public:
     TYPE t;
-    Exp_t():t(E_bool) {};
+    bool initialized;
+    Exp_t():t(E_bool), initialized(false) {};
     explicit Exp_t(TYPE t) : t(t) {};
     Exp_t(TYPE t, int i) : t(t) {
         if ( t == E_byte && i >= (1 << 8)){
@@ -29,6 +30,12 @@ public:
         return E_int;
     }
     bool castType(TYPE newT){
+        if(!initialized){
+            initialized = true;
+            t = newT;
+            return true;
+        }
+
         if(newT == E_void || t == E_void){
             output::errorMismatch(lineno);
             output::printLog("Casting void");
