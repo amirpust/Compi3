@@ -167,17 +167,17 @@ public:
             output::printLog("closeCurrentScope - T:" + to_string((int)(func.symList.symList[0].t.t)));
 
             for (int i = 0; i < func.symList.symList.size(); ++i) {
-                output::printLog("closeCurrentScope - iter 2:" + to_string(i));
+                output::printLog("closeCurrentScope - iter 2: " + to_string(i));
 
-                output::printLog(to_string(closingScope.symList.symList[i].t.t));
-                output::printLog(closingScope.symList.symList[i].t.getStr());
+                output::printLog(to_string(func.symList.symList[i].t.t));
+                output::printLog(func.symList.symList[i].t.getStr());
 
-                string typeForPrinting = closingScope.symList.symList[i].t.getStr();
+                string typeForPrinting = func.symList.symList[i].t.getStr();
 
                 output::printLog("closeCurrentScope - iter 3:" + to_string(i));
 
 
-                output::printID(closingScope.symList.symList[i].id.id, -1-i, typeForPrinting);
+                output::printID(func.symList.symList[i].id.id, -1-i, typeForPrinting);
 
                 output::printLog("closeCurrentScope - iter 4:" + to_string(i));
             }
