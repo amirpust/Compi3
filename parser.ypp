@@ -120,8 +120,8 @@ Statement:      LBRACE Statements RBRACE                                    {out
                             {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(26);}
 ;
-Call :          ID LPAREN ExpList RPAREN                                    {$$ = symbolTable.callFunc(castID($1), castExpList($3)) ; output::printProductionRule(27);}
-                | ID LPAREN RPAREN                                          {$$ = symbolTable.callFunc(castID($1), ExpList()) ; output::printProductionRule(28);}
+Call :          ID LPAREN ExpList RPAREN                                    {$$ = new Exp_t(symbolTable.callFunc(castID($1), castExpList($3))) ; output::printProductionRule(27);}
+                | ID LPAREN RPAREN                                          {$$ = new Exp_t(symbolTable.callFunc(castID($1), ExpList())) ; output::printProductionRule(28);}
 ;
 ExpList:        Exp                                                         {$$ = new ExpList(); castExpList($$).insert(castExp($1)); output::printProductionRule(29);}
                 | Exp COMMA ExpList                                         {$$ = $3; castExpList($$).insert(castExp($1)); output::printProductionRule(30);}
@@ -144,7 +144,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | Exp OR Exp                                                {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(45);}
                 | NOT Exp                                                   {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(43);}
                 | Exp EQUALITY Exp                                          {
-                                                                                    if(!$1->isNumerical() || !$3->isNumerical()){
+                                                                                    if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
                                                                                         exit(12);
                                                                                     }
                                                                                     $$ = new Exp_t(Type(E_bool));
