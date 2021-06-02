@@ -96,23 +96,22 @@ Statement:      LBRACE {symbolTable.openNewScope(); }
                 | RETURN SC                                                 {symbolTable.checkReturnType(Exp_t(Type(E_void))) ; output::printProductionRule(19);}
                 | RETURN Exp SC                                             {symbolTable.checkReturnType(castExp($2)) ; output::printProductionRule(20);}
                 | IF LPAREN Exp RPAREN
-                                    { if(castExp($3).t == E_bool) {symbolTable.openNewScope();symbolTable.openNewScope();output::printProductionRule(21);} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
+                                    { if(castExp($3).t == E_bool) {symbolTable.openNewScope();output::printProductionRule(21);} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
                                     Statement
-                                    {output::printLog("Start: Close if scope") ; symbolTable.closeCurrentScope(); symbolTable.closeCurrentScope(); output::printLog("Done: Close if scope") ;}
+                                    {output::printLog("Start: Close if scope") ; symbolTable.closeCurrentScope(); output::printLog("Done: Close if scope") ;}
                                                                             {output::printProductionRule(21);}
                 | IF LPAREN Exp RPAREN
-                                    {if(castExp($3).t == E_bool) {symbolTable.openNewScope();symbolTable.openNewScope();} else { output::errorMismatch(lineno); exit(1);}}
+                                    {if(castExp($3).t == E_bool) {symbolTable.openNewScope();} else { output::errorMismatch(lineno); exit(1);}}
                                     Statement
                                     ELSE
-                                    {output::printLog("@@@@@@@@@ closing IF scope"); symbolTable.closeCurrentScope();symbolTable.closeCurrentScope();}
-                                    {symbolTable.openNewScope();symbolTable.openNewScope();}
+                                    {output::printLog("@@@@@@@@@ closing IF scope");}
                                     Statement
-                                    {symbolTable.closeCurrentScope();symbolTable.closeCurrentScope();}
+                                    {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(22);}
                 | WHILE LPAREN Exp RPAREN
-                                     {if(castExp($3).t == E_bool) {symbolTable.openLoopScope();symbolTable.openLoopScope();} else { output::errorMismatch(lineno); exit(1);}}
+                                     {if(castExp($3).t == E_bool) {symbolTable.openLoopScope();} else { output::errorMismatch(lineno); exit(1);}}
                                      Statement
-                                     {symbolTable.closeCurrentScope();symbolTable.closeCurrentScope();}
+                                     {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(23);}
                 | BREAK SC                                                  {symbolTable.triggerBreak(); output::printProductionRule(24);}
                 | CONTINUE SC                                               {symbolTable.triggerContinue(); output::printProductionRule(25);}
@@ -175,10 +174,9 @@ CaseDecl:       CASE NUM COLON  {symbolTable.triggerCase();}
 void yyerror(const char* e){
     output::errorSyn(yylineno);
     output::printLog("error");
-    fclose(stdout);
-    fclose(stderr);
     exit(-1);
 }
+
 int main(){
     //yydebug = 1;
 
