@@ -217,7 +217,7 @@ private:
                 return f;
             }
         }
-        return funcList.end();
+        return funcList.funcList.end();
     }
     Symbol* findSym(ID _id){
         for(ScopeList::iterator scope = scopeList.begin(); scope != scopeList.end(); scope++){
