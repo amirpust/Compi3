@@ -105,9 +105,9 @@ Statement:      LBRACE {symbolTable.openNewScope(); }
                                     Statement
                                     {symbolTable.closeCurrentScope();symbolTable.closeCurrentScope();}
                                     ELSE
-                                    {output::printLog("@@@@@@@@@ closing ELSE scope");symbolTable.openNewScope();symbolTable.openNewScope();}
+                                    {symbolTable.openNewScope();symbolTable.openNewScope();}
                                     Statement
-                                    {symbolTable.closeCurrentScope();symbolTable.closeCurrentScope();}
+                                    {output::printLog("@@@@@@@@@ closing ELSE scope");symbolTable.closeCurrentScope();symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(22);}
                 | WHILE LPAREN Exp RPAREN
                                      {if(castExp($3).t == E_bool) {symbolTable.openLoopScope();symbolTable.openLoopScope();} else { output::errorMismatch(lineno); exit(1);}}
