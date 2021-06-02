@@ -108,7 +108,7 @@ Statement:      LBRACE {symbolTable.openNewScope(); }
 ;
 
 BOOLEXP:        Exp                                                         {if (castExp($1).t != Type(E_bool)) {output::errorMismatch(yylineno); exit(1);} $$ = $1;}
-NUMEXP:         Exp                                                         {output::printLog(to_string(castExp($1).t.t)) ;if (!castExp($1).isNumerical()) {output::errorMismatch(yylineno); exit(1);} $$ = $1;}
+NUMEXP:         Exp                                                         {output::printLog("here") ; output::printLog(to_string(castExp($1).t.t)) ;if (!castExp($1).isNumerical()) {output::errorMismatch(yylineno); exit(1);} $$ = $1;}
 
 STARTSCOPE:     /*epsilon*/                                                  {symbolTable.openNewScope();}
 ENDSCOPE:       /*epsilon*/                                                  {symbolTable.closeCurrentScope();}
@@ -129,7 +129,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | ID                                                        {$$ = new Exp_t(symbolTable.getExpByID(castID($1))) ; output::printProductionRule(36);}
                 | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = new Exp_t(Type(E_int)); output::printProductionRule(38);}
-                | NUM B                                                     {if(castNum($1).val > 255) {output::errorByteTooLarge(yylineno, castNum($1).val); exit(1); } $$ = new Exp_t(Type(E_byte)); output::printProductionRule(39);}
+                | NUM B                                                     {if(castNum($1).val > 255) {output::errorByteTooLarge(yylineno, castNum($1).val); exit(1); } ; $$ = new Exp_t(Type(E_byte)); output::printProductionRule(39);}
                 | STRING                                                    {$$ = new Exp_t(Type(E_string)); ; output::printProductionRule(40);}
                 | TRUE                                                      {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(41);}
                 | FALSE                                                     {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(42);}
