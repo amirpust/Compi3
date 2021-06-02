@@ -202,7 +202,7 @@ public:
                 //Func scope
                 FuncSymbol func = funcList.funcList.back();
 
-                for (int i = 0; i < func.symList.symList.size(); ++i) {
+                for (unsigned int i = 0; i < func.symList.symList.size(); ++i) {
                     string typeForPrinting = func.symList.symList[i].t.getStr();
                     output::printID(func.symList.symList[i].id.id, -1 - i,
                                     typeForPrinting);
@@ -211,7 +211,7 @@ public:
 
             Scope closingScope = scopeList.back();
             offsets.pop();
-            for (int i = 0; i < closingScope.symList.symList.size(); ++i) {
+            for (unsigned int i = 0; i < closingScope.symList.symList.size(); ++i) {
                 string typeForPrinting = closingScope.symList.symList[i].t.getStr();
                 output::printID(closingScope.symList.symList[i].id.id,
                                 offsets.top() + i, typeForPrinting);
