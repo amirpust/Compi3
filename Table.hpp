@@ -37,6 +37,7 @@ public:
 
     SymbolTable() : scopeList(), funcList(), seenMainFunc(false) , offsets() , cases(0){
         scopeList.emplace_back(0, GLOBAL_SCOPE);
+        output::printLog("scope list size" + to_string(scopeList.size()));
 
         funcList.insert(FuncSymbol(Type(E_void),IDtype("print"),SymList(vector<Symbol>(1, Symbol(IDtype(""), Type(E_string))))));
         funcList.insert(FuncSymbol(Type(E_void),IDtype("printi"),SymList(vector<Symbol>(1, Symbol(IDtype(""), Type(E_int))))));
@@ -154,32 +155,9 @@ public:
             return;
         }
 
-        Scope closingScope = scopeList.back();
-
-        for (int i = 0; i < closingScope.symList.symList.size(); ++i) {
-            string typeForPrinting = closingScope.symList.symList[i].t.getStr();
-            output::printID(closingScope.symList.symList[i].id.id, offsets.top()--, typeForPrinting);
-        }
-
-        if (scopeList.size() == 2){
-            //Func scope
-            FuncSymbol func = funcList.funcList.back();
-
-            for (int i = 0; i < func.symList.symList.size(); ++i) {
-
-                output::printLog(to_string(func.symList.symList[i].t.t));
-                output::printLog(func.symList.symList[i].t.getStr());
-
-                string typeForPrinting = func.symList.symList[i].t.getStr();
-
-
-                output::printID(func.symList.symList[i].id.id, -1-i, typeForPrinting);
-            }
-        }
-
-        output::printLog("closeCurrentScope - mid flag");
 
         if (scopeList.size() == 1){
+            //Close global
             for (FuncList::iterator func = funcList.funcList.begin(); func != funcList.funcList.end(); ++func){
                 std::vector<string> argTypes;
                 string funcType = (*func).retType.getStr();
@@ -188,7 +166,34 @@ public:
                 }
                 output::printID((*func).id.id, 0, output::makeFunctionType(funcType, argTypes));
             }
+        } else {
+            if (scopeList.size() == 2) {
+                //Func scope
+                FuncSymbol func = funcList.funcList.back();
+
+                for (int i = 0; i < func.symList.symList.size(); ++i) {
+
+                    output::printLog(to_string(func.symList.symList[i].t.t));
+                    output::printLog(func.symList.symList[i].t.getStr());
+
+                    string typeForPrinting = func.symList.symList[i].t.getStr();
+
+
+                    output::printID(func.symList.symList[i].id.id, -1 - i,
+                                    typeForPrinting);
+                }
+            }
+
+            Scope closingScope = scopeList.back();
+
+            for (int i = 0; i < closingScope.symList.symList.size(); ++i) {
+                string typeForPrinting = closingScope.symList.symList[i].t.getStr();
+                output::printID(closingScope.symList.symList[i].id.id,
+                                offsets.top()--, typeForPrinting);
+            }
+
         }
+
 
         scopeList.pop_back();
 
