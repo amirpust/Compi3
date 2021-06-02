@@ -85,7 +85,7 @@ Formals:        /*epsilon*/                                                 {$$ 
 FormalsList:    FormalDecl                                                  {$$ = SymList() ; $$.push_back($1); output::printProductionRule(9);}
                 |FormalDecl COMMA FormalsList                               {$$ = SymList($3) ; $$.push_back($1); output::printProductionRule(10);}
 ;
-FormalDecl:     Type ID                                                     {output::printLog($2);output::printLog(to_string((int)($1)); $$ = Symbol($2, $1) ; output::printProductionRule(11);}
+FormalDecl:     Type ID                                                     {output::printLog($2);output::printLog(to_string((int)($1))); $$ = Symbol($2, $1) ; output::printProductionRule(11);}
 ;
 Statements:     Statement                                                   {output::printProductionRule(12);}
                 |Statements Statement                                       {output::printProductionRule(13);}
