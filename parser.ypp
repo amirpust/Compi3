@@ -6,7 +6,7 @@
     #include "Exp_t.hpp"
     #include "Table.hpp"
     #include "BaseObj.hpp"
-    #define castType(toCast) {*static_cast<Type*>}
+    #define castType(toCast) (*(static_cast<Type*>(toCast)))
 
     int yylex();
     // extern int yylineno; moved it to table.hpp
