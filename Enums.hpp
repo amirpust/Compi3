@@ -3,7 +3,7 @@
 
 #include <string>
 
-extern int lineno;
+extern int yylineno;
 
 enum TYPE {
     E_bool,

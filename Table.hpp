@@ -11,7 +11,6 @@
 #include <algorithm>
 
 
-extern int yylineno;
 
 using namespace std;
 
