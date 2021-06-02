@@ -86,7 +86,7 @@ public:
 
         for(SymList::iterator sym = args.symList.begin(); sym != args.symList.end(); sym++){
             if(isId((*sym).id)){
-                output::printLog("isId:" + isId((*sym).id));
+                output::printLog("isId:" + (*sym).id.id);
                 output::errorDef(yylineno, (*sym).id.id);
                 exit(444);
             }
@@ -94,7 +94,7 @@ public:
                 if (sym == sym2)
                     continue;
                 if ((*sym).id.id == (*sym2).id.id){
-                    output::printLog("isId2:" + isId((*sym).id));
+                    output::printLog("isId2:" + (*sym).id.id));
                     output::errorDef(yylineno, (*sym).id.id);
                     exit(444);
                 }
@@ -164,7 +164,7 @@ public:
         }
 
 
-        for (int i = 0; i < sArgs.symList.size(); ++i) {
+        for (unsigned int i = 0; i < sArgs.symList.size(); ++i) {
             if(
                     (sArgs.symList[i].t.t != func.symList.symList[i].t.t) &&
                     !(sArgs.symList[i].t.t == E_byte && func.symList.symList[i].t.t == E_int)){
