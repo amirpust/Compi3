@@ -84,6 +84,21 @@ public:
             exit(1);
         }
 
+        for(SymList::iterator sym = args.symList.begin(); sym != args.symList.end(); sym++){
+            if(isId((*sym).id)){
+                output::errorDef(yylineno, (*sym).id.id);
+                exit(444);
+            }
+            for(SymList::iterator sym2 = sym; sym2 != args.symList.end(); sym2++){
+                if (sym == sym2)
+                    continue;
+                if ( (*sym).id.id ==  (*sym2).id.id){
+                    output::errorDef(yylineno, (*sym).id.id);
+                    exit(444);
+                }
+            }
+        }
+
         funcList.insert(FuncSymbol(retType, id, args));
         offsets.push(0);
         scopeList.emplace_back(offsets.top(), FUNC_SCOPE);
