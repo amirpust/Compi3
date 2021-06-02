@@ -84,6 +84,7 @@ public:
             exit(1);
         }
 
+        funcList.insert(FuncSymbol(retType, id, args));
         for(SymList::iterator sym = args.symList.begin(); sym != args.symList.end(); sym++){
             if(findFunc((*sym).id) != funcList.funcList.end()){
                 output::printLog("isId:" + (*sym).id.id);
@@ -101,7 +102,7 @@ public:
             }
         }
 
-        funcList.insert(FuncSymbol(retType, id, args));
+
         offsets.push(0);
         scopeList.emplace_back(offsets.top(), FUNC_SCOPE);
     }
