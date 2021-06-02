@@ -120,6 +120,8 @@ public:
 
         reverse(arguments.expList.begin(),arguments.expList.end());
 
+        output::printLog("callFunc: after reverse");
+
         if(findFunc(funcName) == funcList.funcList.end()){
             output::errorUndefFunc(yylineno, funcName.id);
             exit(1);
