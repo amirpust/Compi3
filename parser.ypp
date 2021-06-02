@@ -137,7 +137,7 @@ Type :          INT                                                         {$$ 
 Exp:            LPAREN Exp RPAREN                                           {$$ = Exp_t($2);  output::printProductionRule(34);}
                 | Exp BINOP_MD Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
                 | Exp BINOP_PM Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
-                | ID                                                        {$$ = symbolTable.getExpByID($1) ; output::printProductionRule(36);}
+                | ID                                                        {output::printLog("Flag " + $1)$$ = symbolTable.getExpByID($1) ; output::printProductionRule(36);}
                 | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = Exp_t(E_int); output::printProductionRule(38);}
                 | NUM B                                                     {if($1 > 255) {output::errorByteTooLarge(yylineno, $1); exit(1); } $$ = Exp_t(E_byte); output::printProductionRule(39);}
