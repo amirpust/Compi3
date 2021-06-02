@@ -10,10 +10,9 @@
 class Exp_t : public BaseObj{
 public:
     Type t;
-    bool initialized;
-    Exp_t():t(E_bool), initialized(false) {};
-    explicit Exp_t(Type t) : t(t), initialized(true) {};
-    Exp_t(Type t, int i) : t(t), initialized(true) {
+    Exp_t(): t(E_def) {};
+    explicit Exp_t(Type t) : t(t) {};
+    Exp_t(Type t, int i) : t(t) {
         if ( t == E_byte && i >= (1 << 8)){
             output::errorByteTooLarge(yylineno, i);
             exit(5456);
@@ -34,12 +33,6 @@ public:
         return E_int;
     }
     bool castType(Type newT){
-        if(!initialized){
-            initialized = true;
-            t = newT;
-            return true;
-        }
-
         if(newT == E_void || t == E_void){
             output::errorMismatch(yylineno);
             output::printLog("Casting void");
@@ -52,6 +45,10 @@ public:
         if (t == newT){
             return true;
         };
+        if (t == E_def){
+            t = newT;
+            return true;
+        }
 
         return false;
     }
@@ -59,7 +56,7 @@ public:
     Exp_t& operator=(const Exp_t& e){
         if (!Exp_t(e).castType(t)){
             output::errorMismatch(yylineno);
-            output::printLog("Flag casting from " + e.t.getStr() + " to " + e.t.getStr());
+            output::printLog("Flag casting from " + e.t.getStr() + " to " + t.getStr());
             exit(-1);
         }
         return (*this);

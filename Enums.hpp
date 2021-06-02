@@ -6,6 +6,7 @@
 extern int yylineno;
 
 enum TYPE {
+    E_def,
     E_bool,
     E_byte,
     E_int,
@@ -14,6 +15,7 @@ enum TYPE {
 };
 
 const std::string typeStr[] = {
+        "default",
         "BOOL",
         "BYTE",
         "INT",
