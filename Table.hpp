@@ -38,8 +38,8 @@ public:
 
     SymbolTable() : scopeList(), funcList(), seenMainFunc(false) , offsets() , cases(0){
         scopeList.emplace_back(0, GLOBAL_SCOPE);
-        funcList.emplace_back(E_void, string("print"), SymList(1, Symbol(string("mockId"), E_string)));
-        funcList.emplace_back(E_void, "printi", SymList(1, Symbol("mockId", E_int)));
+        funcList.emplace_back(E_void, "print", SymList(1, Symbol("", E_string)));
+        funcList.emplace_back(E_void, "printi", SymList(1, Symbol("", E_int)));
         offsets.push(0);
     };
 
@@ -71,7 +71,7 @@ public:
             seenMainFunc = true;
         }
 
-        if (findFunc(id) != funcList.end()){
+        if (isId(id)){
             output::errorDef(lineno, id);
             exit(1);
         }
@@ -113,7 +113,7 @@ public:
 
         SymList sArgs = SymList();
         for (ExpList::iterator a = arguments.begin(); a != arguments.end(); a++){
-            sArgs.emplace_back("mockId", (*a).t);
+            sArgs.emplace_back("", (*a).t);
         }
 
         FuncSymbol func = *findFunc(funcName);
@@ -144,6 +144,27 @@ public:
         for (int i = 0; i < closingScope.symList.size(); ++i) {
             string typeForPrinting = typeStr[(int)(closingScope.symList[i].second)];
             output::printID(closingScope.symList[i].first, offsets.top()--, typeForPrinting);
+        }
+
+        if (scopeList.size() == 2){
+            //Func scope
+            FuncSymbol func = funcList.back();
+
+            for (int i = 0; i < func.symList.size(); ++i) {
+                string typeForPrinting = typeStr[(int)(closingScope.symList[i].second)];
+                output::printID(closingScope.symList[i].first, -1-i, typeForPrinting);
+            }
+        }
+
+        if (scopeList.size() == 1){
+            for (FuncList::iterator func = funcList.begin(); func != funcList.end(); ++func){
+                std::vector<string> argTypes;
+                string funcType = typeStr[(int)(*func).retType];
+                for(SymList::iterator sym = (*func).symList.begin(); sym != (*func).symList.end(); ++sym){
+                    argTypes.push_back(typeStr[(int)((*sym).second)]);
+                }
+                output::printID((*func).id, 0, output::makeFunctionType(funcType, argTypes));
+            }
         }
 
         scopeList.pop_back();

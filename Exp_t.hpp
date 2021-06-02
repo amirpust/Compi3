@@ -29,6 +29,10 @@ public:
         return E_int;
     }
     bool castType(TYPE newT){
+        if(newT == E_void || t == E_void){
+            output::errorMismatch(lineno);
+            exit(1);
+        }
         if (newT == E_int && t == E_byte){
             t = E_int;
             return true;
