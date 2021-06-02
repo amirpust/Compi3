@@ -71,7 +71,7 @@ Funcs:          /*epsilon*/                                                 {out
                 | FuncDecl Funcs                                            {output::printProductionRule(3);}
 ;
 FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
-                                    {symbolTable.openFuncScope($2, $4, $1);}
+                                    {symbolTable.openFuncScope($2, $4, $1); output::printLog("Flag");}
                                     Statements
                                     {symbolTable.closeCurrentScope();}
                                     RBRACE                                  {output::printProductionRule(4);}
