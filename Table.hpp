@@ -102,7 +102,7 @@ public:
             }
         }
 
-        output::errorUnexpectedBreak(yylineno);
+        output::errorUnexpectedBreak(lineno);
         exit(-1);
     }
 
@@ -112,7 +112,7 @@ public:
                 return;
             }
         }
-        output::errorUnexpectedContinue(yylineno);
+        output::errorUnexpectedContinue(lineno);
         exit(-1);
     }
 
@@ -134,7 +134,7 @@ public:
         }
 
         if(sArgs.symList.size() != func.symList.symList.size()){
-            output::errorPrototypeMismatch(yylineno, funcName.id, strTypes);
+            output::errorPrototypeMismatch(lineno, funcName.id, strTypes);
             exit(-1);
         }
 
@@ -142,7 +142,7 @@ public:
         for (int i = 0; i < sArgs.symList.size(); ++i) {
             output::printLog("Flag callFunc type: "+ to_string(sArgs.symList[i].t.t) + " id: " + sArgs.symList[i].id.id);
             if(sArgs.symList[i].t.t != func.symList.symList[i].t.t){
-                output::errorPrototypeMismatch(yylineno, funcName.id, strTypes);
+                output::errorPrototypeMismatch(lineno, funcName.id, strTypes);
                 exit(-1);
             }
         }
@@ -197,13 +197,13 @@ public:
 
     void checkReturnType(Exp_t exp){
         if(!exp.castType(funcList.funcList.back().retType)){
-            output::errorMismatch(yylineno);
+            output::errorMismatch(lineno);
             exit(1);
         }
     }
     void addSymbol(Type t, IDtype id){
         if(isId(id)) {
-            output::errorDef(yylineno, id.id);
+            output::errorDef(lineno, id.id);
             exit(-1);
         }
 
