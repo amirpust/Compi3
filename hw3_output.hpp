@@ -6,9 +6,9 @@
 #include <fstream>
 
 using namespace std;
+ofstream* logFile;
 
 namespace output{
-    ofstream* logFile;
 
     void init();
     void close();
