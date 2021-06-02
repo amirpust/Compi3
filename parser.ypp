@@ -180,7 +180,9 @@ int main(){
     //yydebug = 1;
 
     output::init();
+    output::printLog("Start");
     int res = yyparse();
+    output::printLog("End");
     output::close();
 
     return res;
