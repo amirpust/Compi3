@@ -76,8 +76,8 @@ FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
                                     {symbolTable.closeCurrentScope();}
                                     RBRACE                                  {output::printProductionRule(4);}
 ;
-RetType:        Type                                                        {$$ = $1; output::printProductionRule(5);}
-                | VOID                                                      {$$ = $1; output::printProductionRule(6);}
+RetType:        Type                                                        {output::printLog("Flag type");$$ = $1; output::printProductionRule(5);}
+                | VOID                                                      {output::printLog("Flag void");$$ = $1; output::printProductionRule(6);}
 ;
 Formals:        /*epsilon*/                                                 {$$ = SymList() ; output::printProductionRule(7);}
                 | FormalsList                                               {$$ = SymList($1) ; output::printProductionRule(8);}
