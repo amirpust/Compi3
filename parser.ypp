@@ -121,9 +121,9 @@ Call :          ID LPAREN ExpList RPAREN                                    {$$ 
 ExpList:        Exp                                                         {$$ = new ExpList(); $$->insert(*$1); output::printProductionRule(29);}
                 | Exp COMMA ExpList                                         {$$ = $3; $$->insert(*$1); output::printProductionRule(30);}
 ;
-Type :          INT                                                         {$$ = $1 ;output::printProductionRule(31);}
-                | BYTE                                                      {$$ = $1 ;output::printProductionRule(32);}
-                | BOOL                                                      {$$ = $1 ;output::printProductionRule(33);}
+Type :          INT                                                         {$$ = new Type(E_int) ;output::printProductionRule(31);}
+                | BYTE                                                      {$$ = new Type(E_byte) ;output::printProductionRule(32);}
+                | BOOL                                                      {$$ = new Type(E_bool) ;output::printProductionRule(33);}
 ;
 Exp:            LPAREN Exp RPAREN                                           {$$ = $1; output::printProductionRule(34);}
                 | Exp BINOP_MD Exp                                          {$$ = new Exp_t(Type($1->getDualType(*$3))); output::printProductionRule(35);}
