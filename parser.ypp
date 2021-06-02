@@ -6,7 +6,7 @@
     #include "Exp_t.hpp"
     #include "Table.hpp"
     #include "BaseObj.hpp"
-
+    #define castType(toCast) {*static_cast<Type*>}
 
     int yylex();
     // extern int yylineno; moved it to table.hpp
@@ -62,7 +62,7 @@ Funcs:          /*epsilon*/                                                 {out
                 | FuncDecl Funcs                                            {output::printProductionRule(3);}
 ;
 FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
-                                    {symbolTable.openFuncScope(*static_cast<IDtype*>($2), *static_cast<SymList*>($4), *static_cast<Type*>($1));}
+                                    {symbolTable.openFuncScope(*static_cast<IDtype*>($2), *static_cast<SymList*>($4), castType($1));}
                                     Statements
                                     {symbolTable.closeCurrentScope();}
                                     RBRACE                                  {output::printProductionRule(4);}
