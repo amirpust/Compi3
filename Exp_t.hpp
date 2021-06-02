@@ -21,6 +21,9 @@ public:
     };
     Exp_t(const Exp_t& c) = default;
 
+    bool isBool() const {
+        return t == E_bool;
+    }
     bool isNumerical() const{
         return t == E_int || t == E_byte;
     }
