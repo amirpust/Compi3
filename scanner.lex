@@ -16,6 +16,7 @@
     using namespace std;
 %}
 
+%option nounput
 %option yylineno
 %option noyywrap
 
