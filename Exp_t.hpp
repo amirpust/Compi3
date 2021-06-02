@@ -13,8 +13,8 @@ public:
     explicit Exp_t(TYPE t) : t(t) {};
     Exp_t(TYPE t, int i) : t(t) {
         if ( t == E_byte && i >= (1 << 8)){
+            output::errorByteTooLarge(lineno, i);
             exit(5456);
-            //todo
         }
     };
     Exp_t(const Exp_t& c) = default;
@@ -46,26 +46,22 @@ public:
             exit(-1);
         }
         return (*this);
-        //TODO: check overflow
     };
+    /*
     Exp_t operator+(const Exp_t& e) const {
         if(!isNumerical() || !e.isNumerical()){
-            //TODO: exception
             exit(621);
         }
 
-        //TODO: check overflow
         return Exp_t(getDualType(e)) ;
     }
     Exp_t operator-(const Exp_t& e) const {
         if(!isNumerical() || !e.isNumerical()){
-            //TODO: exception
         }
 
-        //TODO: check overflow
         return Exp_t(getDualType(e)) ;
     }
-
+    */
     /*
     bool operator==(const Exp_t& e){
         if ( isNumerical() && e.isNumerical()){
@@ -77,19 +73,16 @@ public:
         if ( t == E_string && e.t == E_string){
             return s == e.s;
         }
-        //TODO - exception
         return false;
     }
     bool operator<=(const Exp_t& e){
         if (!isNumerical() || !e.isNumerical()){
-            //TODO: exception
         }
 
         return t <= e.t;
     }
     bool operator<(const Exp_t& e){
         if (!isNumerical() || !e.isNumerical()){
-            //TODO: exception
         }
 
         return t < e.t;

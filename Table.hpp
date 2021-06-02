@@ -43,10 +43,10 @@ public:
         offsets.push(0);
     };
 
-    ~SymbolTable(){
+    void checkMain(){
         if(!seenMainFunc)
-            //TODO: throw an exception
-            return;
+            output::errorMainMissing();
+        exit(1);
     }
 
     // open scopes
@@ -59,17 +59,19 @@ public:
     }
     void openSwitchScope(Exp_t e) {
         if (e.t != E_byte && e.t != E_int) {
-            return; // TODO: throw exception e isn't byte/int/bool
+            output::errorMismatch(lineno);
+            exit(1);
         }
 
         openNewScope( SWITCH_SCOPE);
     }
     void openFuncScope(string id, SymList args, TYPE retType) {
-        if((retType == E_void) && (id == "main")) //TODO: args is empty
+        if ((retType == E_void) && (id == "main") && args.empty()){
             seenMainFunc = true;
+        }
 
         if (findFunc(id) != funcList.end()){
-            //todo: throw
+            output::errorDef(lineno, id);
             exit(1);
         }
 
@@ -79,17 +81,11 @@ public:
 
     // triggers
     void triggerCase(){
-        for (auto& s : scopeList){
-            if (s.type == SWITCH_SCOPE){
-                cases++ ;
-            }
-        }
-        //TODO: exception
-        exit(1);
+        cases++ ;
     }
     void triggerBreak(){
         for(ScopeList::iterator i = scopeList.begin(); i != scopeList.end(); i++){
-            if ((*i).type == LOOP_SCOPE || cases > 0){
+            if ((*i).type == LOOP_SCOPE || (*i).type == SWITCH_SCOPE){
                 cases = 0;
                 return;
             }
@@ -110,7 +106,7 @@ public:
 
     Exp_t callFunc(string funcName, ExpList arguments) {
         if(findFunc(funcName) == funcList.end()){
-            //TODO
+            output::errorUndefFunc(lineno, funcName);
             exit(1);
         }
 
@@ -147,16 +143,7 @@ public:
         }
 
         output::endScope();
-
-        if (scopeList.size() == 2){
-            //Closing func
-            //TODO
-        }else{
-            //TODO
-        }
         Scope closingScope = scopeList.back();
-
-
 
         for (int i = 0; i < closingScope.symList.size(); ++i) {
             string typeForPrinting = typeStr[(int)(closingScope.symList[i].second)];
@@ -166,9 +153,9 @@ public:
         scopeList.pop_back();
     }
     void checkReturnType(Exp_t exp){
-        // TODO: check if it works, actually we are suppose to be in the scope of the function so the return type should be saved
         if(!exp.castType(funcList.back().retType)){
             output::errorMismatch(yylineno);
+            exit(1);
         }
     }
     void addSymbol(TYPE t, string& id){
@@ -184,7 +171,7 @@ public:
     TYPE getTypeByID(string& _id){
         Symbol* sym = findSym(_id);
         if(!sym){
-            //TODO: make sure can't reach here
+            output::errorUndef(lineno, _id);
             exit(-46);
         }
         return sym->second;
@@ -195,7 +182,7 @@ public:
     void assign(string& _id, Exp_t e){
         Symbol* sym = findSym(_id);
         if(!sym){
-            //TODO: make sure can't reach here
+            output::errorUndef(lineno, _id);
             exit(-463);
         }
         Exp_t newE = Exp_t(sym->second);

@@ -1,8 +1,10 @@
 #include <iostream>
 #include "hw3_output.hpp"
 #include <sstream>
+#include <fstream>
 
 using namespace std;
+ofstream logFile;
 
 void output::endScope(){
     cout << "---end scope---" << endl;
@@ -87,8 +89,9 @@ void output::errorByteTooLarge(int lineno, const int& value) {
 }
 
 void output::printProductionRule(int rule){
-    cout << "printProductionRule " << rule << endl;
-
+    logFile.open("log.txt");
+    logFile << "printProductionRule " << rule << endl;
+    logFile.close();
 }
 void output::printInt(int i){
     cout << "printInt " << i << endl;
