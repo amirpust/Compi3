@@ -113,8 +113,8 @@ public:
         }
 
         SymList sArgs = SymList();
-        for (ExpList::iterator a = arguments.begin(); a != arguments.end(); a++){
-            sArgs.emplace_back("", (*a).t);
+        for (ExpList::iterator a = arguments.expList.begin(); a != arguments.expList.end(); a++){
+            sArgs.insert("", (*a).t);
         }
 
         FuncSymbol func = *findFunc(funcName);

@@ -5,8 +5,9 @@
 #include <string>
 #include "hw3_output.hpp"
 #include "Enums.hpp"
+#include "BaseObj.hpp"
 
-class Exp_t{
+class Exp_t : public BaseObj{
 public:
     TYPE t;
     bool initialized;
@@ -102,7 +103,21 @@ public:
     } */
 };
 
-typedef vector<Exp_t> ExpList;
+
+class ExpList : public BaseObj{
+public:
+    vector<Exp_t> expList;
+    ExpList(const vector<Exp_t>& _expList) : expList(_expList) {}
+    ExpList() : expList() {};
+
+    void insert(Exp_t _e){
+        expList.push_back(_e);
+    }
+
+    typedef vector<Exp_t>::iterator iterator;
+};
+
+typedef
 
 
 #endif //HW3_EXP_T_HPP

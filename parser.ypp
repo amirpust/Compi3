@@ -5,7 +5,7 @@
     #include "RelopAUX.hpp"
     #include "Exp_t.hpp"
     #include "Table.hpp"
-    #include "ObjectsPool.hpp"
+    #include "BaseObj.hpp"
 
 
     int yylex();
@@ -19,16 +19,16 @@
 
 %}
 
-%token  <typeVal> VOID
-%token  <typeVal> INT
-%nonassoc <typeVal> BYTE
-%nonassoc <typeVal> B
-%nonassoc <typeVal> BOOL
+%token VOID
+%token INT
+%nonassoc BYTE
+%nonassoc B
+%nonassoc BOOL
 %left OR
 %left AND
 %right NOT
-%nonassoc <boolVal> TRUE
-%nonassoc <boolVal> FALSE
+%nonassoc TRUE
+%nonassoc FALSE
 %nonassoc RETURN
 %nonassoc IF
 %nonassoc WHILE
@@ -46,22 +46,13 @@
 %left RBRACE
 %right ASSIGN
 %left EQUALITY
-%nonassoc <relopAUX> RELOP
-%left <intVal> BINOP_PM
-%left <boolVal> BINOP_MD
-%token <idVal> ID
-%nonassoc <intVal> NUM
-%nonassoc <stringVal> STRING
+%nonassoc RELOP
+%left BINOP_PM
+%left BINOP_MD
+%token ID
+%nonassoc NUM
+%nonassoc STRING
 %right ELSE
-
-%type<typeVal> RetType
-%type<expVal> Exp
-%type<typeVal> Call
-%type<expList> ExpList
-%type<typeVal> Type
-%type<symbol> FormalDecl
-%type<symList> FormalsList
-%type<symList> Formals
 
 %%
 
@@ -76,7 +67,7 @@ FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
                                     {output::printLog("Flag close scope"); symbolTable.closeCurrentScope();}
                                     RBRACE                                  {output::printProductionRule(4);}
 ;
-RetType:        Type                                                        {output::printLog("Flag type"); $$ = $1; output::printProductionRule(5);}
+RetType:        Type                                                        {output::printLog("Flag type"); $$ = new objects_pool(*$1); output::printProductionRule(5);}
                 | VOID                                                      {output::printLog("Flag void"); $$ = $1; output::printProductionRule(6);}
 ;
 Formals:        /*epsilon*/                                                 {$$ = SymList() ; output::printProductionRule(7);}
