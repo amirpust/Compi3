@@ -95,19 +95,8 @@ Statement:      LBRACE {symbolTable.openNewScope(); }
                 | Call SC                                                   {output::printProductionRule(18);}
                 | RETURN SC                                                 {symbolTable.checkReturnType(Exp_t(Type(E_void))) ; output::printProductionRule(19);}
                 | RETURN Exp SC                                             {symbolTable.checkReturnType(castExp($2)) ; output::printProductionRule(20);}
-                | IF LPAREN Exp RPAREN
-                                    { if(castExp($3).t == E_bool) {symbolTable.openNewScope();output::printProductionRule(21);} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
-                                    Statement
-                                    {output::printLog("Start: Close if scope") ; symbolTable.closeCurrentScope(); output::printLog("Done: Close if scope") ;}
-                                                                            {output::printProductionRule(21);}
-                | IF LPAREN Exp RPAREN
-                                    {if(castExp($3).t == E_bool) {symbolTable.openNewScope();} else { output::errorMismatch(lineno); exit(1);}}
-                                    Statement
-                                    ELSE
-                                    {output::printLog("@@@@@@@@@ closing IF scope");}
-                                    Statement
-                                    {symbolTable.closeCurrentScope();}
-                                                                            {output::printProductionRule(22);}
+                | IF LPAREN BOOLEXP RPAREN Statement ENDSCOPE
+                | IF LPAREN BOOLEXP RPAREN Statement ELSE Statement ENDSCOPE
                 | WHILE LPAREN Exp RPAREN
                                      {if(castExp($3).t == E_bool) {symbolTable.openLoopScope();} else { output::errorMismatch(lineno); exit(1);}}
                                      Statement
@@ -121,6 +110,11 @@ Statement:      LBRACE {symbolTable.openNewScope(); }
                             {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(26);}
 ;
+
+BOOLEXP:        Exp                                                         {if (castExp($1).t != E_bool) {output::errorMismatch(lineno); exit(1)} symbolTable.openNewScope(); $$ = $1}
+
+ENDSCOPE:       /*epsilon*/                                                  {symbolTable.closeCurrentScope();}
+
 Call :          ID LPAREN ExpList RPAREN                                    {$$ = new Exp_t(symbolTable.callFunc(castID($1), castExpList($3))) ; output::printProductionRule(27);}
                 | ID LPAREN RPAREN                                          {$$ = new Exp_t(symbolTable.callFunc(castID($1), ExpList())) ; output::printProductionRule(28);}
 ;
