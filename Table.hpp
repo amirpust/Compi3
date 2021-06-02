@@ -138,11 +138,6 @@ public:
         return Exp_t(func.retType);
     }
     void closeCurrentScope(){
-        if(scopeList.size() <= 1 && !seenMainFunc){
-            output::errorMainMissing();
-            exit(-1);
-        }
-
         output::endScope();
         Scope closingScope = scopeList.back();
 
