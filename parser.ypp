@@ -146,6 +146,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                                                                             }
                 | Exp RELOP Exp                                             {
                                                                                 if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
+                                                                                    cout << "YAY" << endl;
                                                                                     exit(12);
                                                                                 }
                                                                                 $$ = new Exp_t(Type(E_bool));
