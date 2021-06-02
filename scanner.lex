@@ -7,7 +7,7 @@
     #include "Table.hpp"
     #include "BaseObj.hpp"
 
-    ID id = new ID("yay");
+    BaseObj* id = new ID("yay");
 
     #include "hw3_output.hpp"
     #include "parser.tab.hpp"
