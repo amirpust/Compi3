@@ -163,6 +163,8 @@ public:
             //Func scope
             FuncSymbol func = funcList.funcList.back();
             output::printLog("closeCurrentScope - size:" + to_string(func.symList.symList.size()));
+            output::printLog("closeCurrentScope - address:" + to_string((long long int)(&(func.symList.symList[0]))));
+            output::printLog("closeCurrentScope - T:" + to_string((int)(func.symList.symList[0].t.t)));
 
             for (int i = 0; i < func.symList.symList.size(); ++i) {
                 output::printLog("closeCurrentScope - iter 2:" + to_string(i));
