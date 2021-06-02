@@ -133,7 +133,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                                                                                     output::errorMismatch(yylineno);
                                                                                     exit(12);
                                                                                 };
-                                                                                $$ = new Exp_t(Type(castExp($1).getDualType(castExp($3)))); output::printProductionRule(35);}
+                                                                                $$ = new Exp_t(Type(castExp($1).getDualType(castExp($3))));  output::printLog(castExp($$).t.getStr()) ;output::printLog(castExp($1).t.getStr()) ;output::printLog(castExp($3).t.getStr()) ;output::printProductionRule(35);}
                 | ID                                                        {$$ = new Exp_t(symbolTable.getExpByID(castID($1))) ; output::printProductionRule(36);}
                 | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = new Exp_t(Type(E_int)); output::printProductionRule(38);}
