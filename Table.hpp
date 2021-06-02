@@ -67,6 +67,7 @@ public:
         openNewScope( SWITCH_SCOPE);
     }
     void openFuncScope(string id, SymList args, TYPE retType) {
+        output::printLog("Flag " + id);
         if ((retType == E_void) && (id == "main") && args.empty()){
             seenMainFunc = true;
         }
