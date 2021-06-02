@@ -175,6 +175,8 @@ CaseDecl:       CASE NUM COLON  {symbolTable.triggerCase();}
 void yyerror(const char* e){
     output::errorSyn(yylineno);
     output::printLog("error");
+    fclose(stdout);
+    fclose(stderr);
     exit(-1);
 }
 int main(){

@@ -149,7 +149,7 @@ public:
     void closeCurrentScope(){
 
         output::endScope();
-
+        
         if (scopeList.empty()){
             output::printLog("ASSERT: closeCurrentScope - empty");
             return;
