@@ -127,7 +127,7 @@ Statement:      LBRACE Statements RBRACE                                    {out
 Call :          ID LPAREN ExpList RPAREN                                    {$$ = symbolTable.callFunc($1, $3) ; output::printProductionRule(27);}
                 | ID LPAREN RPAREN                                          {$$ = symbolTable.callFunc($1, ExpList()) ; output::printProductionRule(28);}
 ;
-ExpList:        Exp                                                         {$$ = ExpList(); $$.push_back($1); output::printProductionRule(29);}
+ExpList:        Exp                                                         {output::printLog(to_string((int)($1.t))); $$ = ExpList(); $$.push_back($1); output::printProductionRule(29);}
                 | Exp COMMA ExpList                                         {$$ = ExpList($3); $$.push_back($1); output::printProductionRule(30);}
 ;
 Type :          INT                                                         {$$ = $1 ;output::printProductionRule(31);}
