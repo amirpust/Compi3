@@ -144,7 +144,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                                                                                     delete $1;
                                                                                     delete $3;
                                                                             }
-                | NUMEXP RELOP Exp                                             {
+                | Exp RELOP NUMEXP                                             {
                                                                                 if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
                                                                                     exit(12);
                                                                                 }
