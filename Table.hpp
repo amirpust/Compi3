@@ -71,7 +71,7 @@ public:
             seenMainFunc = true;
         }
 
-        if (isId(id)){
+        if (findFunc(id) != funcList.end()){
             output::errorDef(lineno, id);
             exit(1);
         }
@@ -221,6 +221,12 @@ private:
                 if ((*sym).first == _id){
                     return &(*sym);
                 }
+            }
+        }
+
+        for(SymList::iterator sym = funcList.back().symList.begin(); sym != funcList.back().symList.end() ; sym++){
+            if ((*sym).first == _id){
+                return &(*sym);
             }
         }
 
