@@ -108,10 +108,8 @@ Statement:      LBRACE {symbolTable.openNewScope(); }
 ;
 
 BOOLEXP:        Exp                                                         {if (castExp($1).t != Type(E_bool)) {output::errorMismatch(yylineno); exit(1);} $$ = $1;}
-NUMEXP:         Exp                                                         {output::printLog("here") ; output::printLog(to_string(castExp($1).t.t)) ;if (!castExp($1).isNumerical()) {output::errorMismatch(yylineno); exit(1);} $$ = $1;}
 
 STARTSCOPE:     /*epsilon*/                                                 {symbolTable.openNewScope();}
-ENDSCOPE:       /*epsilon*/                                                 {symbolTable.closeCurrentScope();}
 
 Call :          ID LPAREN ExpList RPAREN                                    {$$ = new Exp_t(symbolTable.callFunc(castID($1), castExpList($3))) ; output::printProductionRule(27);}
                 | ID LPAREN RPAREN                                          {$$ = new Exp_t(symbolTable.callFunc(castID($1), ExpList())) ; output::printProductionRule(28);}
