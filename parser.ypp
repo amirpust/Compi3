@@ -98,7 +98,7 @@ Statement:      LBRACE Statements RBRACE                                    {out
                 | RETURN SC                                                 {symbolTable.checkReturnType(Exp_t(E_void)) ; output::printProductionRule(19);}
                 | RETURN Exp SC                                             {symbolTable.checkReturnType($2) ; output::printProductionRule(20);}
                 | IF LPAREN Exp RPAREN
-                                    { if($3.t == E_bool) {symbolTable.openNewScope();} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
+                                    { if($3.t == E_bool) {symbolTable.openNewScope();output::printProductionRule(21);} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
                                     Statement
                                     {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(21);}
@@ -141,7 +141,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = Exp_t(E_int); output::printProductionRule(38);}
                 | NUM B                                                     {if($1 > 255) {output::errorByteTooLarge(yylineno, $1); exit(1); } $$ = Exp_t(E_byte); output::printProductionRule(39);}
-                | STRING                                                    {output::printLog("Flag trying string");$$ = Exp_t(E_string); output::printProductionRule(40);}
+                | STRING                                                    {$$.t = E_string ; output::printProductionRule(40);}
                 | TRUE                                                      {$$ = Exp_t(E_bool); output::printProductionRule(41);}
                 | FALSE                                                     {$$ = Exp_t(E_bool); output::printProductionRule(42);}
                 | NOT Exp                                                   {$$ = Exp_t(E_bool); output::printProductionRule(43);}
