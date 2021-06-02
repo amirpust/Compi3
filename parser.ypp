@@ -97,7 +97,7 @@ Statement:      LBRACE Statements RBRACE                                    {out
                 | IF LPAREN Exp RPAREN
                                     { if(castExp($3).t == E_bool) {symbolTable.openNewScope();output::printProductionRule(21);} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
                                     Statement
-                                    {symbolTable.closeCurrentScope();}
+                                    {output::printLog("Before") ; symbolTable.closeCurrentScope(); output::printLog("After") ;}
                                                                             {output::printProductionRule(21);}
                 | IF LPAREN Exp RPAREN
                                     {if(castExp($3).t == E_bool) {symbolTable.openNewScope();} else { output::errorMismatch(lineno); exit(1);}}
