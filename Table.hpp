@@ -147,10 +147,6 @@ public:
         return func.retType;
     }
     void closeCurrentScope(){
-        output::printLog("closeCurrentScope - entering flag");
-        output::printLog("scope list size" + to_string(scopeList.size()));
-        output::printLog("func list size" + to_string(funcList.funcList.size()));
-
 
         output::endScope();
 

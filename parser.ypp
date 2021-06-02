@@ -181,9 +181,10 @@ int main(){
     output::init();
     output::printLog("Start");
     int res = yyparse();
+    symbolTable.gg();
+
     output::printLog("End");
     output::close();
 
-    symbolTable.gg();
     return res;
 }
