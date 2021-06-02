@@ -24,10 +24,10 @@ whitespace	                                        ([ \t\r\n])
 noZeroDigit	                                        ([1-9])
 digit		                                        ([0-9])
 %%
-void					                            {yylval = new BaseObj() ;return VOID;}
-int                                                 {return INT;}
-byte                                                {return BYTE;}
-b                                                   {return B;}
+void					                            {yylval = new BaseObj() ; return VOID;}
+int                                                 {yylval = new Type(E_bool) ; return INT;}
+byte                                                {yylval = new ID("yaY") ; return BYTE;}
+b                                                   {static_cast<*ID>(yylval) = new ID("yaY") ; return B;}
 bool                                                {return BOOL;}
 and                                                 {return AND;}
 or                                                  {return OR;}
