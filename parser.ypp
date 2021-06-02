@@ -139,7 +139,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | ID                                                        {$$ = symbolTable.getExpByID($1) ; output::printProductionRule(36);}
                 | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = Exp_t(E_int); output::printProductionRule(38);}
-                | NUM B                                                     {if($1 > 255) {errorByteTooLarge(yylineno, $1); exit(1); } $$ = Exp_t(E_byte); output::printProductionRule(39);}
+                | NUM B                                                     {if($1 > 255) {output::errorByteTooLarge(yylineno, $1); exit(1); } $$ = Exp_t(E_byte); output::printProductionRule(39);}
                 | STRING                                                    {$$ = Exp_t(E_string); output::printProductionRule(40);}
                 | TRUE                                                      {$$ = Exp_t(E_bool); output::printProductionRule(41);}
                 | FALSE                                                     {$$ = Exp_t(E_bool); output::printProductionRule(42);}
