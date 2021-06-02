@@ -64,7 +64,7 @@
 
 %%
 
-Program:        Funcs                                                       {symbolTable.checkMain() ; output::printProductionRule(1);}
+Program:        Funcs                                                       {output::printProductionRule(1);}
 ;
 Funcs:          /*epsilon*/                                                 {output::printProductionRule(2);}
                 | FuncDecl Funcs                                            {output::printProductionRule(3);}
