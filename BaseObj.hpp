@@ -58,7 +58,7 @@ public:
     IDtype id;
     SymList symList;
 
-    FuncSymbol(Type _retType, IDtype _id, SymList _symList);;
+    FuncSymbol(Type _retType, IDtype _id, SymList _symList);
 };
 
 class FuncList : public BaseObj {
@@ -66,7 +66,7 @@ public:
     vector<FuncSymbol> funcList;
 
     FuncList(vector<FuncSymbol> & _funcList);
-    FuncList();;
+    FuncList();
 
     void insert(FuncSymbol func);
 
