@@ -140,8 +140,11 @@ public:
 
         for (int i = 0; i < sArgs.symList.size(); ++i) {
             output::printLog("Flag callFunc type: "+ to_string(sArgs.symList[i].t.t) + " id: " + sArgs.symList[i].id.id);
-            if(sArgs.symList[i].t.t != func.symList.symList[i].t.t ||
+            if(
+                    (sArgs.symList[i].t.t != func.symList.symList[i].t.t) ||
                     (sArgs.symList[i].t.t == E_byte && func.symList.symList[i].t.t == E_int)){
+                output::printLog("Got " + sArgs.symList[i].t.getStr());
+                output::printLog("Expected " + func.symList.symList[i].t.getStr());
                 output::errorPrototypeMismatch(yylineno, funcName.id, strTypes);
                 exit(-1);
             }
