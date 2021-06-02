@@ -36,10 +36,7 @@ public:
     int cases;
 
     SymbolTable() : scopeList(), funcList(), seenMainFunc(false) , offsets() , cases(0){
-        cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
-
         scopeList.emplace_back(0, GLOBAL_SCOPE);
-        cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << to_string(scopeList.size()) << endl;
         funcList.insert(FuncSymbol(Type(E_void),IDtype("print"),SymList(vector<Symbol>(1, Symbol(IDtype(""), Type(E_string))))));
         funcList.insert(FuncSymbol(Type(E_void),IDtype("printi"),SymList(vector<Symbol>(1, Symbol(IDtype(""), Type(E_int))))));
 
@@ -55,8 +52,10 @@ public:
 
     // open scopes
     void openNewScope(SCOPE_REASON type = REGULAR_SCOPE){
+        output::printLog("Start openNewScope | size " + to_string(scopeList.size()));
         scopeList.emplace_back(offsets.top(), type);
         offsets.push(offsets.top());
+        output::printLog("End openNewScope | size " + to_string(scopeList.size()));
     }
     void openLoopScope(){
         openNewScope(LOOP_SCOPE);
