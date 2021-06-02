@@ -107,7 +107,7 @@ Statement:      LBRACE {symbolTable.openNewScope(); }
                                                                             {output::printProductionRule(26);}
 ;
 
-BOOLEXP:        Exp                                                         {if (castExp($1).t != E_bool) {output::errorMismatch(yylineno); exit(1);} $$ = $1;}
+BOOLEXP:        Exp                                                         {if (castExp($1).t != Type(E_bool)) {output::errorMismatch(yylineno); exit(1);} $$ = $1;}
 NUMEXP:         Exp                                                         {if (!castExp($1).isNumerical) {output::errorMismatch(yylineno); exit(1);} $$ = $1;}
 
 STARTSCOPE:     /*epsilon*/                                                  {symbolTable.openNewScope();}
@@ -133,9 +133,9 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | STRING                                                    {$$ = new Exp_t(Type(E_string)); ; output::printProductionRule(40);}
                 | TRUE                                                      {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(41);}
                 | FALSE                                                     {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(42);}
-                | BOOLEXP AND BOOLEXP                                               {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(44);}
-                | BOOLEXP OR BOOLEXP                                                {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(45);}
-                | NOT BOOLEXP                                                   {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(43);}
+                | BOOLEXP AND BOOLEXP                                       {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(44);}
+                | BOOLEXP OR BOOLEXP                                        {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(45);}
+                | NOT BOOLEXP                                               {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(43);}
                 | Exp EQUALITY Exp                                          {
                                                                                     if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
                                                                                         exit(12);
