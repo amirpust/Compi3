@@ -5,7 +5,6 @@
 #include "Enums.hpp"
 #include <vector>
 #include <utility>
-#define YYSTYPE BaseObj*
 
 using namespace std;
 
@@ -79,5 +78,4 @@ public:
     Num(int val);
 };
 
-#define YYSTYPE BaseObj*
 #endif //HW3_BASEOBJ_HPP
