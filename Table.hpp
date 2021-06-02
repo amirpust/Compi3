@@ -42,7 +42,10 @@ public:
 
         offsets.push(0);
     };
-
+    ~SymbolTable() {
+        checkMain();
+        closeCurrentScope();
+    }
     void checkMain(){
         if(!seenMainFunc){
             output::errorMainMissing();
@@ -173,31 +176,23 @@ public:
                 FuncSymbol func = funcList.funcList.back();
 
                 for (int i = 0; i < func.symList.symList.size(); ++i) {
-
-                    output::printLog(to_string(func.symList.symList[i].t.t));
-                    output::printLog(func.symList.symList[i].t.getStr());
-
                     string typeForPrinting = func.symList.symList[i].t.getStr();
-
-
                     output::printID(func.symList.symList[i].id.id, -1 - i,
                                     typeForPrinting);
                 }
             }
 
             Scope closingScope = scopeList.back();
-
+            offsets.pop();
             for (int i = 0; i < closingScope.symList.symList.size(); ++i) {
                 string typeForPrinting = closingScope.symList.symList[i].t.getStr();
                 output::printID(closingScope.symList.symList[i].id.id,
-                                offsets.top()--, typeForPrinting);
+                                offsets.top() + i, typeForPrinting);
             }
-
         }
 
 
         scopeList.pop_back();
-
         output::printLog("closeCurrentScope - end flag");
     }
 
