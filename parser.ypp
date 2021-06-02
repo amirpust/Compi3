@@ -103,8 +103,8 @@ Statement:      LBRACE {symbolTable.openNewScope(); }
                 | IF LPAREN Exp RPAREN
                                     {if(castExp($3).t == E_bool) {symbolTable.openNewScope();symbolTable.openNewScope();} else { output::errorMismatch(lineno); exit(1);}}
                                     Statement
-                                    {output::printLog("@@@@@@@@@ closing IF scope"); symbolTable.closeCurrentScope();symbolTable.closeCurrentScope();}
                                     ELSE
+                                    {output::printLog("@@@@@@@@@ closing IF scope"); symbolTable.closeCurrentScope();symbolTable.closeCurrentScope();}
                                     {symbolTable.openNewScope();symbolTable.openNewScope();}
                                     Statement
                                     {symbolTable.closeCurrentScope();symbolTable.closeCurrentScope();}
