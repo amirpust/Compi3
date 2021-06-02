@@ -44,9 +44,10 @@ public:
     };
 
     void checkMain(){
-        if(!seenMainFunc)
+        if(!seenMainFunc){
             output::errorMainMissing();
-        exit(1);
+            exit(1);
+        }
     }
 
     // open scopes

@@ -64,9 +64,9 @@
 
 %%
 
-Program:        Funcs                                                       {output::printProductionRule(1);}
+Program:        Funcs                                                       {symbolTable.checkMain() ; output::printProductionRule(1);}
 ;
-Funcs:          /*epsilon*/                                                 {symbolTable.checkMain() ; output::printProductionRule(2);}
+Funcs:          /*epsilon*/                                                 {output::printProductionRule(2);}
                 | FuncDecl Funcs                                            {output::printProductionRule(3);}
 ;
 FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
