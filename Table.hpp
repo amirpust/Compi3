@@ -3,8 +3,7 @@
 
 #include "Enums.hpp"
 #include "Exp_t.hpp"
-#include "Symbol.hpp"
-#include "FuncSymbol.hpp"
+#include "BaseObj.hpp"
 #include <string>
 #include <vector>
 #include "hw3_output.hpp"
@@ -38,8 +37,10 @@ public:
 
     SymbolTable() : scopeList(), funcList(), seenMainFunc(false) , offsets() , cases(0){
         scopeList.emplace_back(0, GLOBAL_SCOPE);
-        funcList.emplace_back(E_void, "print", SymList(1, Symbol("", E_string)));
-        funcList.emplace_back(E_void, "printi", SymList(1, Symbol("", E_int)));
+
+        funcList.insert(FuncSymbol(Type(E_void),ID("print"),SymList(vector<Symbol>(1, Symbol(ID(""), Type(E_string))))));
+        funcList.insert(FuncSymbol(Type(E_void),ID("printi"),SymList(vector<Symbol>(1, Symbol(ID(""), Type(E_int))))));
+
         offsets.push(0);
     };
 
@@ -66,18 +67,18 @@ public:
 
         openNewScope( SWITCH_SCOPE);
     }
-    void openFuncScope(string id, SymList args, TYPE retType) {
-        output::printLog("Flag " + id);
-        if ((retType == E_void) && (id == "main") && args.empty()){
+    void openFuncScope(ID id, SymList args, Type retType) {
+        output::printLog("Flag " + id.id);
+        if ((retType == E_void) && (id.id == "main") && args.symList.empty()){
             seenMainFunc = true;
         }
 
-        if (findFunc(id) != funcList.end()){
-            output::errorDef(lineno, id);
+        if (findFunc(id) != funcList.funcList.end()){
+            output::errorDef(lineno, id.id);
             exit(1);
         }
 
-        funcList.emplace_back(retType, id, args);
+        funcList.insert(FuncSymbol(retType, id, args));
         offsets.push(0);
     }
 
@@ -96,6 +97,7 @@ public:
         output::errorUnexpectedBreak(yylineno);
         exit(-1);
     }
+
     void triggerContinue(){
         for(ScopeList::iterator i = scopeList.begin(); i != scopeList.end(); i++){
             if ((*i).type == LOOP_SCOPE){
@@ -106,33 +108,33 @@ public:
         exit(-1);
     }
 
-    TYPE callFunc(string funcName, ExpList arguments) {
-        if(findFunc(funcName) == funcList.end()){
-            output::errorUndefFunc(lineno, funcName);
+    Type callFunc(ID funcName, ExpList arguments) {
+        if(findFunc(funcName) == funcList.funcList.end()){
+            output::errorUndefFunc(lineno, funcName.id);
             exit(1);
         }
 
         SymList sArgs = SymList();
         for (ExpList::iterator a = arguments.expList.begin(); a != arguments.expList.end(); a++){
-            sArgs.insert("", (*a).t);
+            sArgs.insert(Symbol(ID(""),Type((*a).t)));
         }
 
         FuncSymbol func = *findFunc(funcName);
         std::vector<string> strTypes = std::vector<string>();
-        for (SymList::iterator i = func.symList.begin(); i != func.symList.end(); i++){
-            strTypes.push_back(typeStr[(int)((*i).second)]);
+        for (SymList::iterator i = func.symList.symList.begin(); i != func.symList.symList.end(); i++){
+            strTypes.push_back(typeStr[(int)((*i).t.t)]);
         }
 
-        if(sArgs.size() != func.symList.size()){
-            output::errorPrototypeMismatch(yylineno, funcName, strTypes);
+        if(sArgs.symList.size() != func.symList.symList.size()){
+            output::errorPrototypeMismatch(yylineno, funcName.id, strTypes);
             exit(-1);
         }
 
 
-        for (int i = 0; i < sArgs.size(); ++i) {
-            output::printLog("Flag callFunc type: "+ to_string(sArgs[i].second) + " id: " + sArgs[i].first);
-            if(sArgs[i].second != func.symList[i].second){
-                output::errorPrototypeMismatch(yylineno, funcName, strTypes);
+        for (int i = 0; i < sArgs.symList.size(); ++i) {
+            output::printLog("Flag callFunc type: "+ to_string(sArgs.symList[i].t.t) + " id: " + sArgs.symList[i].id.id);
+            if(sArgs.symList[i].t.t != func.symList.symList[i].t.t){
+                output::errorPrototypeMismatch(yylineno, funcName.id, strTypes);
                 exit(-1);
             }
         }
@@ -143,99 +145,99 @@ public:
         output::endScope();
         Scope closingScope = scopeList.back();
 
-        for (int i = 0; i < closingScope.symList.size(); ++i) {
-            string typeForPrinting = typeStr[(int)(closingScope.symList[i].second)];
-            output::printID(closingScope.symList[i].first, offsets.top()--, typeForPrinting);
+        for (int i = 0; i < closingScope.symList.symList.size(); ++i) {
+            string typeForPrinting = typeStr[(int)(closingScope.symList.symList[i].t.t)];
+            output::printID(closingScope.symList.symList[i].id.id, offsets.top()--, typeForPrinting);
         }
 
         if (scopeList.size() == 2){
             //Func scope
-            FuncSymbol func = funcList.back();
+            FuncSymbol func = funcList.funcList.back();
 
-            for (int i = 0; i < func.symList.size(); ++i) {
-                string typeForPrinting = typeStr[(int)(closingScope.symList[i].second)];
-                output::printID(closingScope.symList[i].first, -1-i, typeForPrinting);
+            for (int i = 0; i < func.symList.symList.size(); ++i) {
+                string typeForPrinting = typeStr[(int)(closingScope.symList.symList[i].t.t)];
+                output::printID(closingScope.symList.symList[i].id.id, -1-i, typeForPrinting);
             }
         }
 
         if (scopeList.size() == 1){
-            for (FuncList::iterator func = funcList.begin(); func != funcList.end(); ++func){
+            for (FuncList::iterator func = funcList.funcList.begin(); func != funcList.funcList.end(); ++func){
                 std::vector<string> argTypes;
-                string funcType = typeStr[(int)(*func).retType];
-                for(SymList::iterator sym = (*func).symList.begin(); sym != (*func).symList.end(); ++sym){
-                    argTypes.push_back(typeStr[(int)((*sym).second)]);
+                string funcType = typeStr[(int)(*func).retType.t];
+                for(SymList::iterator sym = (*func).symList.symList.begin(); sym != (*func).symList.symList.end(); ++sym){
+                    argTypes.push_back(typeStr[(int)((*sym).t.t)]);
                 }
-                output::printID((*func).id, 0, output::makeFunctionType(funcType, argTypes));
+                output::printID((*func).id.id, 0, output::makeFunctionType(funcType, argTypes));
             }
         }
 
         scopeList.pop_back();
     }
     void checkReturnType(Exp_t exp){
-        if(!exp.castType(funcList.back().retType)){
+        if(!exp.castType(funcList.funcList.back().retType)){
             output::errorMismatch(yylineno);
             exit(1);
         }
     }
-    void addSymbol(TYPE t, string& id){
+    void addSymbol(Type t, ID id){
         if(isId(id)) {
-            output::errorDef(yylineno, id);
+            output::errorDef(yylineno, id.id);
             exit(-1);
         }
 
-        scopeList.back().symList.emplace_back(id, t);
+        scopeList.back().symList.insert(Symbol(id, t));
         offsets.top()++;
     }
 
-    TYPE getTypeByID(string& _id){
+    Type getTypeByID(ID _id){
         Symbol* sym = findSym(_id);
         if(!sym){
-            output::errorUndef(lineno, _id);
+            output::errorUndef(lineno, _id.id);
             exit(-46);
         }
-        return sym->second;
+        return sym->t;
     }
-    Exp_t getExpByID(string& _id){
+    Exp_t getExpByID(ID _id){
         return Exp_t(getTypeByID(_id));
     }
-    void assign(string& _id, Exp_t e){
+    void assign(ID _id, Exp_t e){
         Symbol* sym = findSym(_id);
         if(!sym){
-            output::errorUndef(lineno, _id);
+            output::errorUndef(lineno, _id.id);
             exit(-463);
         }
-        Exp_t newE = Exp_t(sym->second);
+        Exp_t newE = Exp_t(sym->t);
         newE = e;
     }
 
 private:
-    FuncList::iterator findFunc(string& _id){
-        for (FuncList::iterator f = funcList.begin(); f != funcList.end(); f++){
-            if (f->id == _id){
+    FuncList::iterator findFunc(ID _id){
+        for (FuncList::iterator f = funcList.funcList.begin(); f != funcList.funcList.end(); f++){
+            if (f->id.id == _id.id){
                 return f;
             }
         }
         return funcList.end();
     }
-    Symbol* findSym(string& _id){
+    Symbol* findSym(ID _id){
         for(ScopeList::iterator scope = scopeList.begin(); scope != scopeList.end(); scope++){
-            for(SymList::iterator sym = (*scope).symList.begin(); sym != (*scope).symList.end() ; sym++){
-                if ((*sym).first == _id){
+            for(SymList::iterator sym = (*scope).symList.symList.begin(); sym != (*scope).symList.symList.end() ; sym++){
+                if ((*sym).id.id == _id.id){
                     return &(*sym);
                 }
             }
         }
 
-        for(SymList::iterator sym = funcList.back().symList.begin(); sym != funcList.back().symList.end() ; sym++){
-            if ((*sym).first == _id){
+        for(SymList::iterator sym = funcList.funcList.back().symList.symList.begin(); sym != funcList.funcList.back().symList.symList.end() ; sym++){
+            if ((*sym).id.id == _id.id){
                 return &(*sym);
             }
         }
 
         return NULL;
     }
-    bool isId(string _id){
-        return findSym(_id) || findFunc(_id) != funcList.end();
+    bool isId(ID _id){
+        return findSym(_id) || findFunc(_id) != funcList.funcList.end();
     }
 };
 
