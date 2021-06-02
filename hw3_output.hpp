@@ -8,12 +8,15 @@
 using namespace std;
 
 namespace output{
-    ofstream logFile;
+    ofstream* logFile;
+
     void init(){
-        logFile.open("log.txt");
+        logFile = new ofstream();
+        logFile->open("log.txt");
     }
     void close(){
-        logFile.close();
+        logFile->close();
+        delete logFile;
     }
 
     void endScope();
