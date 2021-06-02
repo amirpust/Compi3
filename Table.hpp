@@ -129,7 +129,7 @@ public:
         FuncSymbol func = *findFunc(funcName);
         std::vector<string> strTypes = std::vector<string>();
         for (SymList::iterator i = func.symList.symList.begin(); i != func.symList.symList.end(); i++){
-            strTypes.push_back(typeStr[(int)((*i).t.t)]);
+            strTypes.push_back((*i).t.getStr());
         }
 
         if(sArgs.symList.size() != func.symList.symList.size()){
@@ -140,7 +140,8 @@ public:
 
         for (int i = 0; i < sArgs.symList.size(); ++i) {
             output::printLog("Flag callFunc type: "+ to_string(sArgs.symList[i].t.t) + " id: " + sArgs.symList[i].id.id);
-            if(sArgs.symList[i].t.t != func.symList.symList[i].t.t){
+            if(sArgs.symList[i].t.t != func.symList.symList[i].t.t ||
+                    (sArgs.symList[i].t.t == E_byte && func.symList.symList[i].t.t == E_int)){
                 output::errorPrototypeMismatch(yylineno, funcName.id, strTypes);
                 exit(-1);
             }
