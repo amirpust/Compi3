@@ -116,6 +116,8 @@ public:
     }
 
     Type callFunc(IDtype funcName, ExpList arguments) {
+        reverse(arguments.expList.begin(),arguments.expList.end());
+
         if(findFunc(funcName) == funcList.funcList.end()){
             output::errorUndefFunc(yylineno, funcName.id);
             exit(1);
@@ -139,7 +141,6 @@ public:
 
 
         for (int i = 0; i < sArgs.symList.size(); ++i) {
-            output::printLog("Flag callFunc type: "+ to_string(sArgs.symList[i].t.t) + " id: " + sArgs.symList[i].id.id);
             if(
                     (sArgs.symList[i].t.t != func.symList.symList[i].t.t) &&
                     !(sArgs.symList[i].t.t == E_byte && func.symList.symList[i].t.t == E_int)){
