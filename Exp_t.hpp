@@ -48,7 +48,7 @@ public:
     Exp_t& operator=(const Exp_t& e){
         if (!Exp_t(e).castType(t)){
             output::errorMismatch(lineno);
-            output::printLog("Flag = ");
+            output::printLog("Flag casting from " + typeStr[e.t] + " to " + typeStr[t]);
             exit(-1);
         }
         return (*this);
