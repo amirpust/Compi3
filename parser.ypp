@@ -7,7 +7,7 @@
     #include "Table.hpp"
     #include "BaseObj.hpp"
     #define castType(toCast) (*(static_cast<Type*>(toCast)))
-    #define castID(toCast) (*(static_cast<IDType*>(toCast)))
+    #define castID(toCast) (*(static_cast<IDtype*>(toCast)))
     #define castSymList(toCast) (*(static_cast<SymList*>(toCast)))
     #define castSymbol(toCast) (*(static_cast<Symbol*>(toCast)))
 
