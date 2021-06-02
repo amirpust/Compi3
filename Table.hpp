@@ -212,6 +212,13 @@ public:
             exit(1);
         }
     }
+
+    void checkReturnType(){
+        if(funcList.funcList.back().retType != E_void){
+            output::errorMismatch(yylineno);
+            exit(1);
+        }
+    }
     void addSymbol(Type t, IDtype id){
         if(isId(id)) {
             output::errorDef(yylineno, id.id);
