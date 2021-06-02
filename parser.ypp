@@ -98,7 +98,7 @@ Statement:      LBRACE Statements RBRACE                                    {out
                 | RETURN SC                                                 {symbolTable.checkReturnType(Exp_t(E_void)) ; output::printProductionRule(19);}
                 | RETURN Exp SC                                             {symbolTable.checkReturnType($2) ; output::printProductionRule(20);}
                 | IF LPAREN Exp RPAREN
-                                    {cout << $3.t << endl; if($3.t == E_bool) {symbolTable.openNewScope();} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
+                                    {output::printLog("Flag IF");cout << $3.t << endl; if($3.t == E_bool) {symbolTable.openNewScope();} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
                                     Statement
                                     {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(21);}
