@@ -70,7 +70,7 @@ Funcs:          /*epsilon*/                                                 {out
 FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
                                     {symbolTable.openFuncScope(castID($2), castSymList($4), castType($1));}
                                     Statements
-                                    {symbolTable.closeCurrentScope();}
+                                    {output::printLog("Start: Close func scope") ; symbolTable.closeCurrentScope(); output::printLog("Done: Close func scope") ;}
                                     RBRACE                                  {output::printProductionRule(4);}
 ;
 RetType:        Type                                                        {$$ = $1; output::printProductionRule(5);}
@@ -97,7 +97,7 @@ Statement:      LBRACE Statements RBRACE                                    {out
                 | IF LPAREN Exp RPAREN
                                     { if(castExp($3).t == E_bool) {symbolTable.openNewScope();output::printProductionRule(21);} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
                                     Statement
-                                    {output::printLog("Before") ; symbolTable.closeCurrentScope(); output::printLog("After") ;}
+                                    {output::printLog("Start: Close if scope") ; symbolTable.closeCurrentScope(); output::printLog("Done: Close if scope") ;}
                                                                             {output::printProductionRule(21);}
                 | IF LPAREN Exp RPAREN
                                     {if(castExp($3).t == E_bool) {symbolTable.openNewScope();} else { output::errorMismatch(lineno); exit(1);}}
