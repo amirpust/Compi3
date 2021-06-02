@@ -105,7 +105,7 @@ Statement:      LBRACE {symbolTable.openNewScope(); }
                                     Statement
                                     {symbolTable.closeCurrentScope();symbolTable.closeCurrentScope();}
                                     ELSE
-                                    {symbolTable.openNewScope();symbolTable.openNewScope();}
+                                    {output::printLog("closing ELSE scope");symbolTable.openNewScope();symbolTable.openNewScope();}
                                     Statement
                                     {symbolTable.closeCurrentScope();symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(22);}
