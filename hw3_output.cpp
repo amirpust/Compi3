@@ -4,6 +4,7 @@
 #include <fstream>
 
 using namespace std;
+ofstream* logFile;
 
 void output::endScope(){
     cout << "---end scope---" << endl;

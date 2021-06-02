@@ -6,7 +6,6 @@
 #include <fstream>
 
 using namespace std;
-ofstream* logFile;
 
 namespace output{
 
