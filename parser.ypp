@@ -12,6 +12,7 @@
     #define castSymbol(toCast) (*(static_cast<Symbol*>(toCast)))
     #define castExp(toCast) (*(static_cast<Exp_t*>(toCast)))
     #define castExpList(toCast) (*(static_cast<ExpList*>(toCast)))
+    #define castNum(toCast) (*(static_cast<Num*>(toCast)))
 
     int yylex();
     // extern int yylineno; moved it to table.hpp
@@ -136,7 +137,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | ID                                                        {$$ = new Exp_t(symbolTable.getExpByID(castID($1))) ; output::printProductionRule(36);}
                 | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = new Exp_t(Type(E_int)); output::printProductionRule(38);}
-                | NUM B                                                     {if($1 > 255) {output::errorByteTooLarge(yylineno, $1); exit(1); } $$ = new Exp_t(Type(E_byte)); output::printProductionRule(39);}
+                | NUM B                                                     {if(castNum($1).val > 255) {output::errorByteTooLarge(yylineno, castNum($1).val); exit(1); } $$ = new Exp_t(Type(E_byte)); output::printProductionRule(39);}
                 | STRING                                                    {$$ = new Exp_t(Type(E_string)); ; output::printProductionRule(40);}
                 | TRUE                                                      {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(41);}
                 | FALSE                                                     {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(42);}
@@ -152,7 +153,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                                                                                     delete $3;
                                                                             }
                 | Exp RELOP Exp                                             {
-                                                                                if(!$1->isNumerical() || !$3->isNumerical()){
+                                                                                if(!castExp($1)->isNumerical() || !castExp($3)->isNumerical()){
                                                                                     exit(12);
                                                                                 }
                                                                                 $$ = new Exp_t(Type(E_bool));
