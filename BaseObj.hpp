@@ -23,6 +23,13 @@ class Type: public BaseObj {
 public:
     TYPE t;
     Type(TYPE t);
+
+    string getStr() const;
+
+    bool operator==(const Type rhs) const;
+    bool operator==(const TYPE rhs) const;
+    bool operator!=(const Type rhs) const;
+    bool operator!=(const TYPE rhs) const;
 };
 
 class Symbol : public BaseObj {
@@ -30,7 +37,7 @@ public:
     ID id;
     Type t;
 
-    Symbol(const ID &id, const Type &t);
+    Symbol(const ID id, const Type t);
 
     Symbol(const Symbol& _sym);
 };
@@ -45,6 +52,8 @@ public:
     void insert(Symbol sym){
         symList.push_back(sym);
     }
+
+    typedef vector<Symbol>::iterator iterator;
 };
 
 #define YYSTYPE BaseObj*

@@ -9,11 +9,11 @@
 
 class Exp_t : public BaseObj{
 public:
-    TYPE t;
+    Type t;
     bool initialized;
     Exp_t():t(E_bool), initialized(false) {};
-    explicit Exp_t(TYPE t) : t(t), initialized(true) {};
-    Exp_t(TYPE t, int i) : t(t), initialized(true) {
+    explicit Exp_t(Type t) : t(t), initialized(true) {};
+    Exp_t(Type t, int i) : t(t), initialized(true) {
         if ( t == E_byte && i >= (1 << 8)){
             output::errorByteTooLarge(lineno, i);
             exit(5456);
@@ -24,13 +24,13 @@ public:
     bool isNumerical() const{
         return t == E_int || t == E_byte;
     }
-    TYPE getDualType(const Exp_t& e) const {
+    Type getDualType(const Exp_t& e) const {
         if (t == E_byte && e.t == E_byte)
             return E_byte;
 
         return E_int;
     }
-    bool castType(TYPE newT){
+    bool castType(Type newT){
         if(!initialized){
             initialized = true;
             t = newT;
@@ -56,7 +56,7 @@ public:
     Exp_t& operator=(const Exp_t& e){
         if (!Exp_t(e).castType(t)){
             output::errorMismatch(lineno);
-            output::printLog("Flag casting from " + typeStr[e.t] + " to " + typeStr[t]);
+            output::printLog("Flag casting from " + e.t.getStr() + " to " + e.t.getStr());
             exit(-1);
         }
         return (*this);
