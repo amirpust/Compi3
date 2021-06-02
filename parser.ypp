@@ -62,39 +62,39 @@ Funcs:          /*epsilon*/                                                 {out
                 | FuncDecl Funcs                                            {output::printProductionRule(3);}
 ;
 FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
-                                    {symbolTable.openFuncScope($2, $4, $1); output::printLog("open scope Flag");}
+                                    {symbolTable.openFuncScope(*$2, *$4, *$1);}
                                     Statements
-                                    {output::printLog("Flag close scope"); symbolTable.closeCurrentScope();}
+                                    {symbolTable.closeCurrentScope();}
                                     RBRACE                                  {output::printProductionRule(4);}
 ;
-RetType:        Type                                                        {output::printLog("Flag type"); $$ = new objects_pool(*$1); output::printProductionRule(5);}
-                | VOID                                                      {output::printLog("Flag void"); $$ = $1; output::printProductionRule(6);}
+RetType:        Type                                                        {$$ = $1; output::printProductionRule(5);}
+                | VOID                                                      {$$ = new Type(E_void); output::printProductionRule(6);}
 ;
-Formals:        /*epsilon*/                                                 {$$ = SymList() ; output::printProductionRule(7);}
-                | FormalsList                                               {$$ = SymList($1) ; output::printProductionRule(8);}
+Formals:        /*epsilon*/                                                 {$$ = new SymList() ; output::printProductionRule(7);}
+                | FormalsList                                               {$$ = $1 ; output::printProductionRule(8);}
 ;
-FormalsList:    FormalDecl                                                  {output::printProductionRule(9); $$ = SymList() ; $$.push_back($1); }
-                |FormalDecl COMMA FormalsList                               {output::printProductionRule(10); $$ = SymList($3) ; $$.push_back($1); }
+FormalsList:    FormalDecl                                                  {output::printProductionRule(9); $$ = new SymList() ; $$->insert(*$1); }
+                |FormalDecl COMMA FormalsList                               {output::printProductionRule(10); $$ = $3 ; $$->insert(*$1); }
 ;
-FormalDecl:     Type ID                                                     {output::printLog($2);output::printLog(to_string((int)($1))); $$ = Symbol($2, $1) ; output::printProductionRule(11);}
+FormalDecl:     Type ID                                                     {$$ = new Symbol(*$2, *$1) ; output::printProductionRule(11);}
 ;
 Statements:     Statement                                                   {output::printProductionRule(12);}
                 |Statements Statement                                       {output::printProductionRule(13);}
 ;
 Statement:      LBRACE Statements RBRACE                                    {output::printProductionRule(14);}
-                | Type ID SC                                                {symbolTable.addSymbol($1, $2) ; output::printProductionRule(15);}
-                | Type ID ASSIGN Exp SC                                     {symbolTable.addSymbol($1, $2); symbolTable.assign($2, $4); output::printProductionRule(16);}
-                | ID ASSIGN Exp SC                                          {symbolTable.getExpByID($1) = $3 ; output::printProductionRule(17);}
+                | Type ID SC                                                {symbolTable.addSymbol(*$1, *$2) ; output::printProductionRule(15);}
+                | Type ID ASSIGN Exp SC                                     {symbolTable.addSymbol(*$1, *$2); symbolTable.assign(*$2, *$4); output::printProductionRule(16);}
+                | ID ASSIGN Exp SC                                          {symbolTable.getExpByID(*$1) = *$3 ; output::printProductionRule(17);}
                 | Call SC                                                   {output::printProductionRule(18);}
-                | RETURN SC                                                 {symbolTable.checkReturnType(Exp_t(E_void)) ; output::printProductionRule(19);}
-                | RETURN Exp SC                                             {symbolTable.checkReturnType($2) ; output::printProductionRule(20);}
+                | RETURN SC                                                 {symbolTable.checkReturnType(Exp_t(Type(E_void))) ; output::printProductionRule(19);}
+                | RETURN Exp SC                                             {symbolTable.checkReturnType(*$2) ; output::printProductionRule(20);}
                 | IF LPAREN Exp RPAREN
-                                    { if($3.t == E_bool) {symbolTable.openNewScope();output::printProductionRule(21);} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
+                                    { if($3->t == E_bool) {symbolTable.openNewScope();output::printProductionRule(21);} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
                                     Statement
                                     {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(21);}
                 | IF LPAREN Exp RPAREN
-                                    {if($3.t == E_bool) {symbolTable.openNewScope();} else { output::errorMismatch(lineno); exit(1);}}
+                                    {if($3->t == E_bool) {symbolTable.openNewScope();} else { output::errorMismatch(lineno); exit(1);}}
                                     Statement
                                     {symbolTable.closeCurrentScope();}
                                     ELSE
@@ -103,43 +103,57 @@ Statement:      LBRACE Statements RBRACE                                    {out
                                     {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(22);}
                 | WHILE LPAREN Exp RPAREN
-                                     {if($3.t == E_bool) {symbolTable.openLoopScope();} else { output::errorMismatch(lineno); exit(1);}}
+                                     {if($3->t == E_bool) {symbolTable.openLoopScope();} else { output::errorMismatch(lineno); exit(1);}}
                                      Statement
                                      {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(23);}
                 | BREAK SC                                                  {symbolTable.triggerBreak(); output::printProductionRule(24);}
                 | CONTINUE SC                                               {symbolTable.triggerContinue(); output::printProductionRule(25);}
                 | SWITCH LPAREN Exp RPAREN
-                            {symbolTable.openSwitchScope($3);}
+                            {symbolTable.openSwitchScope(*$3);}
                             LBRACE CaseList RBRACE
                             {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(26);}
 ;
-Call :          ID LPAREN ExpList RPAREN                                    {$$ = symbolTable.callFunc($1, $3) ; output::printProductionRule(27);}
-                | ID LPAREN RPAREN                                          {$$ = symbolTable.callFunc($1, ExpList()) ; output::printProductionRule(28);}
+Call :          ID LPAREN ExpList RPAREN                                    {$$ = symbolTable.callFunc(*$1, *$3) ; output::printProductionRule(27);}
+                | ID LPAREN RPAREN                                          {$$ = symbolTable.callFunc(*$1, *(new ExpList())) ; output::printProductionRule(28);}
 ;
-ExpList:        Exp                                                         {output::printLog(to_string((int)($1.t))); $$ = ExpList(); $$.push_back($1); output::printProductionRule(29);}
-                | Exp COMMA ExpList                                         {$$ = ExpList($3); $$.push_back($1); output::printProductionRule(30);}
+ExpList:        Exp                                                         {$$ = new ExpList(); $$->insert(*$1); output::printProductionRule(29);}
+                | Exp COMMA ExpList                                         {$$ = $3; $$->insert(*$1); output::printProductionRule(30);}
 ;
 Type :          INT                                                         {$$ = $1 ;output::printProductionRule(31);}
                 | BYTE                                                      {$$ = $1 ;output::printProductionRule(32);}
                 | BOOL                                                      {$$ = $1 ;output::printProductionRule(33);}
 ;
-Exp:            LPAREN Exp RPAREN                                           {$$ = Exp_t($2);  output::printProductionRule(34);}
-                | Exp BINOP_MD Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
-                | Exp BINOP_PM Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
-                | ID                                                        {$$ = symbolTable.getExpByID($1) ; output::printProductionRule(36);}
-                | Call                                                      {$$ = Exp_t($1) ; output::printProductionRule(37);}
-                | NUM                                                       {$$ = Exp_t(E_int); output::printProductionRule(38);}
-                | NUM B                                                     {if($1 > 255) {output::errorByteTooLarge(yylineno, $1); exit(1); } $$.t = E_byte; output::printProductionRule(39);}
-                | STRING                                                    {$$.t = E_string ; output::printProductionRule(40);}
-                | TRUE                                                      {$$.t = E_bool; output::printProductionRule(41);}
-                | FALSE                                                     {$$.t = E_bool; output::printProductionRule(42);}
-                | Exp AND Exp                                               {$$.t = E_bool; output::printProductionRule(44);}
-                | Exp OR Exp                                                {$$.t = E_bool; output::printProductionRule(45);}
-                | NOT Exp                                                   {$$.t = E_bool; output::printProductionRule(43);}
-                | Exp EQUALITY Exp                                          {$$.t = E_bool; output::printProductionRule(46);}
-                | Exp RELOP Exp                                             {$$.t = E_bool ; output::printProductionRule(46);}
+Exp:            LPAREN Exp RPAREN                                           {$$ = $1; output::printProductionRule(34);}
+                | Exp BINOP_MD Exp                                          {$$ = new Exp_t(Type($1->getDualType(*$3))); output::printProductionRule(35);}
+                | Exp BINOP_PM Exp                                          {$$ = new Exp_t(Type($1->getDualType(*$3))); output::printProductionRule(35);}
+                | ID                                                        {$$ = symbolTable.getExpByID(*$1) ; output::printProductionRule(36);}
+                | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
+                | NUM                                                       {$$ = new Exp_t(Type(E_int)); output::printProductionRule(38);}
+                | NUM B                                                     {if($1 > 255) {output::errorByteTooLarge(yylineno, $1); exit(1); } $$ = new Exp_t(Type(E_byte)); output::printProductionRule(39);}
+                | STRING                                                    {$$ = new Exp_t(Type(E_string)); ; output::printProductionRule(40);}
+                | TRUE                                                      {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(41);}
+                | FALSE                                                     {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(42);}
+                | Exp AND Exp                                               {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(44);}
+                | Exp OR Exp                                                {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(45);}
+                | NOT Exp                                                   {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(43);}
+                | Exp EQUALITY Exp                                          {
+                                                                                    if(!$1->isNumerical() || !$3->isNumerical()){
+                                                                                        exit(12);
+                                                                                    }
+                                                                                    $$ = new Exp_t(Type(E_bool));
+                                                                                    delete $1;
+                                                                                    delete $3;
+                                                                            }
+                | Exp RELOP Exp                                             {
+                                                                                if(!$1->isNumerical() || !$3->isNumerical()){
+                                                                                    exit(12);
+                                                                                }
+                                                                                $$ = new Exp_t(Type(E_bool));
+                                                                                delete $1;
+                                                                                delete $3;
+                                                                            };
 ;
 CaseList:       CaseDecl CaseList                                           {output::printProductionRule(48);}
                 | CaseDecl                                                  {output::printProductionRule(49);}
