@@ -7,6 +7,9 @@
     #include "Table.hpp"
     #include "BaseObj.hpp"
     #define castType(toCast) (*(static_cast<Type*>(toCast)))
+    #define castID(toCast) (*(static_cast<IDType*>(toCast)))
+    #define castSymList(toCast) (*(static_cast<SymList*>(toCast)))
+    #define castSymbol(toCast) (*(static_cast<Symbol*>(toCast)))
 
     int yylex();
     // extern int yylineno; moved it to table.hpp
@@ -62,7 +65,7 @@ Funcs:          /*epsilon*/                                                 {out
                 | FuncDecl Funcs                                            {output::printProductionRule(3);}
 ;
 FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
-                                    {symbolTable.openFuncScope(*static_cast<IDtype*>($2), *static_cast<SymList*>($4), castType($1));}
+                                    {symbolTable.openFuncScope(castID($2), castSymList($4), castType($1));}
                                     Statements
                                     {symbolTable.closeCurrentScope();}
                                     RBRACE                                  {output::printProductionRule(4);}
@@ -73,8 +76,8 @@ RetType:        Type                                                        {$$ 
 Formals:        /*epsilon*/                                                 {$$ = new SymList() ; output::printProductionRule(7);}
                 | FormalsList                                               {$$ = $1 ; output::printProductionRule(8);}
 ;
-FormalsList:    FormalDecl                                                  {output::printProductionRule(9); $$ = new SymList() ; $$->insert(*$1); }
-                |FormalDecl COMMA FormalsList                               {output::printProductionRule(10); $$ = $3 ; $$->insert(*$1); }
+FormalsList:    FormalDecl                                                  {output::printProductionRule(9); $$ = new SymList() ; castSymList($$).insert(castSymbol($1)); }
+                |FormalDecl COMMA FormalsList                               {output::printProductionRule(10); $$ = $3 ; castSymList($$).insert(castSymbol($1); }
 ;
 FormalDecl:     Type ID                                                     {$$ = new Symbol(*$2, *$1) ; output::printProductionRule(11);}
 ;
