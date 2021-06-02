@@ -130,6 +130,7 @@ public:
 
 
         for (int i = 0; i < sArgs.size(); ++i) {
+            output::printLog("Flag callFunc type: "+ to_string(sArgs[i].second) + " id: " + sArgs[i].first);
             if(sArgs[i].second != func.symList[i].second){
                 output::errorPrototypeMismatch(yylineno, funcName, strTypes);
                 exit(-1);
