@@ -143,7 +143,7 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | FALSE                                                     {$$ = new Exp_t(Type(E_bool)); output::printProductionRule(42);}
                 | Exp AND Exp                                               {if (castExp($1).t != Type(E_bool) || castExp($3).t != Type(E_bool)) {output::errorMismatch(yylineno); exit(1);} ; $$ = new Exp_t(Type(E_bool)); output::printProductionRule(44);}
                 | Exp OR Exp                                                {if (castExp($1).t != Type(E_bool) || castExp($3).t != Type(E_bool)) {output::errorMismatch(yylineno); exit(1);} ; $$ = new Exp_t(Type(E_bool)); output::printProductionRule(45);}
-                | NOT Exp                                                   {if (castExp($1).t != Type(E_bool)) {output::errorMismatch(yylineno); exit(1);} ;$$ = new Exp_t(Type(E_bool)); output::printProductionRule(43);}
+                | NOT Exp                                                   {if (castExp($2).t != Type(E_bool)) {output::errorMismatch(yylineno); exit(1);} ;$$ = new Exp_t(Type(E_bool)); output::printProductionRule(43);}
                 | Exp EQUALITY Exp                                          {
                                                                                     if(!castExp($1).isNumerical() || !castExp($3).isNumerical()){
                                                                                         output::errorMismatch(yylineno);
