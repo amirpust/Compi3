@@ -24,10 +24,10 @@ whitespace	                                        ([ \t\r\n])
 noZeroDigit	                                        ([1-9])
 digit		                                        ([0-9])
 %%
-void					                            {yylval = new BaseObj() ; return VOID;}
-int                                                 {yylval = new Type(E_bool) ; return INT;}
-byte                                                {yylval = new ID2("yaY") ; return BYTE;}
-b                                                   {yylval = new ID2(yytext) ; return B;}
+void					                            {return VOID;}
+int                                                 {return INT;}
+byte                                                {return BYTE;}
+b                                                   {return B;}
 bool                                                {return BOOL;}
 and                                                 {return AND;}
 or                                                  {return OR;}
@@ -55,7 +55,7 @@ default                                             return DEFAULT;
 "=="|"!="                                           return EQUALITY;
 "*"|"/"                                             {return BINOP_MD;}
 "+"|"-"                                             {return BINOP_PM;}
-[a-zA-Z][a-zA-Z0-9]*                                {yylval = new ID(string(yytext));  return ID;}
+[a-zA-Z][a-zA-Z0-9]*                                {yylval = new IDtype(string(yytext));  return ID;}
 {noZeroDigit}{digit}*                               {yylval = new Num(stoi(yytext)); return NUM;}
 0                                                   {yylval = new Num(0); return NUM;}
 \"([^\n\r\"\\]|\\[rnt"\\])+\"                       {return STRING;}

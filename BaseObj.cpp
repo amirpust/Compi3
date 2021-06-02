@@ -18,7 +18,7 @@ string Type::getStr() const {
 }
 
 //Symbol
-Symbol::Symbol(const ID id, const Type t) : id(id), t(t) {}
+Symbol::Symbol(const IDtype id, const Type t) : id(id), t(t) {}
 Symbol::Symbol(const Symbol& _sym) : id(_sym.id), t(_sym.t) {}
 
 SymList::SymList(const vector<Symbol> &symList) : symList(symList) {}
@@ -30,7 +30,7 @@ void SymList::insert(Symbol sym) {
 
 
 //Func Symbol
-FuncSymbol::FuncSymbol(Type _retType, ID _id, SymList _symList) :   retType(_retType),
+FuncSymbol::FuncSymbol(Type _retType, IDtype _id, SymList _symList) :   retType(_retType),
                                                                     id(_id),
                                                                     symList(_symList) {}
 FuncList::FuncList(vector<FuncSymbol> &_funcList) : funcList(_funcList) {}

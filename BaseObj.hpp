@@ -13,16 +13,10 @@ public:
     BaseObj() = default;
 };
 
-class ID2 : public BaseObj{
+class IDtype : public BaseObj{
 public:
     string id;
-    ID2(string _id) : id(_id) {};
-};
-
-class ID : public BaseObj{
-public:
-    string id;
-    ID(string _id) : id(_id) {};
+    IDtype(string _id) : id(_id) {};
 };
 
 class Type: public BaseObj {
@@ -39,10 +33,10 @@ public:
 };
 class Symbol : public BaseObj {
 public:
-    ID id;
+    IDtype id;
     Type t;
 
-    Symbol(const ID id, const Type t);
+    Symbol(const IDtype id, const Type t);
 
     Symbol(const Symbol& _sym);
 };
@@ -61,10 +55,10 @@ public:
 class FuncSymbol : public BaseObj {
 public:
     Type retType;
-    ID id;
+    IDtype id;
     SymList symList;
 
-    FuncSymbol(Type _retType, ID _id, SymList _symList);;
+    FuncSymbol(Type _retType, IDtype _id, SymList _symList);;
 };
 
 class FuncList : public BaseObj {

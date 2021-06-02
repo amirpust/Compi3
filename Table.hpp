@@ -38,8 +38,8 @@ public:
     SymbolTable() : scopeList(), funcList(), seenMainFunc(false) , offsets() , cases(0){
         scopeList.emplace_back(0, GLOBAL_SCOPE);
 
-        funcList.insert(FuncSymbol(Type(E_void),ID("print"),SymList(vector<Symbol>(1, Symbol(ID(""), Type(E_string))))));
-        funcList.insert(FuncSymbol(Type(E_void),ID("printi"),SymList(vector<Symbol>(1, Symbol(ID(""), Type(E_int))))));
+        funcList.insert(FuncSymbol(Type(E_void),IDtype("print"),SymList(vector<Symbol>(1, Symbol(IDtype(""), Type(E_string))))));
+        funcList.insert(FuncSymbol(Type(E_void),IDtype("printi"),SymList(vector<Symbol>(1, Symbol(IDtype(""), Type(E_int))))));
 
         offsets.push(0);
     };
@@ -67,7 +67,7 @@ public:
 
         openNewScope( SWITCH_SCOPE);
     }
-    void openFuncScope(ID id, SymList args, Type retType) {
+    void openFuncScope(IDtype id, SymList args, Type retType) {
         output::printLog("Flag " + id.id);
         if ((retType == E_void) && (id.id == "main") && args.symList.empty()){
             seenMainFunc = true;
@@ -108,7 +108,7 @@ public:
         exit(-1);
     }
 
-    Type callFunc(ID funcName, ExpList arguments) {
+    Type callFunc(IDtype funcName, ExpList arguments) {
         if(findFunc(funcName) == funcList.funcList.end()){
             output::errorUndefFunc(lineno, funcName.id);
             exit(1);
@@ -116,7 +116,7 @@ public:
 
         SymList sArgs = SymList();
         for (ExpList::iterator a = arguments.expList.begin(); a != arguments.expList.end(); a++){
-            sArgs.insert(Symbol(ID(""),Type((*a).t)));
+            sArgs.insert(Symbol(IDtype(""),Type((*a).t)));
         }
 
         FuncSymbol func = *findFunc(funcName);
@@ -179,7 +179,7 @@ public:
             exit(1);
         }
     }
-    void addSymbol(Type t, ID id){
+    void addSymbol(Type t, IDtype id){
         if(isId(id)) {
             output::errorDef(yylineno, id.id);
             exit(-1);
@@ -189,7 +189,7 @@ public:
         offsets.top()++;
     }
 
-    Type getTypeByID(ID _id){
+    Type getTypeByID(IDtype _id){
         Symbol* sym = findSym(_id);
         if(!sym){
             output::errorUndef(lineno, _id.id);
@@ -197,10 +197,10 @@ public:
         }
         return sym->t;
     }
-    Exp_t getExpByID(ID _id){
+    Exp_t getExpByID(IDtype _id){
         return Exp_t(getTypeByID(_id));
     }
-    void assign(ID _id, Exp_t e){
+    void assign(IDtype _id, Exp_t e){
         Symbol* sym = findSym(_id);
         if(!sym){
             output::errorUndef(lineno, _id.id);
@@ -211,7 +211,7 @@ public:
     }
 
 private:
-    FuncList::iterator findFunc(ID _id){
+    FuncList::iterator findFunc(IDtype _id){
         for (FuncList::iterator f = funcList.funcList.begin(); f != funcList.funcList.end(); f++){
             if (f->id.id == _id.id){
                 return f;
@@ -219,7 +219,7 @@ private:
         }
         return funcList.funcList.end();
     }
-    Symbol* findSym(ID _id){
+    Symbol* findSym(IDtype _id){
         for(ScopeList::iterator scope = scopeList.begin(); scope != scopeList.end(); scope++){
             for(SymList::iterator sym = (*scope).symList.symList.begin(); sym != (*scope).symList.symList.end() ; sym++){
                 if ((*sym).id.id == _id.id){
@@ -236,7 +236,7 @@ private:
 
         return NULL;
     }
-    bool isId(ID _id){
+    bool isId(IDtype _id){
         return findSym(_id) || findFunc(_id) != funcList.funcList.end();
     }
 };
