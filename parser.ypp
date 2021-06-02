@@ -62,7 +62,7 @@ Funcs:          /*epsilon*/                                                 {out
                 | FuncDecl Funcs                                            {output::printProductionRule(3);}
 ;
 FuncDecl:       RetType ID LPAREN Formals RPAREN LBRACE
-                                    {symbolTable.openFuncScope(*static_cast<IDtype*>($2), *static_cast<SymList*>($4), *static_cast<retType*>($1));}
+                                    {symbolTable.openFuncScope(*static_cast<IDtype*>($2), *static_cast<SymList*>($4), *static_cast<Type*>($1));}
                                     Statements
                                     {symbolTable.closeCurrentScope();}
                                     RBRACE                                  {output::printProductionRule(4);}
