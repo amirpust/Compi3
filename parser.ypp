@@ -111,7 +111,7 @@ Statement:      LBRACE {symbolTable.openNewScope(); }
                                                                             {output::printProductionRule(26);}
 ;
 
-BOOLEXP:        Exp                                                         {if (castExp($1).t != E_bool) {output::errorMismatch(lineno); exit(1)} symbolTable.openNewScope(); $$ = $1}
+BOOLEXP:        Exp                                                         {if (castExp($1).t != E_bool) {output::errorMismatch(lineno); exit(1);} symbolTable.openNewScope(); $$ = $1;}
 
 ENDSCOPE:       /*epsilon*/                                                  {symbolTable.closeCurrentScope();}
 
