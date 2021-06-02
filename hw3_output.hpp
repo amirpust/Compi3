@@ -3,9 +3,19 @@
 
 #include <vector>
 #include <string>
+#include <fstream>
+
 using namespace std;
 
 namespace output{
+    ofstream logFile;
+    void init(){
+        logFile.open("log.txt");
+    }
+    void close(){
+        logFile.close();
+    }
+
     void endScope();
     void printID(const string& id, int offset, const string& type);
 

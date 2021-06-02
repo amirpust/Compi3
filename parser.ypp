@@ -16,6 +16,7 @@
     void yyerror(const char*);
 
     SymbolTable symbolTable = SymbolTable();
+
 %}
 
 %token  <typeVal> VOID
@@ -166,5 +167,10 @@ void yyerror(const char* e){
 }
 int main(){
     //yydebug = 1;
-    return yyparse();
+
+    output::init();
+    int res = yyparse();
+    output::close();
+
+    return res;
 }
