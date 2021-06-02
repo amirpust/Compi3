@@ -143,6 +143,9 @@ public:
     }
     void closeCurrentScope(){
         output::printLog("closeCurrentScope - entering flag");
+        output::printLog("scope list size" + to_string(scopeList.size()));
+        output::printLog("func list size" + to_string(funcList.funcList.size()));
+
 
         output::endScope();
 
@@ -154,7 +157,6 @@ public:
         Scope closingScope = scopeList.back();
 
         for (int i = 0; i < closingScope.symList.symList.size(); ++i) {
-            output::printLog("closeCurrentScope - iter:" + to_string(i));
             string typeForPrinting = closingScope.symList.symList[i].t.getStr();
             output::printID(closingScope.symList.symList[i].id.id, offsets.top()--, typeForPrinting);
         }
@@ -162,28 +164,20 @@ public:
         if (scopeList.size() == 2){
             //Func scope
             FuncSymbol func = funcList.funcList.back();
-            output::printLog("closeCurrentScope - size:" + to_string(func.symList.symList.size()));
-            output::printLog("closeCurrentScope - address:" + to_string((long long int)(&(func.symList.symList[0]))));
-            output::printLog("closeCurrentScope - T:" + to_string((int)(func.symList.symList[0].t.t)));
 
             for (int i = 0; i < func.symList.symList.size(); ++i) {
-                output::printLog("closeCurrentScope - iter 2: " + to_string(i));
 
                 output::printLog(to_string(func.symList.symList[i].t.t));
                 output::printLog(func.symList.symList[i].t.getStr());
 
                 string typeForPrinting = func.symList.symList[i].t.getStr();
 
-                output::printLog("closeCurrentScope - iter 3:" + to_string(i));
-
 
                 output::printID(func.symList.symList[i].id.id, -1-i, typeForPrinting);
-
-                output::printLog("closeCurrentScope - iter 4:" + to_string(i));
             }
         }
 
-        output::printLog("closeCurrentScope -mid flag");
+        output::printLog("closeCurrentScope - mid flag");
 
         if (scopeList.size() == 1){
             for (FuncList::iterator func = funcList.funcList.begin(); func != funcList.funcList.end(); ++func){
@@ -197,6 +191,8 @@ public:
         }
 
         scopeList.pop_back();
+
+        output::printLog("closeCurrentScope - end flag");
     }
 
     void checkReturnType(Exp_t exp){
