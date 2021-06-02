@@ -98,7 +98,7 @@ Statement:      LBRACE Statements RBRACE                                    {out
                 | RETURN SC                                                 {symbolTable.checkReturnType(Exp_t(E_void)) ; output::printProductionRule(19);}
                 | RETURN Exp SC                                             {symbolTable.checkReturnType($2) ; output::printProductionRule(20);}
                 | IF LPAREN Exp RPAREN
-                                    {output::printLog("Flag IF");cout << $3.t << endl; if($3.t == E_bool) {symbolTable.openNewScope();} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
+                                    { if($3.t == E_bool) {symbolTable.openNewScope();} else {  output::printProductionRule(21); output::errorMismatch(lineno); exit(41);}}
                                     Statement
                                     {symbolTable.closeCurrentScope();}
                                                                             {output::printProductionRule(21);}
@@ -137,11 +137,11 @@ Type :          INT                                                         {$$ 
 Exp:            LPAREN Exp RPAREN                                           {$$ = Exp_t($2);  output::printProductionRule(34);}
                 | Exp BINOP_MD Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
                 | Exp BINOP_PM Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
-                | ID                                                        {output::printLog("Flag Exp of type:" + to_string((int)$$.t) + " ID of type "+to_string((int)symbolTable.getExpByID($1).t)) ;$$ = symbolTable.getExpByID($1) ; output::printProductionRule(36);}
+                | ID                                                        {$$ = symbolTable.getExpByID($1) ; output::printProductionRule(36);}
                 | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = Exp_t(E_int); output::printProductionRule(38);}
                 | NUM B                                                     {if($1 > 255) {output::errorByteTooLarge(yylineno, $1); exit(1); } $$ = Exp_t(E_byte); output::printProductionRule(39);}
-                | STRING                                                    {$$ = Exp_t(E_string); output::printProductionRule(40);}
+                | STRING                                                    {output::printLog("Flag trying string");$$ = Exp_t(E_string); output::printProductionRule(40);}
                 | TRUE                                                      {$$ = Exp_t(E_bool); output::printProductionRule(41);}
                 | FALSE                                                     {$$ = Exp_t(E_bool); output::printProductionRule(42);}
                 | NOT Exp                                                   {$$ = Exp_t(E_bool); output::printProductionRule(43);}
