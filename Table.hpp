@@ -167,6 +167,7 @@ public:
             for (int i = 0; i < func.symList.symList.size(); ++i) {
                 output::printLog("closeCurrentScope - iter 2:" + to_string(i));
 
+                output::printLog(to_string(closingScope.symList.symList[i].t.t));
                 output::printLog(closingScope.symList.symList[i].t.getStr());
 
                 string typeForPrinting = closingScope.symList.symList[i].t.getStr();
