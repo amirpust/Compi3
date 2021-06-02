@@ -118,10 +118,6 @@ public:
     Type callFunc(IDtype funcName, ExpList arguments) {
         output::printLog("callFunc: start");
 
-        reverse(arguments.expList.begin(),arguments.expList.end());
-
-        output::printLog("callFunc: after reverse");
-
         if(findFunc(funcName) == funcList.funcList.end()){
             output::errorUndefFunc(yylineno, funcName.id);
             exit(1);
@@ -131,6 +127,9 @@ public:
         for (ExpList::iterator a = arguments.expList.begin(); a != arguments.expList.end(); a++){
             sArgs.insert(Symbol(IDtype(""),(*a).t));
         }
+
+        reverse(sArgs.symList.begin(),sArgs.symList.end());
+
         output::printLog("callFunc: Flag 1");
 
         FuncSymbol func = *findFunc(funcName);
