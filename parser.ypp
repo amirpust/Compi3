@@ -82,8 +82,8 @@ RetType:        Type                                                        {$$ 
 Formals:        /*epsilon*/                                                 {$$ = SymList() ; output::printProductionRule(7);}
                 | FormalsList                                               {$$ = SymList($1) ; output::printProductionRule(8);}
 ;
-FormalsList:    FormalDecl                                                  {$$ = SymList() ; $$.push_back($1); output::printProductionRule(9);}
-                |FormalDecl COMMA FormalsList                               {$$ = SymList($3) ; $$.push_back($1); output::printProductionRule(10);}
+FormalsList:    FormalDecl                                                  {output::printProductionRule(9); $$ = SymList() ; $$.push_back($1); }
+                |FormalDecl COMMA FormalsList                               {output::printProductionRule(10); $$ = SymList($3) ; $$.push_back($1); }
 ;
 FormalDecl:     Type ID                                                     {output::printLog($2);output::printLog(to_string((int)($1))); $$ = Symbol($2, $1) ; output::printProductionRule(11);}
 ;
