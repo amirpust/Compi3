@@ -42,7 +42,7 @@ public:
 
         offsets.push(0);
     };
-    ~SymbolTable() {
+    void gg() {
         checkMain();
         closeCurrentScope();
     }

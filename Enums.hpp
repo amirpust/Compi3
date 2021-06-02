@@ -15,7 +15,7 @@ enum TYPE {
 
 const std::string typeStr[] = {
         "BOOL",
-        "B",
+        "BYTE",
         "INT",
         "STRING",
         "VOID"
