@@ -133,7 +133,7 @@ Type :          INT                                                         {$$ 
 Exp:            LPAREN Exp RPAREN                                           {$$ = $1; output::printProductionRule(34);}
                 | Exp BINOP_MD Exp                                          {$$ = new Exp_t(Type(castExp($1).getDualType(castExp($3)))); output::printProductionRule(35);}
                 | Exp BINOP_PM Exp                                          {$$ = new Exp_t(Type(castExp($1).getDualType(castExp($3)))); output::printProductionRule(35);}
-                | ID                                                        {$$ = symbolTable.getExpByID(castID($1)) ; output::printProductionRule(36);}
+                | ID                                                        {$$ = new Exp_t(symbolTable.getExpByID(castID($1))) ; output::printProductionRule(36);}
                 | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = new Exp_t(Type(E_int)); output::printProductionRule(38);}
                 | NUM B                                                     {if($1 > 255) {output::errorByteTooLarge(yylineno, $1); exit(1); } $$ = new Exp_t(Type(E_byte)); output::printProductionRule(39);}
