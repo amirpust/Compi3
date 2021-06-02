@@ -106,7 +106,7 @@ public:
         exit(-1);
     }
 
-    Exp_t callFunc(string funcName, ExpList arguments) {
+    TYPE callFunc(string funcName, ExpList arguments) {
         if(findFunc(funcName) == funcList.end()){
             output::errorUndefFunc(lineno, funcName);
             exit(1);
@@ -136,7 +136,7 @@ public:
             }
         }
 
-        return Exp_t(func.retType);
+        return func.retType;
     }
     void closeCurrentScope(){
         output::endScope();

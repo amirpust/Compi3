@@ -56,7 +56,7 @@
 
 %type<typeVal> RetType
 %type<expVal> Exp
-%type<expVal> Call
+%type<typeVal> Call
 %type<expList> ExpList
 %type<typeVal> Type
 %type<symbol> FormalDecl
@@ -138,17 +138,17 @@ Exp:            LPAREN Exp RPAREN                                           {$$ 
                 | Exp BINOP_MD Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
                 | Exp BINOP_PM Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
                 | ID                                                        {$$ = symbolTable.getExpByID($1) ; output::printProductionRule(36);}
-                | Call                                                      {$$ = $1 ; output::printProductionRule(37);}
+                | Call                                                      {$$ = Exp_t($1) ; output::printProductionRule(37);}
                 | NUM                                                       {$$ = Exp_t(E_int); output::printProductionRule(38);}
-                | NUM B                                                     {if($1 > 255) {output::errorByteTooLarge(yylineno, $1); exit(1); } $$ = Exp_t(E_byte); output::printProductionRule(39);}
+                | NUM B                                                     {if($1 > 255) {output::errorByteTooLarge(yylineno, $1); exit(1); } $$.t = E_byte; output::printProductionRule(39);}
                 | STRING                                                    {$$.t = E_string ; output::printProductionRule(40);}
-                | TRUE                                                      {$$ = Exp_t(E_bool); output::printProductionRule(41);}
-                | FALSE                                                     {$$ = Exp_t(E_bool); output::printProductionRule(42);}
-                | NOT Exp                                                   {$$ = Exp_t(E_bool); output::printProductionRule(43);}
-                | Exp AND Exp                                               {$$ = Exp_t(E_bool); output::printProductionRule(44);}
-                | Exp OR Exp                                                {$$ = Exp_t(E_bool); output::printProductionRule(45);}
-                | Exp EQUALITY Exp                                          {$$ = Exp_t(E_bool); output::printProductionRule(46);}
-                | Exp RELOP Exp                                             {$$ = Exp_t(E_bool) ; output::printProductionRule(46);}
+                | TRUE                                                      {$$.t = E_bool; output::printProductionRule(41);}
+                | FALSE                                                     {$$.t = E_bool; output::printProductionRule(42);}
+                | Exp AND Exp                                               {$$.t = E_bool; output::printProductionRule(44);}
+                | Exp OR Exp                                                {$$.t = E_bool; output::printProductionRule(45);}
+                | NOT Exp                                                   {$$.t = E_bool; output::printProductionRule(43);}
+                | Exp EQUALITY Exp                                          {$$.t = E_bool; output::printProductionRule(46);}
+                | Exp RELOP Exp                                             {$$.t = E_bool ; output::printProductionRule(46);}
 ;
 CaseList:       CaseDecl CaseList                                           {output::printProductionRule(48);}
                 | CaseDecl                                                  {output::printProductionRule(49);}
