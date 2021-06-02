@@ -47,7 +47,7 @@ public:
     void gg() {
         checkMain();
         closeCurrentScope();
-        cout << "ll" << lineno << endl;
+        cout << "ll" << yylineno << endl;
         cout << "yy" << yylineno << endl;
     }
     void checkMain(){
@@ -69,7 +69,7 @@ public:
     }
     void openSwitchScope(Exp_t e) {
         if (e.t != E_byte && e.t != E_int) {
-            output::errorMismatch(lineno);
+            output::errorMismatch(yylineno);
             exit(1);
         }
 
@@ -83,7 +83,7 @@ public:
         }
 
         if (findFunc(id) != funcList.funcList.end()){
-            output::errorDef(lineno, id.id);
+            output::errorDef(yylineno, id.id);
             exit(1);
         }
 
@@ -104,7 +104,7 @@ public:
             }
         }
 
-        output::errorUnexpectedBreak(lineno);
+        output::errorUnexpectedBreak(yylineno);
         exit(-1);
     }
 
@@ -114,13 +114,13 @@ public:
                 return;
             }
         }
-        output::errorUnexpectedContinue(lineno);
+        output::errorUnexpectedContinue(yylineno);
         exit(-1);
     }
 
     Type callFunc(IDtype funcName, ExpList arguments) {
         if(findFunc(funcName) == funcList.funcList.end()){
-            output::errorUndefFunc(lineno, funcName.id);
+            output::errorUndefFunc(yylineno, funcName.id);
             exit(1);
         }
 
@@ -136,7 +136,7 @@ public:
         }
 
         if(sArgs.symList.size() != func.symList.symList.size()){
-            output::errorPrototypeMismatch(lineno, funcName.id, strTypes);
+            output::errorPrototypeMismatch(yylineno, funcName.id, strTypes);
             exit(-1);
         }
 
@@ -144,7 +144,7 @@ public:
         for (int i = 0; i < sArgs.symList.size(); ++i) {
             output::printLog("Flag callFunc type: "+ to_string(sArgs.symList[i].t.t) + " id: " + sArgs.symList[i].id.id);
             if(sArgs.symList[i].t.t != func.symList.symList[i].t.t){
-                output::errorPrototypeMismatch(lineno, funcName.id, strTypes);
+                output::errorPrototypeMismatch(yylineno, funcName.id, strTypes);
                 exit(-1);
             }
         }
@@ -199,13 +199,13 @@ public:
 
     void checkReturnType(Exp_t exp){
         if(!exp.castType(funcList.funcList.back().retType)){
-            output::errorMismatch(lineno);
+            output::errorMismatch(yylineno);
             exit(1);
         }
     }
     void addSymbol(Type t, IDtype id){
         if(isId(id)) {
-            output::errorDef(lineno, id.id);
+            output::errorDef(yylineno, id.id);
             exit(-1);
         }
 
@@ -216,7 +216,7 @@ public:
     Type getTypeByID(IDtype _id){
         Symbol* sym = findSym(_id);
         if(!sym){
-            output::errorUndef(lineno, _id.id);
+            output::errorUndef(yylineno, _id.id);
             exit(-46);
         }
         return sym->t;
@@ -227,7 +227,7 @@ public:
     void assign(IDtype _id, Exp_t e){
         Symbol* sym = findSym(_id);
         if(!sym){
-            output::errorUndef(lineno, _id.id);
+            output::errorUndef(yylineno, _id.id);
             exit(-463);
         }
         Exp_t newE = Exp_t(sym->t);

@@ -15,7 +15,7 @@ public:
     explicit Exp_t(Type t) : t(t), initialized(true) {};
     Exp_t(Type t, int i) : t(t), initialized(true) {
         if ( t == E_byte && i >= (1 << 8)){
-            output::errorByteTooLarge(lineno, i);
+            output::errorByteTooLarge(yylineno, i);
             exit(5456);
         }
     };
@@ -38,7 +38,7 @@ public:
         }
 
         if(newT == E_void || t == E_void){
-            output::errorMismatch(lineno);
+            output::errorMismatch(yylineno);
             output::printLog("Casting void");
             exit(1);
         }
@@ -55,7 +55,7 @@ public:
 
     Exp_t& operator=(const Exp_t& e){
         if (!Exp_t(e).castType(t)){
-            output::errorMismatch(lineno);
+            output::errorMismatch(yylineno);
             output::printLog("Flag casting from " + e.t.getStr() + " to " + e.t.getStr());
             exit(-1);
         }

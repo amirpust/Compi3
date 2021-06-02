@@ -12,7 +12,7 @@
     #include "parser.tab.hpp"
 
     void printLexError();
-    void output::errorLex(int lineno);
+    void output::errorLex(int yylineno);
     using namespace std;
 %}
 
