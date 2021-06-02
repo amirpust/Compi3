@@ -47,6 +47,8 @@ public:
     void gg() {
         checkMain();
         closeCurrentScope();
+        cout << "ll" << lineno << endl;
+        cout << "yy" << yylineno << endl;
     }
     void checkMain(){
         if(!seenMainFunc){
