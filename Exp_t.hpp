@@ -11,8 +11,8 @@ public:
     TYPE t;
     bool initialized;
     Exp_t():t(E_bool), initialized(false) {};
-    explicit Exp_t(TYPE t) : t(t) {};
-    Exp_t(TYPE t, int i) : t(t) {
+    explicit Exp_t(TYPE t) : t(t), initialized(true) {};
+    Exp_t(TYPE t, int i) : t(t), initialized(true) {
         if ( t == E_byte && i >= (1 << 8)){
             output::errorByteTooLarge(lineno, i);
             exit(5456);
