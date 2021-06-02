@@ -8,6 +8,8 @@
 #include <vector>
 #include "hw3_output.hpp"
 #include <stack>
+#include <algorithm>
+
 
 extern int yylineno;
 
@@ -72,6 +74,7 @@ public:
         openNewScope( SWITCH_SCOPE);
     }
     void openFuncScope(IDtype id, SymList args, Type retType) {
+        reverse(args.symList.begin(),args.symList.end());
         output::printLog("Flag " + id.id);
         if ((retType == E_void) && (id.id == "main") && args.symList.empty()){
             seenMainFunc = true;
@@ -149,7 +152,7 @@ public:
     void closeCurrentScope(){
 
         output::endScope();
-        
+
         if (scopeList.empty()){
             output::printLog("ASSERT: closeCurrentScope - empty");
             return;
