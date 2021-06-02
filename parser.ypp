@@ -132,7 +132,7 @@ ExpList:        Exp                                                         {$$ 
 ;
 Type :          INT                                                         {$$ = $1 ;output::printProductionRule(31);}
                 | BYTE                                                      {$$ = $1 ;output::printProductionRule(32);}
-                | BOOL                                                      {$$ = $1 ;output::printProductionRule(33);}
+                | BOOL                                                      {$$ = E_bool ;output::printProductionRule(33);}
 ;
 Exp:            LPAREN Exp RPAREN                                           {$$ = Exp_t($2);  output::printProductionRule(34);}
                 | Exp BINOP_MD Exp                                          {$$ = Exp_t($1); output::printProductionRule(35);}
