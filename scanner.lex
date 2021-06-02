@@ -15,6 +15,8 @@
     void printLexError();
     void output::errorLex(int lineno);
     using namespace std;
+
+    yylval =  new ID("yay");
 %}
 
 %option yylineno
