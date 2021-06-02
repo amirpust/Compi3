@@ -79,4 +79,8 @@ public:
     Num(int val);
 };
 
+#define YYSTYPE BaseObj*
+
+
+
 #endif //HW3_BASEOBJ_HPP
